@@ -3,7 +3,7 @@
 [![GitHub Actions](https://github.com/ElvUI-WotLK/ElvUI/workflows/lint/badge.svg?branch=master&event=push)](https://github.com/ElvUI-WotLK/ElvUI/actions?query=workflow%3Alint+branch%3Amaster)
 
 # ElvUI - UI Settings (3.3.5a) for sirus.su
-Тут только код без настроек, настройки в https://github.com/fxpw/ElvUI_OptionsUI
+Тут только настройки, ядро в https://github.com/fxpw/ElvUI
 
 ## Screenshots:
 
