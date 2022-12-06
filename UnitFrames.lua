@@ -2322,6 +2322,55 @@ local function GetOptionsTable_Cutaway(updateFunc, groupName, numGroup)
 	return config
 end
 
+local ACH = LibStub("LibAceConfigHelper")
+
+local function GetOptionsTable_AbsorbPrediction(updateFunc, groupName, numGroup, subGroup)
+	local config = ACH:Group(L["Absorbs Prediction"], L["Show a prediction bar with all absorbs on the unitframe. Also displays a slightly different colored bar for heal absorbing shields"], nil, nil, function(info) return UF.db.units[groupName].absorbPrediction[info[#info]] end, function(info, value) UF.db.units[groupName].absorbPrediction[info[#info]] = value  if updateFunc then updateFunc(UF, groupName, numGroup) end end)
+	config.args.enable = ACH:Toggle(L["Enable"], nil, 1)
+	config.args.height = ACH:Range(L["Height"], nil, 2, { min = -1, max = 500, step = 1 })
+	config.args.colorsButton = ACH:Execute(L["COLORS"], nil, 3, function() E.Libs.AceConfigDialog:SelectGroup("ElvUI", "unitframe", "generalOptionsGroup", "allColorsGroup", "absorbPrediction") end)
+	config.args.anchorPoint = ACH:Select(L["Anchor Point"], nil, 4, { TOP = "TOP", BOTTOM = "BOTTOM", CENTER = "CENTER" })
+	config.args.absorbStyle = ACH:Select(L["Absorb Style"], nil, 5, { NONE = L["NONE"], NORMAL = L["Normal"], REVERSED = L["Reversed"], WRAPPED = L["Wrapped"], OVERFLOW = L["Overflow"], STACKED = L["Stacked"] })
+	config.args.overflowButton = ACH:Execute(L["Max Overflow"], nil, 6, function() E.Libs.AceConfigDialog:SelectGroup("ElvUI", "unitframe", "generalOptionsGroup", "allColorsGroup", "healPrediction") end)
+	config.args.absorbTexture = ACH:SharedMediaStatusbar(L["Absorb StatusBar Texture"], nil, 7)
+	config.args.warning = ACH:Description(function()
+				if UF.db.colors.healPrediction.maxOverflow == 0 then
+					local text = L["Max Overflow is set to zero. Absorb Overflows will be hidden when using Overflow style.\nIf used together Max Overflow at zero and Overflow mode will act like Normal mode without the ending sliver of overflow."]
+					return text .. (UF.db.units[groupName].absorbPrediction.absorbStyle == "OVERFLOW" and (" |cffFF9933" .. L["You are using Overflow with Max Overflow at zero."] .. "|r ") or "")
+				end
+			end, 50, "medium", nil, nil, nil, nil, "full")
+
+	if subGroup then
+		config.inline = true
+		config.get = function(info) return UF.db.units[groupName][subGroup].absorbPrediction[info[#info]] end
+		config.set = function(info, value) UF.db.units[groupName][subGroup].absorbPrediction[info[#info]] = value updateFunc(UF, groupName, numGroup) end
+	end
+	config.order = 102
+	return config
+end
+
+local function GetOptionsTable_RoleIcons(updateFunc, groupName, numGroup)
+	local config = ACH:Group(L["Role Icon"], nil, nil, nil, function(info) return UF.db.units[groupName].roleIcon[info[#info]] end, function(info, value) UF.db.units[groupName].roleIcon[info[#info]] = value updateFunc(UF, groupName, numGroup) end)
+	config.args.enable = ACH:Toggle(L["Enable"], nil, 0)
+	config.args.options = ACH:MultiSelect(' ', nil, 1, { tank = L["Show For Tanks"], healer = L["Show For Healers"], damager = L["Show For DPS"], combatHide = L["Hide In Combat"] }, nil, nil, function(_, key) return UF.db.units[groupName].roleIcon[key] end, function(_, key, value) UF.db.units[groupName].roleIcon[key] = value updateFunc(UF, groupName, numGroup) end)
+	config.args.position = ACH:Select(L["Position"], nil, 2, positionValues)
+	config.args.attachTo = ACH:Select(L["Attach To"], L["The object you want to attach to."], 4, attachToValues)
+	config.args.size = ACH:Range(L["Size"], nil, 5, { min = 8, max = 60, step = 1 })
+	config.args.xOffset = ACH:Range(L["X-Offset"], nil, 6, { min = -300, max = 300, step = 1 })
+	config.args.yOffset = ACH:Range(L["Y-Offset"], nil, 7, { min = -300, max = 300, step = 1 })
+	config.order = 1001
+	return config
+end
+local roleValues = {}
+local function RoleIconValues()
+	wipe(roleValues)
+	for name, path in pairs(UF.rolePaths) do
+		roleValues[name] = name..' |T'..path['TANK']..':15:15:0:0:64:64:2:56:2:56|t '..'|T'..path['HEALER']..':15:15:0:0:64:64:2:56:2:56|t '..'|T'..path['DAMAGER']..':15:15:0:0:64:64:2:56:2:56|t '
+	end
+
+	return roleValues
+end
+
 E.Options.args.unitframe = {
 	type = "group",
 	name = L["UnitFrames"],
@@ -2636,7 +2685,7 @@ E.Options.args.unitframe = {
 									set = function(info, value) E.db.unitframe[info[#info]] = value UF:Update_FontStrings() end
 								}
 							}
-						}
+						},
 					}
 				},
 				frameGlowGroup = {
@@ -3453,6 +3502,27 @@ E.Options.args.unitframe = {
 								}
 							}
 						},
+						absorbPrediction = ACH:Group(L["Absorbs Prediction"], nil, 1, nil, function(info)
+								if info.type == "color" then
+									local t = E.db.unitframe.colors.absorbPrediction[info[#info]]
+									local d = P.unitframe.colors.absorbPrediction[info[#info]]
+									return t.r, t.g, t.b, t.a, d.r, d.g, d.b, d.a
+								else
+									return E.db.unitframe.colors.absorbPrediction[info[#info]]
+								end
+							end,
+							function(info, ...)
+								if info.type == "color" then
+									local r, g, b, a = ...
+									local t = E.db.unitframe.colors.absorbPrediction[info[#info]]
+									t.r, t.g, t.b, t.a = r, g, b, a
+								else
+									local value = ...
+									E.db.unitframe.colors.absorbPrediction[info[#info]] = value
+								end
+						
+								UF:Update_AllFrames()
+							end),
 						debuffHighlight = {
 							order = 9,
 							type = "group",
@@ -3625,12 +3695,42 @@ E.Options.args.unitframe = {
 							set = function(info, value) E.global.unitframe.raidDebuffIndicator.otherFilter = value UF:UpdateAllHeaders() end
 						}
 					}
-				}
+				},
+				-- roleIcons = ACH:Group(L["Role Icon"], nil, 6, nil, function(info) return E.db.unitframe.general[info[#info]][info[#info]] end, function(info, value) E.db.unitframe.general[info[#info-1]][info[#info]] = value UF:Update_AllFrames() end),
+				roleIcons = {
+					order = 6,
+					type = "group",
+					name = L["Role Icon"],
+					args = {
+						-- header = {
+						-- 	order = 1,
+						-- 	type = "header",
+						-- 	name = L["Role Icon"],
+						-- },
+						-- icons = ACH:Select(L["LFG Icons"], nil, 2, RoleIconValues)
+						icons = {
+							order = 2,
+							type = "select",
+							name = L["Dungeon & Raid Filter"],
+							values = function()
+								local t = RoleIconValues()
+								return t
+							end,
+							get = function(info) return E.db.unitframe.roleIcons.icons end,
+							set = function(info, value) E.db.unitframe.roleIcons.icons = value UF:Update_AllFrames() end
+						},
+					},
+				},
 			}
 		}
 	}
 }
 
+local colorsAbsorbPrediction = E.Options.args.unitframe.args.generalOptionsGroup.args.allColorsGroup.args.absorbPrediction.args
+colorsAbsorbPrediction.absorbs = ACH:Color(L["Absorbs"], nil, 2, true)
+colorsAbsorbPrediction.healAbsorbs = ACH:Color(L["Heal Absorbs"], nil, 2, true)
+colorsAbsorbPrediction.overabsorbs = ACH:Color(L["Over Absorbs"], nil, 3, true)
+colorsAbsorbPrediction.overhealabsorbs = ACH:Color(L["Over Heal Absorbs"], nil, 4, true)
 --Player
 E.Options.args.unitframe.args.player = {
 	order = 300,
@@ -3751,7 +3851,9 @@ E.Options.args.unitframe.args.player = {
 				}
 			}
 		},
-		healPredction = GetOptionsTable_HealPrediction(UF.CreateAndUpdateUF, "player"),
+		healPrediction = GetOptionsTable_HealPrediction(UF.CreateAndUpdateUF, "player"),
+		absorbPrediction = GetOptionsTable_AbsorbPrediction(UF.CreateAndUpdateUF, "player"),
+		roleIcon = GetOptionsTable_RoleIcons(UF.CreateAndUpdateUF, "player"),
 		customText = GetOptionsTable_CustomText(UF.CreateAndUpdateUF, "player"),
 		health = GetOptionsTable_Health(false, UF.CreateAndUpdateUF, "player"),
 		infoPanel = GetOptionsTable_InformationPanel(UF.CreateAndUpdateUF, "player"),
@@ -4375,7 +4477,9 @@ E.Options.args.unitframe.args.target = {
 				}
 			}
 		},
-		healPredction = GetOptionsTable_HealPrediction(UF.CreateAndUpdateUF, "target"),
+		healPrediction = GetOptionsTable_HealPrediction(UF.CreateAndUpdateUF, "target"),
+		absorbPrediction = GetOptionsTable_AbsorbPrediction(UF.CreateAndUpdateUF, "target"),
+		roleIcon = GetOptionsTable_RoleIcons(UF.CreateAndUpdateUF, "target"),
 		customText = GetOptionsTable_CustomText(UF.CreateAndUpdateUF, "target"),
 		health = GetOptionsTable_Health(false, UF.CreateAndUpdateUF, "target"),
 		infoPanel = GetOptionsTable_InformationPanel(UF.CreateAndUpdateUF, "target"),
@@ -4967,7 +5071,9 @@ E.Options.args.unitframe.args.focus = {
 				}
 			}
 		},
-		healPredction = GetOptionsTable_HealPrediction(UF.CreateAndUpdateUF, "focus"),
+		healPrediction = GetOptionsTable_HealPrediction(UF.CreateAndUpdateUF, "focus"),
+		absorbPrediction = GetOptionsTable_AbsorbPrediction(UF.CreateAndUpdateUF, "focus"),
+		roleIcon = GetOptionsTable_RoleIcons(UF.CreateAndUpdateUF, "focus"),
 		customText = GetOptionsTable_CustomText(UF.CreateAndUpdateUF, "focus"),
 		health = GetOptionsTable_Health(false, UF.CreateAndUpdateUF, "focus"),
 		infoPanel = GetOptionsTable_InformationPanel(UF.CreateAndUpdateUF, "focus"),
@@ -5247,7 +5353,9 @@ E.Options.args.unitframe.args.pet = {
 				}
 			}
 		},
-		healPredction = GetOptionsTable_HealPrediction(UF.CreateAndUpdateUF, "pet"),
+		healPrediction = GetOptionsTable_HealPrediction(UF.CreateAndUpdateUF, "pet"),
+		absorbPrediction = GetOptionsTable_AbsorbPrediction(UF.CreateAndUpdateUF, "pet"),
+		roleIcon = GetOptionsTable_RoleIcons(UF.CreateAndUpdateUF, "pet"),
 		customText = GetOptionsTable_CustomText(UF.CreateAndUpdateUF, "pet"),
 		health = GetOptionsTable_Health(false, UF.CreateAndUpdateUF, "pet"),
 		infoPanel = GetOptionsTable_InformationPanel(UF.CreateAndUpdateUF, "pet"),
@@ -5736,7 +5844,9 @@ E.Options.args.unitframe.args.arena = {
 				}
 			}
 		},
-		healPredction = GetOptionsTable_HealPrediction(UF.CreateAndUpdateUFGroup, "arena", 5),
+		healPrediction = GetOptionsTable_HealPrediction(UF.CreateAndUpdateUFGroup, "arena", 5),
+		absorbPrediction = GetOptionsTable_AbsorbPrediction(UF.CreateAndUpdateUFGroup, "arena", 5),
+		roleIcon = GetOptionsTable_RoleIcons(UF.CreateAndUpdateUFGroup, "arena",5),
 		customText = GetOptionsTable_CustomText(UF.CreateAndUpdateUFGroup, "arena", 5),
 		health = GetOptionsTable_Health(false, UF.CreateAndUpdateUFGroup, "arena", 5),
 		infoPanel = GetOptionsTable_InformationPanel(UF.CreateAndUpdateUFGroup, "arena", 5),
@@ -6049,75 +6159,75 @@ E.Options.args.unitframe.args.party = {
 				}
 			}
 		},
-		roleIcon = {
-			order = 700,
-			type = "group",
-			name = L["Role Icon"],
-			get = function(info) return E.db.unitframe.units.party.roleIcon[info[#info]] end,
-			set = function(info, value) E.db.unitframe.units.party.roleIcon[info[#info]] = value UF:CreateAndUpdateHeaderGroup("party") end,
-			args = {
-				header = {
-					order = 1,
-					type = "header",
-					name = L["Role Icon"]
-				},
-				enable = {
-					order = 2,
-					type = "toggle",
-					name = L["Enable"]
-				},
-				position = {
-					order = 3,
-					type = "select",
-					name = L["Position"],
-					values = positionValues
-				},
-				attachTo = {
-					order = 4,
-					type = "select",
-					name = L["Attach To"],
-					values = attachToValues
-				},
-				xOffset = {
-					order = 5,
-					type = "range",
-					name = L["X-Offset"],
-					min = -300, max = 300, step = 1
-				},
-				yOffset = {
-					order = 6,
-					type = "range",
-					name = L["Y-Offset"],
-					min = -300, max = 300, step = 1
-				},
-				size = {
-					order = 7,
-					type = "range",
-					name = L["Size"],
-					min = 4, max = 100, step = 1
-				},
-				tank = {
-					order = 8,
-					type = "toggle",
-					name = L["Show For Tanks"]
-				},
-				healer = {
-					order = 9,
-					type = "toggle",
-					name = L["Show For Healers"]
-				},
-				damager = {
-					order = 10,
-					type = "toggle",
-					name = L["Show For DPS"],
-				},
-				combatHide = {
-					order = 11,
-					type = "toggle",
-					name = L["Hide In Combat"]
-				}
-			}
-		},
+		-- roleIcon = {
+		-- 	order = 700,
+		-- 	type = "group",
+		-- 	name = L["Role Icon"],
+		-- 	get = function(info) return E.db.unitframe.units.party.roleIcon[info[#info]] end,
+		-- 	set = function(info, value) E.db.unitframe.units.party.roleIcon[info[#info]] = value UF:CreateAndUpdateHeaderGroup("party") end,
+		-- 	args = {
+		-- 		header = {
+		-- 			order = 1,
+		-- 			type = "header",
+		-- 			name = L["Role Icon"]
+		-- 		},
+		-- 		enable = {
+		-- 			order = 2,
+		-- 			type = "toggle",
+		-- 			name = L["Enable"]
+		-- 		},
+		-- 		position = {
+		-- 			order = 3,
+		-- 			type = "select",
+		-- 			name = L["Position"],
+		-- 			values = positionValues
+		-- 		},
+		-- 		attachTo = {
+		-- 			order = 4,
+		-- 			type = "select",
+		-- 			name = L["Attach To"],
+		-- 			values = attachToValues
+		-- 		},
+		-- 		xOffset = {
+		-- 			order = 5,
+		-- 			type = "range",
+		-- 			name = L["X-Offset"],
+		-- 			min = -300, max = 300, step = 1
+		-- 		},
+		-- 		yOffset = {
+		-- 			order = 6,
+		-- 			type = "range",
+		-- 			name = L["Y-Offset"],
+		-- 			min = -300, max = 300, step = 1
+		-- 		},
+		-- 		size = {
+		-- 			order = 7,
+		-- 			type = "range",
+		-- 			name = L["Size"],
+		-- 			min = 4, max = 100, step = 1
+		-- 		},
+		-- 		tank = {
+		-- 			order = 8,
+		-- 			type = "toggle",
+		-- 			name = L["Show For Tanks"]
+		-- 		},
+		-- 		healer = {
+		-- 			order = 9,
+		-- 			type = "toggle",
+		-- 			name = L["Show For Healers"]
+		-- 		},
+		-- 		damager = {
+		-- 			order = 10,
+		-- 			type = "toggle",
+		-- 			name = L["Show For DPS"],
+		-- 		},
+		-- 		combatHide = {
+		-- 			order = 11,
+		-- 			type = "toggle",
+		-- 			name = L["Hide In Combat"]
+		-- 		}
+		-- 	}
+		-- },
 		raidRoleIcons = {
 			order = 750,
 			type = "group",
@@ -6147,7 +6257,9 @@ E.Options.args.unitframe.args.party = {
 			}
 		},
 		health = GetOptionsTable_Health(true, UF.CreateAndUpdateHeaderGroup, "party"),
-		healPredction = GetOptionsTable_HealPrediction(UF.CreateAndUpdateHeaderGroup, "party"),
+		healPrediction = GetOptionsTable_HealPrediction(UF.CreateAndUpdateHeaderGroup, "party"),
+		absorbPrediction = GetOptionsTable_AbsorbPrediction(UF.CreateAndUpdateHeaderGroup, "party"),
+		roleIcon = GetOptionsTable_RoleIcons(UF.CreateAndUpdateHeaderGroup, "party"),
 		power = GetOptionsTable_Power(false, UF.CreateAndUpdateHeaderGroup, "party"),
 		infoPanel = GetOptionsTable_InformationPanel(UF.CreateAndUpdateHeaderGroup, "party"),
 		name = GetOptionsTable_Name(UF.CreateAndUpdateHeaderGroup, "party"),
@@ -6592,7 +6704,9 @@ E.Options.args.unitframe.args.raid = {
 			}
 		},
 		health = GetOptionsTable_Health(true, UF.CreateAndUpdateHeaderGroup, "raid"),
-		healPredction = GetOptionsTable_HealPrediction(UF.CreateAndUpdateHeaderGroup, "raid"),
+		healPrediction = GetOptionsTable_HealPrediction(UF.CreateAndUpdateHeaderGroup, "raid"),
+		absorbPrediction = GetOptionsTable_AbsorbPrediction(UF.CreateAndUpdateHeaderGroup, "raid"),
+		roleIcon = GetOptionsTable_RoleIcons(UF.CreateAndUpdateHeaderGroup, "raid"),
 		power = GetOptionsTable_Power(false, UF.CreateAndUpdateHeaderGroup, "raid"),
 		infoPanel = GetOptionsTable_InformationPanel(UF.CreateAndUpdateHeaderGroup, "raid"),
 		name = GetOptionsTable_Name(UF.CreateAndUpdateHeaderGroup, "raid"),
@@ -6650,75 +6764,75 @@ E.Options.args.unitframe.args.raid = {
 				}
 			}
 		},
-		roleIcon = {
-			order = 700,
-			type = "group",
-			name = L["Role Icon"],
-			get = function(info) return E.db.unitframe.units.raid.roleIcon[info[#info]] end,
-			set = function(info, value) E.db.unitframe.units.raid.roleIcon[info[#info]] = value UF:CreateAndUpdateHeaderGroup("raid") end,
-			args = {
-				header = {
-					order = 1,
-					type = "header",
-					name = L["Role Icon"]
-				},
-				enable = {
-					order = 2,
-					type = "toggle",
-					name = L["Enable"]
-				},
-				position = {
-					order = 3,
-					type = "select",
-					name = L["Position"],
-					values = positionValues
-				},
-				attachTo = {
-					order = 4,
-					type = "select",
-					name = L["Attach To"],
-					values = attachToValues
-				},
-				xOffset = {
-					order = 5,
-					type = "range",
-					name = L["X-Offset"],
-					min = -300, max = 300, step = 1
-				},
-				yOffset = {
-					order = 6,
-					type = "range",
-					name = L["Y-Offset"],
-					min = -300, max = 300, step = 1
-				},
-				size = {
-					order = 7,
-					type = "range",
-					name = L["Size"],
-					min = 4, max = 100, step = 1
-				},
-				tank = {
-					order = 8,
-					type = "toggle",
-					name = L["Show For Tanks"]
-				},
-				healer = {
-					order = 9,
-					type = "toggle",
-					name = L["Show For Healers"]
-				},
-				damager = {
-					order = 10,
-					type = "toggle",
-					name = L["Show For DPS"],
-				},
-				combatHide = {
-					order = 11,
-					type = "toggle",
-					name = L["Hide In Combat"]
-				}
-			}
-		},
+		-- roleIcon = {
+		-- 	order = 700,
+		-- 	type = "group",
+		-- 	name = L["Role Icon"],
+		-- 	get = function(info) return E.db.unitframe.units.raid.roleIcon[info[#info]] end,
+		-- 	set = function(info, value) E.db.unitframe.units.raid.roleIcon[info[#info]] = value UF:CreateAndUpdateHeaderGroup("raid") end,
+		-- 	args = {
+		-- 		header = {
+		-- 			order = 1,
+		-- 			type = "header",
+		-- 			name = L["Role Icon"]
+		-- 		},
+		-- 		enable = {
+		-- 			order = 2,
+		-- 			type = "toggle",
+		-- 			name = L["Enable"]
+		-- 		},
+		-- 		position = {
+		-- 			order = 3,
+		-- 			type = "select",
+		-- 			name = L["Position"],
+		-- 			values = positionValues
+		-- 		},
+		-- 		attachTo = {
+		-- 			order = 4,
+		-- 			type = "select",
+		-- 			name = L["Attach To"],
+		-- 			values = attachToValues
+		-- 		},
+		-- 		xOffset = {
+		-- 			order = 5,
+		-- 			type = "range",
+		-- 			name = L["X-Offset"],
+		-- 			min = -300, max = 300, step = 1
+		-- 		},
+		-- 		yOffset = {
+		-- 			order = 6,
+		-- 			type = "range",
+		-- 			name = L["Y-Offset"],
+		-- 			min = -300, max = 300, step = 1
+		-- 		},
+		-- 		size = {
+		-- 			order = 7,
+		-- 			type = "range",
+		-- 			name = L["Size"],
+		-- 			min = 4, max = 100, step = 1
+		-- 		},
+		-- 		tank = {
+		-- 			order = 8,
+		-- 			type = "toggle",
+		-- 			name = L["Show For Tanks"]
+		-- 		},
+		-- 		healer = {
+		-- 			order = 9,
+		-- 			type = "toggle",
+		-- 			name = L["Show For Healers"]
+		-- 		},
+		-- 		damager = {
+		-- 			order = 10,
+		-- 			type = "toggle",
+		-- 			name = L["Show For DPS"],
+		-- 		},
+		-- 		combatHide = {
+		-- 			order = 11,
+		-- 			type = "toggle",
+		-- 			name = L["Hide In Combat"]
+		-- 		}
+		-- 	}
+		-- },
 		raidRoleIcons = {
 			order = 750,
 			type = "group",
@@ -7011,7 +7125,9 @@ E.Options.args.unitframe.args.raid40 = {
 			}
 		},
 		health = GetOptionsTable_Health(true, UF.CreateAndUpdateHeaderGroup, "raid40"),
-		healPredction = GetOptionsTable_HealPrediction(UF.CreateAndUpdateHeaderGroup, "raid40"),
+		healPrediction = GetOptionsTable_HealPrediction(UF.CreateAndUpdateHeaderGroup, "raid40"),
+		absorbPrediction = GetOptionsTable_AbsorbPrediction(UF.CreateAndUpdateHeaderGroup, "raid40"),
+		roleIcon = GetOptionsTable_RoleIcons(UF.CreateAndUpdateHeaderGroup, "raid40"),
 		power = GetOptionsTable_Power(false, UF.CreateAndUpdateHeaderGroup, "raid40"),
 		infoPanel = GetOptionsTable_InformationPanel(UF.CreateAndUpdateHeaderGroup, "raid40"),
 		name = GetOptionsTable_Name(UF.CreateAndUpdateHeaderGroup, "raid40"),
@@ -7340,7 +7456,8 @@ E.Options.args.unitframe.args.raidpet = {
 			}
 		},
 		health = GetOptionsTable_Health(true, UF.CreateAndUpdateHeaderGroup, "raidpet"),
-		healPredction = GetOptionsTable_HealPrediction(UF.CreateAndUpdateHeaderGroup, "raidpet"),
+		healPrediction = GetOptionsTable_HealPrediction(UF.CreateAndUpdateHeaderGroup, "raidpet"),
+		absorbPrediction = GetOptionsTable_AbsorbPrediction(UF.CreateAndUpdateHeaderGroup, "raidpet"),
 		name = GetOptionsTable_Name(UF.CreateAndUpdateHeaderGroup, "raidpet"),
 		portrait = GetOptionsTable_Portrait(UF.CreateAndUpdateHeaderGroup, "raidpet"),
 		fader = GetOptionsTable_Fader(UF.CreateAndUpdateHeaderGroup, "raidpet"),
