@@ -658,7 +658,8 @@ local function UpdateFilterGroup()
 							selectedSpell = nil
 							UpdateFilterGroup()
 
-							UF:UpdateAuraWatchFromHeader("raid")
+							UF:UpdateAuraWatchFromHeader("raid10")
+							UF:UpdateAuraWatchFromHeader("raid25")
 							UF:UpdateAuraWatchFromHeader("raid40")
 							UF:UpdateAuraWatchFromHeader("party")
 							UF:UpdateAuraWatchFromHeader("raidpet", true)
@@ -680,7 +681,8 @@ local function UpdateFilterGroup()
 
 						selectedSpell = nil
 						UpdateFilterGroup()
-						UF:UpdateAuraWatchFromHeader("raid")
+						UF:UpdateAuraWatchFromHeader("raid10")
+						UF:UpdateAuraWatchFromHeader("raid25")
 						UF:UpdateAuraWatchFromHeader("raid40")
 						UF:UpdateAuraWatchFromHeader("party")
 						UF:UpdateAuraWatchFromHeader("raidpet", true)
@@ -764,7 +766,8 @@ local function UpdateFilterGroup()
 				set = function(info, value)
 					E.global.unitframe.buffwatch[E.myclass][selectedSpell][info[#info]] = value
 
-					UF:UpdateAuraWatchFromHeader("raid")
+					UF:UpdateAuraWatchFromHeader("raid10")
+					UF:UpdateAuraWatchFromHeader("raid25")
 					UF:UpdateAuraWatchFromHeader("raid40")
 					UF:UpdateAuraWatchFromHeader("party")
 					UF:UpdateAuraWatchFromHeader("raidpet", true)
@@ -829,7 +832,8 @@ local function UpdateFilterGroup()
 						set = function(info, r, g, b)
 							local t = E.global.unitframe.buffwatch[E.myclass][selectedSpell][info[#info]]
 							t.r, t.g, t.b = r, g, b
-							UF:UpdateAuraWatchFromHeader("raid")
+							UF:UpdateAuraWatchFromHeader("raid10")
+							UF:UpdateAuraWatchFromHeader("raid25")
 							UF:UpdateAuraWatchFromHeader("raid40")
 							UF:UpdateAuraWatchFromHeader("party")
 							UF:UpdateAuraWatchFromHeader("raidpet", true)
@@ -856,7 +860,8 @@ local function UpdateFilterGroup()
 							E.global.unitframe.buffwatch[E.myclass][selectedSpell].textColor = E.global.unitframe.buffwatch[E.myclass][selectedSpell].textColor or {}
 							local t = E.global.unitframe.buffwatch[E.myclass][selectedSpell].textColor
 							t.r, t.g, t.b = r, g, b
-							UF:UpdateAuraWatchFromHeader("raid")
+							UF:UpdateAuraWatchFromHeader("raid10")
+							UF:UpdateAuraWatchFromHeader("raid25")
 							UF:UpdateAuraWatchFromHeader("raid40")
 							UF:UpdateAuraWatchFromHeader("party")
 							UF:UpdateAuraWatchFromHeader("raidpet", true)
@@ -913,7 +918,8 @@ local function UpdateFilterGroup()
 							selectedSpell = nil
 							UpdateFilterGroup()
 
-							UF:UpdateAuraWatchFromHeader("raid")
+							UF:UpdateAuraWatchFromHeader("raid10")
+							UF:UpdateAuraWatchFromHeader("raid25")
 							UF:UpdateAuraWatchFromHeader("raid40")
 							UF:UpdateAuraWatchFromHeader("party")
 						end
@@ -934,7 +940,8 @@ local function UpdateFilterGroup()
 
 						selectedSpell = nil
 						UpdateFilterGroup()
-						UF:UpdateAuraWatchFromHeader("raid")
+						UF:UpdateAuraWatchFromHeader("raid10")
+						UF:UpdateAuraWatchFromHeader("raid25")
 						UF:UpdateAuraWatchFromHeader("raid40")
 						UF:UpdateAuraWatchFromHeader("party")
 					end,
@@ -1022,7 +1029,8 @@ local function UpdateFilterGroup()
 				set = function(info, value)
 					E.db.unitframe.filters.buffwatch[selectedSpell][info[#info]] = value
 
-					UF:UpdateAuraWatchFromHeader("raid")
+					UF:UpdateAuraWatchFromHeader("raid10")
+					UF:UpdateAuraWatchFromHeader("raid25")
 					UF:UpdateAuraWatchFromHeader("raid40")
 					UF:UpdateAuraWatchFromHeader("party")
 				end,
@@ -1088,7 +1096,8 @@ local function UpdateFilterGroup()
 						set = function(info, r, g, b)
 							local t = E.db.unitframe.filters.buffwatch[selectedSpell][info[#info]]
 							t.r, t.g, t.b = r, g, b
-							UF:UpdateAuraWatchFromHeader("raid")
+							UF:UpdateAuraWatchFromHeader("raid10")
+							UF:UpdateAuraWatchFromHeader("raid25")
 							UF:UpdateAuraWatchFromHeader("raid40")
 							UF:UpdateAuraWatchFromHeader("party")
 						end
@@ -1115,7 +1124,8 @@ local function UpdateFilterGroup()
 						set = function(info, r, g, b)
 							local t = E.db.unitframe.filters.buffwatch[selectedSpell][info[#info]]
 							t.r, t.g, t.b = r, g, b
-							UF:UpdateAuraWatchFromHeader("raid")
+							UF:UpdateAuraWatchFromHeader("raid10")
+							UF:UpdateAuraWatchFromHeader("raid25")
 							UF:UpdateAuraWatchFromHeader("raid40")
 							UF:UpdateAuraWatchFromHeader("party")
 						end

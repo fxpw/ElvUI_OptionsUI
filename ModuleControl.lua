@@ -389,10 +389,15 @@ local function CreateUnitframesConfig()
 				type = "toggle",
 				name = L["PARTY"]
 			},
-			["raid"] = {
+			["raid10"] = {
 				order = 10,
 				type = "toggle",
-				name = L["RAID"]
+				name = L["Raid-10"]
+			},
+			["raid25"] = {
+				order = 11,
+				type = "toggle",
+				name = L["Raid-25"]
 			},
 			["raid40"] = {
 				order = 11,
