@@ -1033,7 +1033,21 @@ L["The display format of the currency icons that get displayed below the main ba
 L["The display format of the money text that is shown at the top of the main bag."] = "Формат отображения текста золота в верхней части основной сумки."
 L["The display format of the money text that is shown in the gold datatext and its tooltip."] = "Формат отображения золота на инфо-тексте золота и его подсказке."
 L["The first button anchors itself to this point on the bar."] = "Первая кнопка прикрепляется к этой точке панели"
-L["The following macro must be true in order for the group to be shown, in addition to any filter that may already be set."] = "Следующий фильтр должен быть верен для отображения группы в дополнение к любому другому уже установленному фильтру."
+L["The following macro must be true in order for the group to be shown, in addition to any filter that may already be set."] = [[Следующий фильтр должен быть верен для отображения группы в дополнение к любому другому уже установленному фильтру.
+
+@unit(target,focus,partyN,raidN)
+exists - существует
+combat - в бою
+dead - цель мертва
+indoors - в помещении
+outdoors - вне помещения
+mod:shift/ctrl/alt - нажата клавиша
+stance:0/1/2/.../n или form:0/.../n - в определенной стойке
+stealth - крадется(мышь)
+vehicleui - игрок в транспорте
+
+т.д, все варианты можно посмотреть погуглив wowwiki macro
+]]
 L["The font that appears on the text above players heads. |cffFF0000WARNING: This requires a game restart or re-log for this change to take effect.|r"] = "Шрифт, которым будет написан текст над головами игроков. |cffFF0000ВНИМАНИЕ: Необходим перезапуск игры или релог для начала действия этой настройки.|r"
 L["The font that combat text will use. |cffFF0000WARNING: This requires a game restart or re-log for this change to take effect.|r"] = "Шрифт текста боя. |cffFF0000ВНИМАНИЕ: это действие потребует перезапуска игры или повторного входа в мир.|r"
 L["The font that the core of the UI will use."] = "Шрифт для основного интерфейса."
