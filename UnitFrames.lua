@@ -1793,15 +1793,15 @@ local function GetOptionsTable_RaidDebuff(updateFunc, groupName)
 						name = L["COLOR"],
 						hasAlpha = true,
 						get = function(info)
-							local c = E.db.unitframe.units.raid.rdebuffs.duration.color
-							local d = P.unitframe.units.raid.rdebuffs.duration.color
+							local c = E.db.unitframe.units[groupName].rdebuffs.duration.color
+							local d = P.unitframe.units[groupName].rdebuffs.duration.color
 							return c.r, c.g, c.b, c.a, d.r, d.g, d.b, d.a
 						end,
 						set = function(info, r, g, b, a)
-							local c = E.db.unitframe.units.raid.rdebuffs.duration.color
+							local c = E.db.unitframe.units[groupName].rdebuffs.duration.color
 							c.r, c.g, c.b, c.a = r, g, b, a
-							UF:CreateAndUpdateHeaderGroup("raid10")
-							UF:CreateAndUpdateHeaderGroup("raid25")
+							UF:CreateAndUpdateHeaderGroup(groupName)
+							-- UF:CreateAndUpdateHeaderGroup("raid25")
 						end
 					}
 				}
