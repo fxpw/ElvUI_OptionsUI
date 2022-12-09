@@ -5363,7 +5363,7 @@ E.Options.args.unitframe.args.pet = {
 		},
 		healPrediction = GetOptionsTable_HealPrediction(UF.CreateAndUpdateUF, "pet"),
 		absorbPrediction = GetOptionsTable_AbsorbPrediction(UF.CreateAndUpdateUF, "pet"),
-		roleIcon = GetOptionsTable_RoleIcons(UF.CreateAndUpdateUF, "pet"),
+		-- roleIcon = GetOptionsTable_RoleIcons(UF.CreateAndUpdateUF, "pet"),
 		customText = GetOptionsTable_CustomText(UF.CreateAndUpdateUF, "pet"),
 		health = GetOptionsTable_Health(false, UF.CreateAndUpdateUF, "pet"),
 		infoPanel = GetOptionsTable_InformationPanel(UF.CreateAndUpdateUF, "pet"),
