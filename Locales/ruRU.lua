@@ -975,7 +975,7 @@ L["Stable"] = "Стойла"
 L["Stack Counter"] = "Количество стаков"
 L["Stack Text Position"] = "Позиция текста стаков"
 L["Stack Text X-Offset"] = "Отступ текста стаков по X"
-L["Stack Text Y-Offset"] = "Отступ текста стаков по X"
+L["Stack Text Y-Offset"] = "Отступ текста стаков по Y"
 L["Stack Threshold"] = "Стаки"
 L["Start Near Center"] = "Начинать от центра"
 L["StatusBar Texture"] = "Текстура полос состояния"
@@ -1290,11 +1290,33 @@ NOTE: This setting will NOT fix the issue with clicking or mousing over nameplat
 
 L[ [=[This works like a macro, you can run different situations to get the actionbar to page differently.
  Example: '[combat] 2;']=] ] = [=[Работает как макрос. Вы можете задать различные условия для отображения разных панелей.
- Пример: '[combat] 2;']=]
+combat - в бою
+mod:shift/ctrl/alt - нажата клавиша
+stance:0/1/2/.../n или form:0/.../n или bonusbar:1/2/.../n - в определенной стойке
+stealth - крадется(мышь)
+vehicleui - игрок в транспорте
+
+Примеры:
+'[combat] 2;'
+'[bonusbar:1,nostealth]2;[bonusbar:1,stealth]3'
+
+т.д, все варианты можно посмотреть погуглив wowwiki macro
+]=]
 
 L[ [=[This works like a macro, you can run different situations to get the actionbar to show/hide differently.
- Example: '[combat] show;hide']=] ] = [=[Работает как макрос. Вы можете задать различные условия для показа/скрытия панели.
- Пример: '[combat] show;hide']=]
+ Example: '[combat] show;hide']=] ] = [=[Работает как макрос. Вы можете задать различные условия для отображения разных панелей.
+ combat - в бою
+ mod:shift/ctrl/alt - нажата клавиша
+ stance:0/1/2/.../n или form:0/.../n или bonusbar:1/2/.../n - в определенной стойке
+ stealth - крадется(мышь)
+ vehicleui - игрок в транспорте
+ 
+ Примеры:
+ '[combat] 2;'
+ '[bonusbar:1,nostealth]2;[bonusbar:1,stealth]3'
+ 
+ т.д, все варианты можно посмотреть погуглив wowwiki macro
+ ]=]
 
 L[ [=[Specify a filename located inside the World of Warcraft directory. Textures folder that you wish to have set as a panel background.
 
