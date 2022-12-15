@@ -121,15 +121,35 @@ local DB = E:GetModule("DataBars")
 		name = "Кнопки действий",
 		desc = L["TOGGLESKIN_DESC"]
 	}
-	E.Options.args.skins.args.cleanExtraButton = {
-		order = 9,
+	-- E.Options.args.skins.args.cleanExtraButton = {
+	-- 	order = 9,
+	-- 	type = "toggle",
+	-- 	name = "Упрощенные кнопки действий",
+	-- 	get = function(info) return E.private.skins.cleanExtraButton end,
+	-- 	set = function(info, value)
+	-- 		E.private.skins.cleanExtraButton = value
+	-- 		E:StaticPopup_Show("PRIVATE_RL")
+	-- 	end
+	-- }
+	E.Options.args.skins.args.blizzard.args.toyCollection = {
 		type = "toggle",
-		name = E.NewSign.."Упрощенные кнопки действий",
-		get = function(info) return E.private.skins.cleanExtraButton end,
-		set = function(info, value)
-			E.private.skins.cleanExtraButton = value
-			E:StaticPopup_Show("PRIVATE_RL")
-		end
+		name = "Игрушки",
+		desc = L["TOGGLESKIN_DESC"]
+	}
+	E.Options.args.skins.args.blizzard.args.legacyCollection = {
+		type = "toggle",
+		name = "Наследие",
+		desc = L["TOGGLESKIN_DESC"]
+	}
+	E.Options.args.skins.args.blizzard.args.blackMarket = {
+		type = "toggle",
+		name = "Черный магазин",
+		desc = L["TOGGLESKIN_DESC"]
+	}
+	E.Options.args.skins.args.blizzard.args.raidManager = {
+		type = "toggle",
+		name = "Менеджер рейда",
+		desc = L["TOGGLESKIN_DESC"]
 	}
 
 	E.Options.args.databars.args.honor = {
