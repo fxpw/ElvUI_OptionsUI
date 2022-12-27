@@ -25,7 +25,7 @@
 -- @class file
 -- @name AceGUI-3.0
 -- @release $Id$
-local ACEGUI_MAJOR, ACEGUI_MINOR = "AceGUI-3.0", 41
+local ACEGUI_MAJOR, ACEGUI_MINOR = "AceGUI-3.0", 42
 local AceGUI, oldminor = LibStub:NewLibrary(ACEGUI_MAJOR, ACEGUI_MINOR)
 
 if not AceGUI then return end -- No upgrade needed
@@ -516,14 +516,14 @@ do
 		end
 	end
 
-	local function FrameResize(this)
+	local function FrameResize(this, width, height)
 		local self = this.obj
 		if this:GetWidth() and this:GetHeight() then
 			if self.OnWidthSet then
-				self:OnWidthSet(this:GetWidth())
+				self:OnWidthSet(width or this:GetWidth())
 			end
 			if self.OnHeightSet then
-				self:OnHeightSet(this:GetHeight())
+				self:OnHeightSet(height or this:GetHeight())
 			end
 		end
 	end
