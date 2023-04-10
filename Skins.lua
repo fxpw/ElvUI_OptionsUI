@@ -302,6 +302,11 @@ E.Options.args.skins = {
 					type = "toggle",
 					name = L["World State Frame"],
 					desc = L["TOGGLESKIN_DESC"]
+				},
+				upgrade = {
+					type = "toggle",
+					name = L["UpgradeFrame"],
+					desc = L["TOGGLESKIN_DESC"]
 				}
 			}
 		}
