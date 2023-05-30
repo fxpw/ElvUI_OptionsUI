@@ -1481,3 +1481,4 @@ L["Custom color your Text: replace the XXXXXX with a Hex color code"] = "Цве�
 
 --- search ru
 L["Search"] = "|cff00ff22Поиск|r"
+L["СlearAuraClickMiddleBitton"] = "Снимать ауру при клике СКМ"

@@ -2694,6 +2694,12 @@ E.Options.args.unitframe = {
 								}
 							}
 						},
+						clearAuraClickMiddleBitton = {
+							order = 9,
+							type = "toggle",
+							name = L["СlearAuraClickMiddleBitton"],
+							desc = L["СlearAuraClickMiddleBitton"],
+						},
 					}
 				},
 				frameGlowGroup = {
