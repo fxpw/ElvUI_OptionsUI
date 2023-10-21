@@ -12,7 +12,13 @@ local HideLeftChat = HideLeftChat
 local HideRightChat = HideRightChat
 
 local datatexts = {}
-
+local orders = {
+	["farleft"] = 1,
+	["left"] = 2,
+	["middle"] = 3,
+	["right"] = 4,
+	["farright"] = 5,
+}
 function DT:PanelLayoutOptions()
 	for name, data in pairs(DT.RegisteredDataTexts) do
 		datatexts[name] = data.localizedName or L[name]
@@ -36,10 +42,12 @@ function DT:PanelLayoutOptions()
 				args = {}
 			}
 			for option in pairs(tab) do
+				
 				table[pointLoc].args[option] = {
 					type = "select",
 					name = L[option] or option:upper(),
 					values = datatexts,
+					order = orders[option],
 					get = function(info) return E.db.datatexts.panels[pointLoc][info[#info]] end,
 					set = function(info, value) E.db.datatexts.panels[pointLoc][info[#info]] = value DT:LoadDataTexts() end
 				}
