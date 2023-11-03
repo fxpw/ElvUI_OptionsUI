@@ -1017,12 +1017,12 @@ local function BuildABConfig()
 				type = "toggle",
 				name = L["Enable"],
 			},
-			buttonsize = {
+			size = {
 				order = 2,
 				type = "range",
 				name = L["Button Size"],
 				desc = L["The size of the action buttons."],
-				min = 15, max = 60, step = 1,
+				min = 15, max = 80, step = 1,
 			},
 			strata = {
 				order = 3,
