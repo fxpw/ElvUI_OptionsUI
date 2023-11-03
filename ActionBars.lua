@@ -427,6 +427,7 @@ local function BuildABConfig()
 			}
 		}
 	end
+
 	group.barPet = {
 		order = 3,
 		type = "group",
@@ -1002,6 +1003,48 @@ local function BuildABConfig()
 			end
 		end
 	end
+	group.vehicleExitButton = {
+		order = 19,
+		type = "group",
+		name = L["Fly Vehicle Exit"],
+		guiInline = false,
+		disabled = function() return not E.ActionBars.Initialized end,
+		get = function(info) return E.db.actionbar.vehicleExitButton[info[#info]] end,
+		set = function(info, value) E.db.actionbar.vehicleExitButton[info[#info]] = value AB:UpdateFlyDismountButton() end,
+		args = {
+			enable = {
+				order = 1,
+				type = "toggle",
+				name = L["Enable"],
+			},
+			buttonsize = {
+				order = 2,
+				type = "range",
+				name = L["Button Size"],
+				desc = L["The size of the action buttons."],
+				min = 15, max = 60, step = 1,
+			},
+			strata = {
+				order = 3,
+				type = "select",
+				name = L["Frame Strata"],
+				values = {
+					["BACKGROUND"] = "BACKGROUND",
+					["LOW"] = "LOW",
+					["MEDIUM"] = "MEDIUM",
+					["HIGH"] = "HIGH",
+					["DIALOG"] = "DIALOG",
+					["TOOLTIP"] = "TOOLTIP"
+				}
+			},
+			level = {
+				order = 4,
+				type = "range",
+				name = L["Frame Level"],
+				min = 2, max = 128, step = 1
+			}
+		}
+	}
 end
 
 local shamanOrder = E.myclass ~= "SHAMAN" and 1 or 0

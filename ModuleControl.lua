@@ -43,7 +43,13 @@ local function CreateActionbarsConfig()
 		get = function(info) return E.global.profileCopy.actionbar[info[#info]] end,
 		set = function(info, value) E.global.profileCopy.actionbar[info[#info]] = value end
 	}
-
+	config.args.vehicleExitButton = {
+		order = 12,
+		type = "toggle",
+		name = L["Fly Vehicle Exit"],
+		get = function(info) return E.global.profileCopy.actionbar[info[#info]] end,
+		set = function(info, value) E.global.profileCopy.actionbar[info[#info]] = value end
+	}
 	return config
 end
 
