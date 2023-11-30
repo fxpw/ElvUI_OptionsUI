@@ -1469,8 +1469,8 @@ L["LeftChatDataPanel"] = "Левая панель чата"
 L["RightChatDataPanel"] = "Правая панель чата"
 L["RightMiniPanel"] = "Правая панель (у карты)"
 
-L["left"] = "Слева"
-L["right"] = "Справа"
+L["left"] = "Слево"
+L["right"] = "Справо"
 L["middle"] = "Средняя"
 
 L["UpgradeFrame"] = "Преобразование"
