@@ -5,7 +5,7 @@
 ## Notes: Options for ElvUI
 ## RequiredDeps: ElvUI
 ## LoadOnDemand: 1
-## X-Sirus-Update: https://github.com/fxpw/ElvUI_OptionsUI
+## X-Sirus-Update: https://github.com/fxpw/ElvUI_OptionsUI/tree/master
 
 Libraries\Load_Libraries.xml
 Locales\Load_locales.xml
