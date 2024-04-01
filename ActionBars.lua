@@ -795,8 +795,19 @@ local function BuildABConfig()
 				min = 0, max = 1, step = 0.1,
 				disabled = function() return not E.db.actionbar.microbar.enabled end
 			},
-			visibility = {
+			dfskin = {
 				order = 10,
+				type = "toggle",
+				name = L["DF skin"],
+				desc = L["Replaces microbar icons with DF icons."],
+				set = function(info, value)
+					E.db.actionbar.microbar.dfskin = value
+					E:StaticPopup_Show("CONFIG_RL")
+				end,
+				disabled = function() return not E.db.actionbar.microbar.enabled end
+			},
+			visibility = {
+				order = 11,
 				type = "input",
 				name = L["Visibility State"],
 				desc = L["This works like a macro, you can run different situations to get the actionbar to show/hide differently.\n Example: '[combat] show;hide'"],
