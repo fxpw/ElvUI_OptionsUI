@@ -94,8 +94,8 @@ E.Options.args.general = {
 					type = "toggle",
 					name = L["stillOnCombatText"],
 					desc = L["stillOnCombatTextdesc"],
-					get = function(info) return E.private.general.pixelPerfect end,
-					set = function(info, value) E.private.general.pixelPerfect = value E:StaticPopup_Show("PRIVATE_RL") end
+					get = function(info) return E.private.general.stillOnCombatText end,
+					set = function(info, value) E.private.general.stillOnCombatText = value E:StaticPopup_Show("PRIVATE_RL") end
 				},
 				eyefinity = {
 					order = 8,
