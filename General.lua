@@ -720,32 +720,38 @@ E.Options.args.general = {
 					name = L["Accept Invites"],
 					desc = L["Automatically accept invites from guild/friends."]
 				},
-				autoRoll = {
+				hideTutorialFrames = {
 					order = 5,
+					type = "toggle",
+					name = L["hideTutorialFrames"],
+					desc = L["hideTutorialFramesdesc"]
+				},
+				autoRoll = {
+					order = 6,
 					type = "toggle",
 					name = L["Auto Greed/DE"],
 					desc = L["Automatically select greed or disenchant (when available) on green quality items. This will only work if you are the max level."],
 					disabled = function() return not E.private.general.lootRoll end
 				},
 				spacer = {
-					order = 6,
+					order = 7,
 					type = "description",
 					name = ""
 				},
 				updateAlert = {
-					order = 7,
+					order = 8,
 					type = "toggle",
 					name = "Выкл Уведомление об обновлении",
 					desc = "Выключает уведомления об обновлениях",
 					-- disabled = function() return not E.private.general.lootRoll end
 				},
 				spacer1 = {
-					order = 8,
+					order = 9,
 					type = "description",
 					name = ""
 				},
 				showWhenInCombat = {
-					order = 9,
+					order = 10,
 					type = "toggle",
 					name = "!!!!!!! Открывать настройки в бою !!!!!!!",
 					desc = "!!!!!!! Позволяет открывать настройки в бою, только для продвинутых юзеров !!!!!!!",
