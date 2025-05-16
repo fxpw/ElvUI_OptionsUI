@@ -897,7 +897,7 @@ local function BuildABConfig()
 					disabled = function() return not E.db.actionbar["bar"..i].enabled end
 				},
 				point = {
-					order = 9,
+					order = 10,
 					type = "select",
 					name = L["Anchor Point"],
 					desc = L["The first button anchors itself to this point on the bar."],
