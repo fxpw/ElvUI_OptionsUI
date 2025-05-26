@@ -890,8 +890,14 @@ local function BuildABConfig()
 					desc = L["Inherit the global fade, mousing over, targetting, setting focus, losing health, entering combat will set the remove transparency. Otherwise it will use the transparency level in the general actionbar settings for global fade alpha."],
 					disabled = function() return not E.db.actionbar["bar"..i].enabled end
 				},
-				point = {
+				cropiconsbar = {
 					order = 9,
+					type = "toggle",
+					name = L["Crop Icons"],
+					disabled = function() return not E.db.actionbar["bar"..i].enabled end
+				},
+				point = {
+					order = 10,
 					type = "select",
 					name = L["Anchor Point"],
 					desc = L["The first button anchors itself to this point on the bar."],
