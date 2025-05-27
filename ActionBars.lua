@@ -424,8 +424,17 @@ local function BuildABConfig()
 					step = 1,
 					disabled = function() return not E.db.actionbar.barTotem.enabled end
 				},
-				buttonspacing = {
+				cropiconsbar = {
 					order = 8,
+					type = "range",
+					name = L["Crop Icons"],
+					min = 0.5,
+					max = 1,
+					step = 0.01,
+					disabled = function() return not E.db.actionbar.barTotem.enabled end
+				},
+				buttonspacing = {
+					order = 9,
 					type = "range",
 					name = L["Button Spacing"],
 					desc = L["The spacing between buttons."],
@@ -435,7 +444,7 @@ local function BuildABConfig()
 					disabled = function() return not E.db.actionbar.barTotem.enabled end
 				},
 				flyoutSpacing = {
-					order = 9,
+					order = 10,
 					type = "range",
 					name = L["Flyout Spacing"],
 					desc = L["The spacing between buttons."],
@@ -445,7 +454,7 @@ local function BuildABConfig()
 					disabled = function() return not E.db.actionbar.barTotem.enabled end
 				},
 				alpha = {
-					order = 10,
+					order = 11,
 					type = "range",
 					name = L["Alpha"],
 					isPercent = true,
@@ -455,7 +464,7 @@ local function BuildABConfig()
 					disabled = function() return not E.db.actionbar.barTotem.enabled end
 				},
 				visibility = {
-					order = 11,
+					order = 12,
 					type = "input",
 					name = L["Visibility State"],
 					desc = L
@@ -1046,7 +1055,7 @@ local function BuildABConfig()
 					disabled = function() return not E.db.actionbar["bar" .. i].enabled end
 				},
 				point = {
-					order = 9,
+					order = 10,
 					type = "select",
 					name = L["Anchor Point"],
 					desc = L["The first button anchors itself to this point on the bar."],
