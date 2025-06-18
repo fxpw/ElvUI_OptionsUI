@@ -998,6 +998,14 @@ local function GetOptionsTable_Power(hasDetatchOption, updateFunc, groupName, nu
 			}
 		}
 	end
+	if groupName == "player" then
+		config.args.EnergyManaRegen = {
+			order = 14,
+			type = "toggle",
+			name = L["Energy/Mana Regen Tick"],
+			desc = L["Enables the five-second-rule ticks for Mana classes and Energy ticks for Rogues and Druids."],
+		}
+	end
 
 	if hasStrataLevel then
 		config.args.strataAndLevel = {
