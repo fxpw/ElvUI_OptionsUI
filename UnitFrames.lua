@@ -1006,6 +1006,12 @@ local function GetOptionsTable_Power(hasDetatchOption, updateFunc, groupName, nu
 			desc = L["Enables the five-second-rule ticks for Mana classes and Energy ticks for Rogues and Druids."],
 		}
 	end
+	config.args.PowerCostDisplay = {
+		order = 15,
+		type = "toggle",
+		name = L["PowerCostDisplay"],
+		desc = L["PowerCostDisplaydesc"],
+	}
 
 	if hasStrataLevel then
 		config.args.strataAndLevel = {
