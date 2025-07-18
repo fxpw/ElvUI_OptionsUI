@@ -518,13 +518,13 @@ E.Options.args.general = {
 					type = "header",
 					name = L["Objective Frame"],
 				},
-				watchFrameAutoHide = {
-					order = 2,
-					type = "toggle",
-					name = L["Auto Hide"],
-					desc = L["Automatically hide the objetive frame during boss or arena fights."],
-					set = function(info, value) E.db.general.watchFrameAutoHide = value; Blizzard:SetObjectiveFrameAutoHide() end,
-				},
+				-- watchFrameAutoHide = {
+				-- 	order = 2,
+				-- 	type = "toggle",
+				-- 	name = L["Auto Hide"],
+				-- 	desc = L["Automatically hide the objetive frame during boss or arena fights."],
+				-- 	set = function(info, value) E.db.general.watchFrameAutoHide = value; Blizzard:SetObjectiveFrameAutoHide() end,
+				-- },
 				watchFrameHeight = {
 					order = 3,
 					type = "range",
