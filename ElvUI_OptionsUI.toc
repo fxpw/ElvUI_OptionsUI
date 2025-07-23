@@ -1,7 +1,7 @@
 ## Interface: 30300
 ## Author: Elv, Bunny, fxpw
 # change also Init.lua:367 in elvui-core
-## Version: 1.21
+## Version: 1.22
 ## Title: |cff1784d1E|r|cffe5e3e3lvUI|r |cff1784d1O|r|cffe5e3e3ptionsUI|r for sirus
 ## Notes: Options for ElvUI
 ## RequiredDeps: ElvUI
