@@ -518,20 +518,29 @@ E.Options.args.general = {
 					type = "header",
 					name = L["Objective Frame"],
 				},
-				-- watchFrameAutoHide = {
-				-- 	order = 2,
-				-- 	type = "toggle",
-				-- 	name = L["Auto Hide"],
-				-- 	desc = L["Automatically hide the objetive frame during boss or arena fights."],
-				-- 	set = function(info, value) E.db.general.watchFrameAutoHide = value; Blizzard:SetObjectiveFrameAutoHide() end,
-				-- },
-				watchFrameHeight = {
+				objectiveFrameAutoHide = {
+					order = 2,
+					type = "toggle",
+					name = L["Auto Hide"],
+					desc = L["Automatically hide the objetive frame during boss or arena fights."],
+					set = function(info, value)
+						E.db.general.objectiveFrameAutoHide = value; Blizzard:ObjectiveTracker_AutoHide()
+					end,
+				},
+				objectiveFrameAutoHideInKeystone = {
 					order = 3,
+					type = "toggle",
+					name = L["Hide In Keystone"],
+					desc = L["Automatically hide the objective frame during boss fights while you are running a key."],
+					hidden = function () return not E.db.general.objectiveFrameAutoHide end;
+				},
+				objectiveFrameHeight = {
+					order = 4,
 					type = "range",
 					name = L["Objective Frame Height"],
 					desc = L["Height of the objective tracker. Increase size to be able to see more objectives."],
 					min = 400, max = E.screenheight, step = 1,
-					set = function(info, value) E.db.general.watchFrameHeight = value; Blizzard:SetWatchFrameHeight() end,
+						set = function(info, value) E.db.general.objectiveFrameHeight = value; Blizzard:ObjectiveTracker_SetHeight() end,
 				},
 			},
 		},

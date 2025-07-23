@@ -288,9 +288,9 @@ E.Options.args.skins = {
 					name = L["Tutorial Frame"],
 					desc = L["TOGGLESKIN_DESC"]
 				},
-				watchframe = {
+				objectiveTracker = {
 					type = "toggle",
-					name = L["Watch Frame"],
+					name = L["Objective Frame"],
 					desc = L["TOGGLESKIN_DESC"]
 				},
 				worldmap = {
