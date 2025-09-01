@@ -100,6 +100,11 @@ local DB = E:GetModule("DataBars")
 		name = "Путеводитель",
 		desc = L["TOGGLESKIN_DESC"]
 	}
+	E.Options.args.skins.args.blizzard.args.hardcore = {
+		type = "toggle",
+		name = "Хардкор",
+		desc = L["TOGGLESKIN_DESC"]
+	}
 	E.Options.args.skins.args.blizzard.args.roulette = {
 		type = "toggle",
 		name = ROULETTE_TITLE,
