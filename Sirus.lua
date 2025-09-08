@@ -146,6 +146,11 @@ local DB = E:GetModule("DataBars")
 		name = "Наследие",
 		desc = L["TOGGLESKIN_DESC"]
 	}
+	E.Options.args.skins.args.blizzard.args.battlePass = {
+		type = "toggle",
+		name = "Боевой пропуск",
+		desc = L["TOGGLESKIN_DESC"]
+	}
 	E.Options.args.skins.args.blizzard.args.blackMarket = {
 		type = "toggle",
 		name = "Черный магазин",
