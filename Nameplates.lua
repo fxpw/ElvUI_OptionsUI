@@ -269,6 +269,8 @@ local function GetUnitSettings(unit, name)
 			E.db.nameplates.units[unit].health[info[#info]] = value
 			NP:ConfigureAll()
 		end)
+	group.args.healthGroup.args.enable                                               = ACH:Toggle(L["Enable"], nil, 1)
+	group.args.healthGroup.args.useClassColor                                        = ACH:Toggle(L["Use Class Color"], nil, 2)
 	group.args.healthGroup.args.height                                               = ACH:Range(L["Height"], nil, 3,
 		{ min = minHeight, max = MaxHeight(unit), step = 1 })
 	group.args.healthGroup.args.width                                                = ACH:Execute(L["Width"], nil, 4,
