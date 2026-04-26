@@ -6,6 +6,9 @@ Engine[1] = {Blank = function() return '' end }
 Engine[2] = E.Libs.ACL:GetLocale("ElvUI", E.global.general.locale or "enUS")
 local C, L = Engine[1], Engine[2]
 local format = string.format
+local gsub, strmatch = string.gsub, string.match
+local tremove, tinsert, tconcat = table.remove, table.insert, table.concat
+local strsplit, pairs, ipairs, next = strsplit, pairs, ipairs, next
 
 C.Values = {
 	FontFlags = {
@@ -13,8 +16,79 @@ C.Values = {
 		["OUTLINE"] = "OUTLINE",
 		["MONOCHROMEOUTLINE"] = "MONOCROMEOUTLINE",
 		["THICKOUTLINE"] = "THICKOUTLINE"
-	}
+	},
+	AllPositions = { LEFT = 'LEFT', RIGHT = 'RIGHT', TOP = 'TOP', BOTTOM = 'BOTTOM', CENTER = 'CENTER' },
+	AllPoints = { TOPLEFT = 'TOPLEFT', LEFT = 'LEFT', BOTTOMLEFT = 'BOTTOMLEFT', RIGHT = 'RIGHT', TOPRIGHT = 'TOPRIGHT', BOTTOMRIGHT = 'BOTTOMRIGHT', TOP = 'TOP', BOTTOM = 'BOTTOM', CENTER = 'CENTER' },
+	Anchors = { TOPLEFT = 'TOPLEFT', LEFT = 'LEFT', BOTTOMLEFT = 'BOTTOMLEFT', RIGHT = 'RIGHT', TOPRIGHT = 'TOPRIGHT', BOTTOMRIGHT = 'BOTTOMRIGHT', TOP = 'TOP', BOTTOM = 'BOTTOM' },
+	SmartAuraPositions = {
+		DISABLED = L["Disable"],
+		BUFFS_ON_DEBUFFS = L["Buffs on Debuffs"],
+		DEBUFFS_ON_BUFFS = L["Debuffs on Buffs"],
+		FLUID_BUFFS_ON_DEBUFFS = L["Fluid Buffs on Debuffs"],
+		FLUID_DEBUFFS_ON_BUFFS = L["Fluid Debuffs on Buffs"],
+	},
 }
+
+do
+	C.StateSwitchGetText = function(_, TEXT)
+		local friend, enemy = strmatch(TEXT, '^Friendly:([^,]*)'), strmatch(TEXT, '^Enemy:([^,]*)')
+		local text = friend or enemy or TEXT
+		local SF, localized = E.global.unitframe.specialFilters and E.global.unitframe.specialFilters[text], L[text]
+		local blockB, blockS, blockT
+		if SF and localized and text:match('^block') then blockB, blockS, blockT = localized:match('^%[(.-)](%s?)(.+)') end
+		local filterText = (blockB and format('|cFF999999%s|r%s%s', blockB, blockS, blockT)) or localized or text
+		return (friend and format('|cFF33FF33%s|r %s', _G.FRIEND, filterText)) or (enemy and format('|cFFFF3333%s|r %s', _G.ENEMY, filterText)) or filterText
+	end
+
+	local function filterMatch(s, v)
+		local m1, m2, m3, m4 = '^'..v..'$', '^'..v..',', ','..v..'$', ','..v..','
+		return (strmatch(s, m1) and m1) or (strmatch(s, m2) and m2) or (strmatch(s, m3) and m3) or (strmatch(s, m4) and v..',')
+	end
+
+	C.SetFilterPriority = function(db, groupName, auraType, value, remove, movehere, friendState)
+		if not auraType or not value then return end
+		local filter = db[groupName] and db[groupName][auraType] and db[groupName][auraType].priority
+		if not filter then return end
+		local found = filterMatch(filter, E:EscapeString(value))
+		if found and movehere then
+			local tbl, sv, sm = {strsplit(',', filter)}
+			for i in ipairs(tbl) do
+				if tbl[i] == value then sv = i elseif tbl[i] == movehere then sm = i end
+				if sv and sm then break end
+			end
+			tremove(tbl, sm)
+			tinsert(tbl, sv, movehere)
+			db[groupName][auraType].priority = tconcat(tbl, ',')
+		elseif found and friendState then
+			local realValue = strmatch(value, '^Friendly:([^,]*)') or strmatch(value, '^Enemy:([^,]*)') or value
+			local friend = filterMatch(filter, E:EscapeString('Friendly:'..realValue))
+			local enemy = filterMatch(filter, E:EscapeString('Enemy:'..realValue))
+			local default = filterMatch(filter, E:EscapeString(realValue))
+			local state =
+				(friend and (not enemy) and format('%s%s', 'Enemy:', realValue))
+			or	((not enemy and not friend) and format('%s%s', 'Friendly:', realValue))
+			or	(enemy and (not friend) and default and format('%s%s', 'Friendly:', realValue))
+			or	(enemy and (not friend) and strmatch(value, '^Enemy:') and realValue)
+			or	(friend and enemy and realValue)
+			if state then
+				local stateFound = filterMatch(filter, E:EscapeString(state))
+				if not stateFound then
+					local tbl, sv = {strsplit(',', filter)}
+					for i in ipairs(tbl) do
+						if tbl[i] == value then sv = i break end
+					end
+					tinsert(tbl, sv, state)
+					tremove(tbl, sv + 1)
+					db[groupName][auraType].priority = tconcat(tbl, ',')
+				end
+			end
+		elseif found and remove then
+			db[groupName][auraType].priority = gsub(filter, found, '')
+		elseif not found and not remove then
+			db[groupName][auraType].priority = (filter == '' and value) or (filter..','..value)
+		end
+	end
+end
 
 E:AddLib("AceGUI", "AceGUI-3.0")
 E:AddLib("AceConfig", "AceConfig-3.0-ElvUI")
