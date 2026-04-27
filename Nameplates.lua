@@ -1017,3 +1017,23 @@ Units.ENEMY_PLAYER                                                 = GetUnitSett
 Units.FRIENDLY_NPC                                                 = GetUnitSettings('FRIENDLY_NPC', L["FRIENDLY_NPC"])
 Units.ENEMY_NPC                                                    = GetUnitSettings('ENEMY_NPC', L["ENEMY_NPC"])
 Units.PLAYER                                                       = GetUnitSettings('PLAYER', L["Player"])
+
+-- Target unit: classpower (combo points for Rogue/Druid, DK runes on the targeted nameplate)
+Units.TARGET                                                       = ACH:Group(L["TARGET"], nil, 10, 'tree', nil, nil,
+	function() return not NP.Initialized end)
+Units.TARGET.args.classpower                                       = ACH:Group(L["Class Power"], nil, 1, nil,
+	function(info) return E.db.nameplates.units.TARGET.classpower[info[#info]] end,
+	function(info, value)
+		E.db.nameplates.units.TARGET.classpower[info[#info]] = value
+		NP:ClassPower_UpdateRuneFrameVisibility()
+		NP:ConfigureAll()
+	end)
+Units.TARGET.args.classpower.args.enable                           = ACH:Toggle(L["Enable"], nil, 1)
+Units.TARGET.args.classpower.args.width                            = ACH:Range(L["Width"], nil, 2,
+	{ min = 20, max = 300, step = 1 })
+Units.TARGET.args.classpower.args.height                           = ACH:Range(L["Height"], nil, 3,
+	{ min = 2, max = 30, step = 1 })
+Units.TARGET.args.classpower.args.xOffset                          = ACH:Range(L["X-Offset"], nil, 4,
+	{ min = -200, max = 200, step = 1 })
+Units.TARGET.args.classpower.args.yOffset                          = ACH:Range(L["Y-Offset"], nil, 5,
+	{ min = -100, max = 100, step = 1 })
