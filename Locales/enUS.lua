@@ -516,6 +516,7 @@ L["Hide At Max Level"] = true
 L["Hide Both"] = true
 L["Hide Error Text"] = true
 L["Hide Frame"] = true
+L["Disable Name Only"] = true
 L["Hide In Combat"] = true
 L["Hide In Vehicle"] = true
 L["Hide Spell Name"] = true

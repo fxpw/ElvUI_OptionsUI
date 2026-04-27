@@ -532,6 +532,7 @@ StyleFilters.actions = ACH:Group(L["Actions"], nil, 10, nil,
 	function(info, value) local _, a = GetFilter(true) a[info[#info]] = value NP:ConfigureAll() end,
 	DisabledFilter)
 StyleFilters.actions.args.hide = ACH:Toggle(L["Hide Frame"], nil, 1)
+StyleFilters.actions.args.showHealth = ACH:Toggle(L["Disable Name Only"], nil, 2, nil, nil, nil, nil, nil, actionHidePlate)
 StyleFilters.actions.args.nameOnly = ACH:Toggle(L["Name Only"], nil, 3, nil, nil, nil, nil, nil, actionHidePlate)
 StyleFilters.actions.args.spacer1 = ACH:Spacer(4, 'full')
 StyleFilters.actions.args.scale = ACH:Range(L["Scale"], nil, 5, { min = .25, max = 1.5, step = .01 }, nil, nil, nil, actionHidePlate)
