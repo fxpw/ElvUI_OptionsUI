@@ -300,6 +300,7 @@ StyleFilters.triggers.args.faction.args.types.inline = true
 StyleFilters.triggers.args.faction.args.types.args.Alliance = ACH:Toggle(L["Alliance"], nil, 1)
 StyleFilters.triggers.args.faction.args.types.args.Horde = ACH:Toggle(L["Horde"], nil, 2)
 StyleFilters.triggers.args.faction.args.types.args.Neutral = ACH:Toggle(L["Neutral"], nil, 3)
+StyleFilters.triggers.args.faction.args.types.args.Renegade = ACH:Toggle(L["Renegade"] or "Renegade", nil, 4)
 
 -- Class ---------------------------------------------------------------
 StyleFilters.triggers.args.class = ACH:Group(L["CLASS"], nil, 12, nil, nil, nil, DisabledFilter)
