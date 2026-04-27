@@ -510,6 +510,8 @@ local function GetUnitSettings(unit, name)
 			NP:ConfigureAll()
 		end)
 	group.args.portraitGroup.args.enable                                             = ACH:Toggle(L["Enable"], nil, 1)
+	group.args.portraitGroup.args.classicon                                          = ACH:Toggle(L["Class Icon"],
+		L["Display the class icon for players instead of the unit portrait."], 1.5)
 	group.args.portraitGroup.args.width                                              = ACH:Range(L["Width"], nil, 2,
 		{ min = 12, max = 64, step = 1 })
 	group.args.portraitGroup.args.height                                             = ACH:Range(L["Height"], nil, 3,
