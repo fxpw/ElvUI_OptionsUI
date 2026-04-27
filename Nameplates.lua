@@ -1018,6 +1018,26 @@ Units.FRIENDLY_NPC                                                 = GetUnitSett
 Units.ENEMY_NPC                                                    = GetUnitSettings('ENEMY_NPC', L["ENEMY_NPC"])
 Units.PLAYER                                                       = GetUnitSettings('PLAYER', L["Player"])
 
+-- Player unit: classpower (combo points under the player's own nameplate, Rogue/Druid only)
+Units.PLAYER.args.classpower                                       = ACH:Group(L["Class Power"], nil, 10, nil,
+	function(info) return E.db.nameplates.units.PLAYER.classpower[info[#info]] end,
+	function(info, value)
+		E.db.nameplates.units.PLAYER.classpower[info[#info]] = value
+		NP:ClassPower_UpdateRuneFrameVisibility()
+		NP:ConfigureAll()
+	end)
+Units.PLAYER.args.classpower.args.enable                           = ACH:Toggle(L["Enable"], nil, 1)
+Units.PLAYER.args.classpower.args.onlyInCombat                     = ACH:Toggle(L["Only In Combat"], nil, 2, nil, nil,
+	nil, nil, nil, function() return not E.db.nameplates.units.PLAYER.classpower.enable end)
+Units.PLAYER.args.classpower.args.width                            = ACH:Range(L["Width"], nil, 3,
+	{ min = 20, max = 300, step = 1 })
+Units.PLAYER.args.classpower.args.height                          = ACH:Range(L["Height"], nil, 4,
+	{ min = 2, max = 30, step = 1 })
+Units.PLAYER.args.classpower.args.xOffset                         = ACH:Range(L["X-Offset"], nil, 5,
+	{ min = -200, max = 200, step = 1 })
+Units.PLAYER.args.classpower.args.yOffset                         = ACH:Range(L["Y-Offset"], nil, 6,
+	{ min = -100, max = 100, step = 1 })
+
 -- Target unit: classpower (combo points for Rogue/Druid, DK runes on the targeted nameplate)
 Units.TARGET                                                       = ACH:Group(L["TARGET"], nil, 10, 'tree', nil, nil,
 	function() return not NP.Initialized end)
@@ -1029,11 +1049,13 @@ Units.TARGET.args.classpower                                       = ACH:Group(L
 		NP:ConfigureAll()
 	end)
 Units.TARGET.args.classpower.args.enable                           = ACH:Toggle(L["Enable"], nil, 1)
-Units.TARGET.args.classpower.args.width                            = ACH:Range(L["Width"], nil, 2,
+Units.TARGET.args.classpower.args.onlyInCombat                     = ACH:Toggle(L["Only In Combat"], nil, 2, nil, nil,
+	nil, nil, nil, function() return not E.db.nameplates.units.TARGET.classpower.enable end)
+Units.TARGET.args.classpower.args.width                            = ACH:Range(L["Width"], nil, 3,
 	{ min = 20, max = 300, step = 1 })
-Units.TARGET.args.classpower.args.height                           = ACH:Range(L["Height"], nil, 3,
+Units.TARGET.args.classpower.args.height                           = ACH:Range(L["Height"], nil, 4,
 	{ min = 2, max = 30, step = 1 })
-Units.TARGET.args.classpower.args.xOffset                          = ACH:Range(L["X-Offset"], nil, 4,
+Units.TARGET.args.classpower.args.xOffset                          = ACH:Range(L["X-Offset"], nil, 5,
 	{ min = -200, max = 200, step = 1 })
-Units.TARGET.args.classpower.args.yOffset                          = ACH:Range(L["Y-Offset"], nil, 5,
+Units.TARGET.args.classpower.args.yOffset                          = ACH:Range(L["Y-Offset"], nil, 6,
 	{ min = -100, max = 100, step = 1 })
