@@ -526,14 +526,16 @@ end
 -- ACTIONS
 -- =====================================================================
 local function actionHidePlate() local _, a = GetFilter(true) return a and a.hide end
+local function actionDisableShowHealth() local _, a = GetFilter(true) return (a and a.hide) or (a and a.nameOnly) end
+local function actionDisableNameOnly() local _, a = GetFilter(true) return (a and a.hide) or (a and a.showHealth) end
 
 StyleFilters.actions = ACH:Group(L["Actions"], nil, 10, nil,
 	function(info) local _, a = GetFilter(true) return a and a[info[#info]] end,
 	function(info, value) local _, a = GetFilter(true) a[info[#info]] = value NP:ConfigureAll() end,
 	DisabledFilter)
 StyleFilters.actions.args.hide = ACH:Toggle(L["Hide Frame"], nil, 1)
-StyleFilters.actions.args.showHealth = ACH:Toggle(L["Disable Name Only"], nil, 2, nil, nil, nil, nil, nil, actionHidePlate)
-StyleFilters.actions.args.nameOnly = ACH:Toggle(L["Name Only"], nil, 3, nil, nil, nil, nil, nil, actionHidePlate)
+StyleFilters.actions.args.showHealth = ACH:Toggle(L["Disable Name Only"], nil, 2, nil, nil, nil, nil, nil, actionDisableShowHealth)
+StyleFilters.actions.args.nameOnly = ACH:Toggle(L["Name Only"], nil, 3, nil, nil, nil, nil, nil, actionDisableNameOnly)
 StyleFilters.actions.args.spacer1 = ACH:Spacer(4, 'full')
 StyleFilters.actions.args.scale = ACH:Range(L["Scale"], nil, 5, { min = .25, max = 1.5, step = .01 }, nil, nil, nil, actionHidePlate)
 StyleFilters.actions.args.alpha = ACH:Range(L["Alpha"], L["Change the alpha level of the frame."], 6, { min = -1, max = 100, step = 1 }, nil, nil, nil, actionHidePlate)
@@ -613,3 +615,23 @@ StyleFilters.actions.args.flash.inline = true
 StyleFilters.actions.args.flash.args.enable = ACH:Toggle(L["Enable"], nil, 1)
 StyleFilters.actions.args.flash.args.color = ACH:Color(L["Color"], nil, 2, true)
 StyleFilters.actions.args.flash.args.speed = ACH:Range(L["Speed"], nil, 3, { min = 1, max = 10, step = 1 })
+
+-- Target Indicator sub-group
+local function actionTIStyleDisabled() local _, a = GetFilter(true) return (a and a.hide) or not (a and a.showTargetIndicator) end
+StyleFilters.actions.args.targetIndicator = ACH:Group(L["Target Indicator"], nil, 13, nil,
+	function(info) local _, a = GetFilter(true) return a and a[info[#info]] end,
+	function(info, value) local _, a = GetFilter(true) a[info[#info]] = value NP:ConfigureAll() end,
+	actionHidePlate)
+StyleFilters.actions.args.targetIndicator.inline = true
+StyleFilters.actions.args.targetIndicator.args.showTargetIndicator = ACH:Toggle(L["Show Target Indicator"], nil, 1)
+StyleFilters.actions.args.targetIndicator.args.targetIndicatorStyle = ACH:Select(L["Style"], nil, 2, {
+	none   = L["None"],
+	style1 = L["Border"],
+	style2 = L["Background"],
+	style3 = L["Top Arrow Only"],
+	style4 = L["Side Arrows Only"],
+	style5 = L["Border"] .. ' + ' .. L["Top Arrow Only"],
+	style6 = L["Background"] .. ' + ' .. L["Top Arrow Only"],
+	style7 = L["Border"] .. ' + ' .. L["Side Arrows Only"],
+	style8 = L["Background"] .. ' + ' .. L["Side Arrows Only"],
+}, nil, nil, nil, nil, actionTIStyleDisabled)

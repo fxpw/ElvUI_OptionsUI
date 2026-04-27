@@ -867,26 +867,6 @@ NamePlates.generalGroup.args.threatGroup.args.beingTankedByPet                = 
 NamePlates.generalGroup.args.threatGroup.args.indicator                       = ACH:Toggle(L["Show Icon"], nil, 6, nil,
 	nil, nil, nil, nil, function() return not E.db.nameplates.threat.enable end)
 
-NamePlates.generalGroup.args.targetIndicator                                  = ACH:Group(L["Target Indicator"], nil, 85,
-	nil,
-	function(info) return E.db.nameplates.targetIndicator[info[#info]] end,
-	function(info, value)
-		E.db.nameplates.targetIndicator[info[#info]] = value
-		NP:ConfigureAll()
-	end)
-NamePlates.generalGroup.args.targetIndicator.args.enable                      = ACH:Toggle(L["Enable"], nil, 1)
-NamePlates.generalGroup.args.targetIndicator.args.style                       = ACH:Select(L["Style"], nil, 2, {
-	none   = L["None"],
-	style1 = L["Border"],
-	style2 = L["Background"],
-	style3 = L["Top Arrow Only"],
-	style4 = L["Side Arrows Only"],
-	style5 = L["Border"] .. ' + ' .. L["Top Arrow Only"],
-	style6 = L["Background"] .. ' + ' .. L["Top Arrow Only"],
-	style7 = L["Border"] .. ' + ' .. L["Side Arrows Only"],
-	style8 = L["Background"] .. ' + ' .. L["Side Arrows Only"],
-})
-
 -- ============================================================
 -- Colors Group
 -- ============================================================
