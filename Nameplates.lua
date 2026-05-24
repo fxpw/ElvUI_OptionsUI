@@ -287,14 +287,7 @@ local function GetUnitSettings(unit, name)
 	group.args.healthGroup.args.textGroup.args.format                                = ACH:Input(L["Text Format"], nil, 2,
 		nil, 'full')
 	group.args.healthGroup.args.textGroup.args.position                              = ACH:Select(L["Position"], nil, 3,
-		{
-			CENTER = 'CENTER',
-			TOPLEFT = 'TOPLEFT',
-			BOTTOMLEFT = 'BOTTOMLEFT',
-			TOPRIGHT = 'TOPRIGHT',
-			BOTTOMRIGHT =
-			'BOTTOMRIGHT'
-		})
+		C.Values.AllPoints)
 	group.args.healthGroup.args.textGroup.args.parent                                = ACH:Select(L["Parent"], nil, 4,
 		{ Nameplate = L["Nameplate"], Health = L["Health"] })
 	group.args.healthGroup.args.textGroup.args.xOffset                               = ACH:Range(L["X-Offset"], nil, 5,
@@ -399,14 +392,7 @@ local function GetUnitSettings(unit, name)
 	group.args.powerGroup.args.textGroup.args.format                                 = ACH:Input(L["Text Format"], nil, 2,
 		nil, 'full')
 	group.args.powerGroup.args.textGroup.args.position                               = ACH:Select(L["Position"], nil, 3,
-		{
-			CENTER = 'CENTER',
-			TOPLEFT = 'TOPLEFT',
-			BOTTOMLEFT = 'BOTTOMLEFT',
-			TOPRIGHT = 'TOPRIGHT',
-			BOTTOMRIGHT =
-			'BOTTOMRIGHT'
-		})
+		C.Values.AllPoints)
 	group.args.powerGroup.args.textGroup.args.parent                                 = ACH:Select(L["Parent"], nil, 4,
 		{ Nameplate = L["Nameplate"], Health = L["Health"] })
 	group.args.powerGroup.args.textGroup.args.xOffset                                = ACH:Range(L["X-Offset"], nil, 5,
@@ -534,14 +520,7 @@ local function GetUnitSettings(unit, name)
 	group.args.levelGroup.args.textFormat                                            = ACH:Input(L["Text Format"], nil, 2,
 		nil, 'full')
 	group.args.levelGroup.args.position                                              = ACH:Select(L["Position"], nil, 3,
-		{
-			CENTER = 'CENTER',
-			TOPLEFT = 'TOPLEFT',
-			BOTTOMLEFT = 'BOTTOMLEFT',
-			TOPRIGHT = 'TOPRIGHT',
-			BOTTOMRIGHT =
-			'BOTTOMRIGHT'
-		})
+		C.Values.AllPoints)
 	group.args.levelGroup.args.parent                                                = ACH:Select(L["Parent"], nil, 4,
 		{ Nameplate = L["Nameplate"], Health = L["Health"] })
 	group.args.levelGroup.args.xOffset                                               = ACH:Range(L["X-Offset"], nil, 5,
@@ -568,14 +547,7 @@ local function GetUnitSettings(unit, name)
 	group.args.nameGroup.args.textFormat                                             = ACH:Input(L["Text Format"], nil, 2,
 		nil, 'full')
 	group.args.nameGroup.args.position                                               = ACH:Select(L["Position"], nil, 3,
-		{
-			CENTER = 'CENTER',
-			TOPLEFT = 'TOPLEFT',
-			BOTTOMLEFT = 'BOTTOMLEFT',
-			TOPRIGHT = 'TOPRIGHT',
-			BOTTOMRIGHT =
-			'BOTTOMRIGHT'
-		})
+		C.Values.AllPoints)
 	group.args.nameGroup.args.parent                                                 = ACH:Select(L["Parent"], nil, 4,
 		{ Nameplate = L["Nameplate"], Health = L["Health"] })
 	group.args.nameGroup.args.xOffset                                                = ACH:Range(L["X-Offset"], nil, 5,
@@ -669,7 +641,7 @@ NamePlates.enable                                                             = 
 	function(info) return E.private.nameplates[info[#info]] end,
 	function(info, value)
 		E.private.nameplates[info[#info]] = value
-		E.ShowPopup = true
+		E:StaticPopup_Show('PRIVATE_RL')
 	end)
 NamePlates.statusbar                                                          = ACH:SharedMediaStatusbar(
 	L["StatusBar Texture"], nil, 2)
@@ -691,22 +663,6 @@ NamePlates.generalGroup                                                       = 
 NamePlates.generalGroup.args.motionType                                       = ACH:Select(L["UNIT_NAMEPLATES_TYPES"],
 	L["Set to either stack nameplates vertically or allow them to overlap."], 1,
 	{ STACKED = L["UNIT_NAMEPLATES_TYPE_2"], OVERLAP = L["UNIT_NAMEPLATES_TYPE_1"] })
-NamePlates.generalGroup.args.showEnemyCombat                                  = ACH:Select(L["Enemy Combat Toggle"],
-	L["Control enemy nameplates toggling on or off when in combat."], 2,
-	{ DISABLED = L["Disable"], TOGGLE_ON = L["Toggle On While In Combat"], TOGGLE_OFF = L["Toggle Off While In Combat"] },
-	nil, nil, nil,
-	function(info, value)
-		E.db.nameplates[info[#info]] = value
-		NP:PLAYER_REGEN_ENABLED()
-	end)
-NamePlates.generalGroup.args.showFriendlyCombat                               = ACH:Select(L["Friendly Combat Toggle"],
-	L["Control friendly nameplates toggling on or off when in combat."], 3,
-	{ DISABLED = L["Disable"], TOGGLE_ON = L["Toggle On While In Combat"], TOGGLE_OFF = L["Toggle Off While In Combat"] },
-	nil, nil, nil,
-	function(info, value)
-		E.db.nameplates[info[#info]] = value
-		NP:PLAYER_REGEN_ENABLED()
-	end)
 NamePlates.generalGroup.args.smoothbars                                       = ACH:Toggle(L["Smooth Bars"],
 	L["Bars will transition smoothly."], 4)
 NamePlates.generalGroup.args.spacer1                                          = ACH:Spacer(6, 'full')
@@ -716,6 +672,13 @@ NamePlates.generalGroup.args.overlapH                                         = 
 	L["Percentage amount for horizontal overlap of Nameplates."], 10, { min = 0, max = 3, step = .1 })
 NamePlates.generalGroup.args.highlight                                        = ACH:Toggle(L["Hover Highlight"], nil, 13)
 NamePlates.generalGroup.args.fadeIn                                           = ACH:Toggle(L["Alpha Fading"], nil, 14)
+NamePlates.generalGroup.args.loadDistance                                     = ACH:Range(L["Load Distance"],
+	L["Maximum distance (yards) at which nameplates are loaded."], 15, { min = 10, max = 100, step = 1 }, nil,
+	function() return E.db.nameplates.plateSize.loadDistance end,
+	function(info, value)
+		E.db.nameplates.plateSize.loadDistance = value
+		NP:UpdateCVars()
+	end)
 
 NamePlates.generalGroup.args.useTargetScale                                   = ACH:Toggle(L["Use Target Scale"],
 	L["Scale up the targeted nameplate."], 16)
@@ -724,35 +687,6 @@ NamePlates.generalGroup.args.targetScale                                      = 
 	function() return not E.db.nameplates.useTargetScale end)
 
 NamePlates.generalGroup.args.spacer2                                          = ACH:Spacer(20, 'full')
-NamePlates.generalGroup.args.plateVisibility                                  = ACH:Group(L["Visibility"], nil, 50)
-NamePlates.generalGroup.args.plateVisibility.args.showAll                     = ACH:Toggle(L["UNIT_NAMEPLATES_AUTOMODE"],
-	L["This option controls the Blizzard setting for whether or not the Nameplates should be shown."], 0, nil, nil, nil,
-	function(info) return E.db.nameplates.visibility[info[#info]] end,
-	function(info, value)
-		E.db.nameplates.visibility[info[#info]] = value
-		NP:UpdateCVars()
-		NP:ConfigureAll()
-	end)
-NamePlates.generalGroup.args.plateVisibility.args.enemyVisibility             = ACH:MultiSelect(L["Enemy"], nil, 10,
-	{ guardians = L["Guardians"], minions = L["Minions"], minus = L["Minus"], pets = L["Pets"], totems = L["Totems"] },
-	nil, nil,
-	function(_, key) return E.db.nameplates.visibility.enemy[key] end,
-	function(_, key, value)
-		E.db.nameplates.visibility.enemy[key] = value
-		NP:UpdateCVars()
-		NP:ConfigureAll()
-	end,
-	function() return not E.db.nameplates.visibility.showAll end)
-NamePlates.generalGroup.args.plateVisibility.args.friendlyVisibility          = ACH:MultiSelect(L["Friendly"], nil, 15,
-	{ guardians = L["Guardians"], minions = L["Minions"], npcs = L["NPC"], pets = L["Pets"], totems = L["Totems"] },
-	nil, nil,
-	function(_, key) return E.db.nameplates.visibility.friendly[key] end,
-	function(_, key, value)
-		E.db.nameplates.visibility.friendly[key] = value
-		NP:UpdateCVars()
-		NP:ConfigureAll()
-	end,
-	function() return not E.db.nameplates.visibility.showAll end)
 
 NamePlates.generalGroup.args.clickThrough                                     = ACH:Group(L["Click Through"], nil, 65,
 	nil, function(info) return E.db.nameplates.clickThrough[info[#info]] end)
@@ -799,14 +733,6 @@ NamePlates.generalGroup.args.clickableRange.args.personal.args.personalWidth  = 
 	L["Width of your own (personal) nameplate."], 1, { min = 50, max = 250, step = 1 })
 NamePlates.generalGroup.args.clickableRange.args.personal.args.personalHeight = ACH:Range(L["Clickable Height"],
 	L["Height of your own (personal) nameplate."], 2, { min = 10, max = 75, step = 1 })
-
-NamePlates.generalGroup.args.clickableRange.args.loadDistance                 = ACH:Range(L["Load Distance"],
-	L["Maximum distance (yards) at which nameplates are loaded."], 4, { min = 10, max = 100, step = 1 }, nil, nil,
-	function(info, value)
-		E.db.nameplates.plateSize[info[#info]] = value
-		NP:UpdateCVars()
-		NP:ConfigureAll()
-	end)
 
 NamePlates.generalGroup.args.cutaway                                          = ACH:Group(L["Cutaway Bars"], nil, 75)
 NamePlates.generalGroup.args.cutaway.args.health                              = ACH:Group(L["Health"], nil, 1, nil,
