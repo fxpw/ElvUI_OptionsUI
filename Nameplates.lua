@@ -288,8 +288,6 @@ local function GetUnitSettings(unit, name)
 		nil, 'full')
 	group.args.healthGroup.args.textGroup.args.position                              = ACH:Select(L["Position"], nil, 3,
 		C.Values.AllPoints)
-	group.args.healthGroup.args.textGroup.args.parent                                = ACH:Select(L["Parent"], nil, 4,
-		{ Nameplate = L["Nameplate"], Health = L["Health"] })
 	group.args.healthGroup.args.textGroup.args.xOffset                               = ACH:Range(L["X-Offset"], nil, 5,
 		{ min = -100, max = 100, step = 1 })
 	group.args.healthGroup.args.textGroup.args.yOffset                               = ACH:Range(L["Y-Offset"], nil, 6,
@@ -393,8 +391,6 @@ local function GetUnitSettings(unit, name)
 		nil, 'full')
 	group.args.powerGroup.args.textGroup.args.position                               = ACH:Select(L["Position"], nil, 3,
 		C.Values.AllPoints)
-	group.args.powerGroup.args.textGroup.args.parent                                 = ACH:Select(L["Parent"], nil, 4,
-		{ Nameplate = L["Nameplate"], Health = L["Health"] })
 	group.args.powerGroup.args.textGroup.args.xOffset                                = ACH:Range(L["X-Offset"], nil, 5,
 		{ min = -100, max = 100, step = 1 })
 	group.args.powerGroup.args.textGroup.args.yOffset                                = ACH:Range(L["Y-Offset"], nil, 6,
@@ -521,8 +517,6 @@ local function GetUnitSettings(unit, name)
 		nil, 'full')
 	group.args.levelGroup.args.position                                              = ACH:Select(L["Position"], nil, 3,
 		C.Values.AllPoints)
-	group.args.levelGroup.args.parent                                                = ACH:Select(L["Parent"], nil, 4,
-		{ Nameplate = L["Nameplate"], Health = L["Health"] })
 	group.args.levelGroup.args.xOffset                                               = ACH:Range(L["X-Offset"], nil, 5,
 		{ min = -100, max = 100, step = 1 })
 	group.args.levelGroup.args.yOffset                                               = ACH:Range(L["Y-Offset"], nil, 6,
@@ -548,8 +542,6 @@ local function GetUnitSettings(unit, name)
 		nil, 'full')
 	group.args.nameGroup.args.position                                               = ACH:Select(L["Position"], nil, 3,
 		C.Values.AllPoints)
-	group.args.nameGroup.args.parent                                                 = ACH:Select(L["Parent"], nil, 4,
-		{ Nameplate = L["Nameplate"], Health = L["Health"] })
 	group.args.nameGroup.args.xOffset                                                = ACH:Range(L["X-Offset"], nil, 5,
 		{ min = -100, max = 100, step = 1 })
 	group.args.nameGroup.args.yOffset                                                = ACH:Range(L["Y-Offset"], nil, 6,
