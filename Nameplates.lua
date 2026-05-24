@@ -62,20 +62,6 @@ local function BuildAuraGroup(unit, auraType, name, order)
 	aura.args.anchorPoint                                         = ACH:Select(L["Anchor Point"],
 		L["What point to anchor to the frame you set to attach to."], 12, C.Values.Anchors)
 
-	local attachValues                                            = auraType == 'buffs'
-		and { FRAME = L["Frame"], DEBUFFS = L["Debuffs"], HEALTH = L["Health"], POWER = L["Power"] }
-		or { FRAME = L["Frame"], BUFFS = L["Buffs"], HEALTH = L["Health"], POWER = L["Power"] }
-	local smartHideKey1                                           = auraType == 'buffs' and 'BUFFS_ON_DEBUFFS' or
-		'DEBUFFS_ON_BUFFS'
-	local smartHideKey2                                           = auraType == 'buffs' and 'FLUID_BUFFS_ON_DEBUFFS' or
-		'FLUID_DEBUFFS_ON_BUFFS'
-	aura.args.attachTo                                            = ACH:Select(L["Attach To"],
-		L["What to attach the anchor frame to."], 13, attachValues, nil, nil, nil, nil,
-		function()
-			local pos = E.db.nameplates.units[unit].smartAuraPosition
-			return pos == smartHideKey1 or pos == smartHideKey2
-		end)
-
 	aura.args.growthX                                             = ACH:Select(L["Growth X-Direction"], nil, 14,
 		{ LEFT = L["Left"], RIGHT = L["Right"] }, nil, nil, nil, nil,
 		function()
