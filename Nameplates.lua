@@ -709,23 +709,18 @@ NamePlates.generalGroup.args.showFriendlyCombat                               = 
 	end)
 NamePlates.generalGroup.args.smoothbars                                       = ACH:Toggle(L["Smooth Bars"],
 	L["Bars will transition smoothly."], 4)
-NamePlates.generalGroup.args.clampToScreen                                    = ACH:Toggle(L["Clamp Nameplates"],
-	L["Clamp nameplates to the top of the screen when outside of view."], 5)
 NamePlates.generalGroup.args.spacer1                                          = ACH:Spacer(6, 'full')
 NamePlates.generalGroup.args.overlapV                                         = ACH:Range(L["Overlap Vertical"],
 	L["Percentage amount for vertical overlap of Nameplates."], 10, { min = 0, max = 3, step = .1 })
 NamePlates.generalGroup.args.overlapH                                         = ACH:Range(L["Overlap Horizontal"],
 	L["Percentage amount for horizontal overlap of Nameplates."], 10, { min = 0, max = 3, step = .1 })
-NamePlates.generalGroup.args.lowHealthThreshold                               = ACH:Range(L["Low Health Threshold"],
-	L["Make the unitframe glow when it is below this percent of health."], 11,
-	{ min = 0, softMax = .5, max = .8, step = .01, isPercent = true })
 NamePlates.generalGroup.args.highlight                                        = ACH:Toggle(L["Hover Highlight"], nil, 13)
 NamePlates.generalGroup.args.fadeIn                                           = ACH:Toggle(L["Alpha Fading"], nil, 14)
 
 NamePlates.generalGroup.args.useTargetScale                                   = ACH:Toggle(L["Use Target Scale"],
 	L["Scale up the targeted nameplate."], 16)
 NamePlates.generalGroup.args.targetScale                                      = ACH:Range(L["Target Scale"], nil, 17,
-	{ min = 0.3, max = 2, step = 0.01 }, nil, nil, nil, nil,
+	{ min = 0.3, max = 2, step = 0.01 }, nil, nil, nil,
 	function() return not E.db.nameplates.useTargetScale end)
 
 NamePlates.generalGroup.args.spacer2                                          = ACH:Spacer(20, 'full')
@@ -806,7 +801,7 @@ NamePlates.generalGroup.args.clickableRange.args.personal.args.personalHeight = 
 	L["Height of your own (personal) nameplate."], 2, { min = 10, max = 75, step = 1 })
 
 NamePlates.generalGroup.args.clickableRange.args.loadDistance                 = ACH:Range(L["Load Distance"],
-	L["Maximum distance (yards) at which nameplates are loaded."], 4, { min = 10, max = 100, step = 1 }, nil, nil, nil,
+	L["Maximum distance (yards) at which nameplates are loaded."], 4, { min = 10, max = 100, step = 1 }, nil, nil,
 	function(info, value)
 		E.db.nameplates.plateSize[info[#info]] = value
 		NP:UpdateCVars()
@@ -862,9 +857,7 @@ NamePlates.generalGroup.args.threatGroup.args.useThreatColor                  = 
 NamePlates.generalGroup.args.threatGroup.args.beingTankedByTank               = ACH:Toggle(L["Off Tank"],
 	L["Use Off Tank Color when another Tank has threat."], 4, nil, nil, nil, nil, nil,
 	function() return not E.db.nameplates.threat.useThreatColor end)
-NamePlates.generalGroup.args.threatGroup.args.beingTankedByPet                = ACH:Toggle(L["Off Tank (Pets)"], nil, 5,
-	nil, nil, nil, nil, nil, function() return not E.db.nameplates.threat.useThreatColor end)
-NamePlates.generalGroup.args.threatGroup.args.indicator                       = ACH:Toggle(L["Show Icon"], nil, 6, nil,
+NamePlates.generalGroup.args.threatGroup.args.indicator                       = ACH:Toggle(L["Show Icon"], nil, 5, nil,
 	nil, nil, nil, nil, function() return not E.db.nameplates.threat.enable end)
 
 -- ============================================================
