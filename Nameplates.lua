@@ -673,7 +673,7 @@ NamePlates.generalGroup.args.overlapH                                         = 
 NamePlates.generalGroup.args.highlight                                        = ACH:Toggle(L["Hover Highlight"], nil, 13)
 NamePlates.generalGroup.args.fadeIn                                           = ACH:Toggle(L["Alpha Fading"], nil, 14)
 NamePlates.generalGroup.args.loadDistance                                     = ACH:Range(L["Load Distance"],
-	L["Maximum distance (yards) at which nameplates are loaded."], 15, { min = 10, max = 100, step = 1 }, nil,
+	L["Maximum distance (yards) at which nameplates are loaded."], 15, { min = 41, max = 79, step = 1 }, nil,
 	function() return E.db.nameplates.plateSize.loadDistance end,
 	function(info, value)
 		E.db.nameplates.plateSize.loadDistance = value
