@@ -1,4 +1,4 @@
-﻿local E, _, V, P, G = unpack(ElvUI)
+local E, _, V, P, G = unpack(ElvUI)
 local C, L = unpack(select(2, ...))
 local NP = E:GetModule('NamePlates')
 local ACD = E.Libs.AceConfigDialog
@@ -560,7 +560,7 @@ local function GetUnitSettings(unit, name)
 		{ min = -100, max = 100, step = 1 })
 
 	if unit == 'FRIENDLY_PLAYER' or unit == 'ENEMY_PLAYER' then
-		group.args.pvpindicator                   = ACH:Group(L["PvP Indicator"], L["Horde / Alliance / Honor Info"], 60,
+		group.args.pvpindicator                   = ACH:Group(L["PvP Indicator"], L["Horde / Alliance / Renegade"], 60,
 			nil,
 			function(info) return E.db.nameplates.units[unit].pvpindicator[info[#info]] end,
 			function(info, value)
