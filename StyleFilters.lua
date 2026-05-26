@@ -237,6 +237,10 @@ StyleFilters.triggers.args.targeting.args.types.args.isTarget = ACH:Toggle(L["Is
 StyleFilters.triggers.args.targeting.args.types.args.notTarget = ACH:Toggle(L["Not Targeted"], L["If enabled then the filter will only activate when you are not targeting the unit."], 2)
 StyleFilters.triggers.args.targeting.args.types.args.requireTarget = ACH:Toggle(L["Require Target"], L["If enabled then the filter will only activate when you have a target."], 3)
 StyleFilters.triggers.args.targeting.args.types.args.noTarget = ACH:Toggle(L["No Target"], nil, 4)
+StyleFilters.triggers.args.targeting.args.types.args.targetMe = ACH:Toggle(L["Targeting Player"] or "Targeting Player", L["If enabled then the filter will only activate when the unit is targeting you."], 5)
+StyleFilters.triggers.args.targeting.args.types.args.notTargetMe = ACH:Toggle(L["Not Targeting Player"] or "Not Targeting Player", L["If enabled then the filter will only activate when the unit is not targeting you."], 6)
+StyleFilters.triggers.args.targeting.args.types.args.targetPet = ACH:Toggle(L["Targeting Pet"] or "Targeting Pet", L["If enabled then the filter will only activate when the unit is targeting your pet."], 7)
+StyleFilters.triggers.args.targeting.args.types.args.notTargetPet = ACH:Toggle(L["Not Targeting Pet"] or "Not Targeting Pet", L["If enabled then the filter will only activate when the unit is not targeting your pet."], 8)
 
 -- Casting -------------------------------------------------------------
 StyleFilters.triggers.args.casting = ACH:Group(L["Casting"], nil, 8, nil,
