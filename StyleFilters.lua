@@ -414,7 +414,10 @@ do
 		opt.changeList.args.removeSpell = ACH:Select(L["Remove Spell ID or Name"], L["If the aura is listed with a number then you need to use that to remove it from the list."], 2,
 			function()
 				local t, v = GetFilter(true), {}
-				for n in pairs(t[auraType].names) do v[n] = format('%s (%s)', strsplit('\n', n)) end
+				for n in pairs(t[auraType].names) do
+					local spell, stacks = strsplit('\n', n)
+					v[n] = (stacks and stacks ~= '' and format('%s (%s)', spell, stacks)) or spell or n
+				end
 				return v
 			end, nil, nil, nil,
 			function(_, value)
@@ -546,17 +549,24 @@ local function actionColorGet(info)
 	local _, a = GetFilter(true)
 	local t = a and a.color and a.color[info[#info]]
 	if type(t) == 'table' then return t.r, t.g, t.b, t.a end
+	if info[#info] == 'healthColor' or info[#info] == 'borderColor' or info[#info] == 'nameColor' then
+		return 1, 1, 1, 1
+	end
 	return t
 end
 local function actionColorSet(info, ...)
 	local _, a = GetFilter(true)
 	if not a or not a.color then return end
-	local t = a.color[info[#info]]
+	local key = info[#info]
+	local t = a.color[key]
 	if type(t) == 'table' then
 		local r, g, b, alpha = ...
 		t.r, t.g, t.b, t.a = r, g, b, alpha
+	elseif key == 'healthColor' or key == 'borderColor' or key == 'nameColor' then
+		local r, g, b, alpha = ...
+		a.color[key] = { r = r, g = g, b = b, a = alpha }
 	else
-		a.color[info[#info]] = (...)
+		a.color[key] = (...)
 	end
 	NP:ConfigureAll()
 end
