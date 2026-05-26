@@ -626,6 +626,40 @@ StyleFilters.actions.args.flash.args.enable = ACH:Toggle(L["Enable"], nil, 1)
 StyleFilters.actions.args.flash.args.color = ACH:Color(L["Color"], nil, 2, true)
 StyleFilters.actions.args.flash.args.speed = ACH:Range(L["Speed"], nil, 3, { min = 1, max = 10, step = 1 })
 
+-- Text override sub-group
+StyleFilters.actions.args.text = ACH:Group(L["Text"], nil, 12.5, nil,
+	function(info)
+		local _, a = GetFilter(true)
+		return a and a.text and a.text[info[#info]]
+	end,
+	function(info, value)
+		local _, a = GetFilter(true)
+		if not a then return end
+		a.text = a.text or {}
+		a.text[info[#info]] = value
+		NP:ConfigureAll()
+	end,
+	actionHidePlate)
+StyleFilters.actions.args.text.inline = true
+StyleFilters.actions.args.text.args.enableName = ACH:Toggle(L["Name"], nil, 1)
+StyleFilters.actions.args.text.args.nameTag = ACH:Input(L["Text Format"], nil, 2, nil, 'full', nil, nil, nil,
+	function()
+		local _, a = GetFilter(true)
+		return not (a and a.text and a.text.enableName)
+	end)
+StyleFilters.actions.args.text.args.enableLevel = ACH:Toggle(L["Level"], nil, 3)
+StyleFilters.actions.args.text.args.levelTag = ACH:Input(L["Text Format"], nil, 4, nil, 'full', nil, nil, nil,
+	function()
+		local _, a = GetFilter(true)
+		return not (a and a.text and a.text.enableLevel)
+	end)
+StyleFilters.actions.args.text.args.enablePower = ACH:Toggle(L["Power"], nil, 5)
+StyleFilters.actions.args.text.args.powerTag = ACH:Input(L["Text Format"], nil, 6, nil, 'full', nil, nil, nil,
+	function()
+		local _, a = GetFilter(true)
+		return not (a and a.text and a.text.enablePower)
+	end)
+
 -- Target Indicator sub-group
 local function actionTIStyleDisabled() local _, a = GetFilter(true) return (a and a.hide) or not (a and a.showTargetIndicator) end
 StyleFilters.actions.args.targetIndicator = ACH:Group(L["Target Indicator"], nil, 13, nil,

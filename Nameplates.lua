@@ -231,6 +231,44 @@ local function GetUnitSettings(unit, name)
 			NP:ConfigureAll()
 		end)
 
+	local function CreateCustomTextGroup(objectName)
+		if group.args.customText.args[objectName] then return end
+
+		group.args.customText.args[objectName] = {
+			order = -1,
+			type = 'group',
+			name = objectName,
+			get = function(info) return E.db.nameplates.units[unit].customTexts[objectName][info[#info]] end,
+			set = function(info, value)
+				E.db.nameplates.units[unit].customTexts[objectName][info[#info]] = value
+				NP:ConfigureAll()
+			end,
+			args = {
+				header = { order = 1, type = 'header', name = objectName },
+				delete = {
+					order = 2,
+					type = 'execute',
+					name = L["DELETE"],
+					func = function()
+						group.args.customText.args[objectName] = nil
+						if E.db.nameplates.units[unit].customTexts then
+							E.db.nameplates.units[unit].customTexts[objectName] = nil
+						end
+						NP:ConfigureAll()
+					end
+				},
+				enable = ACH:Toggle(L["Enable"], nil, 3),
+				font = ACH:SharedMediaFont(L["Font"], nil, 4),
+				size = ACH:Range(L["FONT_SIZE"], nil, 5, { min = 6, max = 32, step = 1 }),
+				fontOutline = ACH:FontFlags(L["Font Outline"], nil, 6),
+				justifyH = ACH:Select(L["JustifyH"], nil, 7, { CENTER = L["Center"], LEFT = L["Left"], RIGHT = L["Right"] }),
+				xOffset = ACH:Range(L["X-Offset"], nil, 8, { min = -400, max = 400, step = 1 }),
+				yOffset = ACH:Range(L["Y-Offset"], nil, 9, { min = -400, max = 400, step = 1 }),
+				text_format = ACH:Input(L["Text Format"], L["TEXT_FORMAT_DESC"], 100, nil, 'full'),
+			},
+		}
+	end
+
 	-- General
 	group.args.general                                                               = ACH:Group(L["General"], nil, 1,
 		nil,
@@ -597,6 +635,50 @@ local function GetUnitSettings(unit, name)
 			L["Display the target of current cast."], 4)
 	end
 
+	group.args.customText = ACH:Group(L["Custom Texts"], nil, 90)
+	group.args.customText.args.header = ACH:Header(L["Custom Texts"], 1)
+	group.args.customText.args.createCustomText = ACH:Input(L["Create Custom Text"], nil, 2, nil, 'full',
+		function() return '' end,
+		function(_, textName)
+			if not textName or textName == '' then return end
+
+			for object in pairs(E.db.nameplates.units[unit]) do
+				if object:lower() == textName:lower() then
+					E:Print(L["The name you have selected is already in use by another element."])
+					return
+				end
+			end
+
+			E.db.nameplates.units[unit].customTexts = E.db.nameplates.units[unit].customTexts or {}
+			for key in pairs(E.db.nameplates.units[unit].customTexts) do
+				if key:lower() == textName:lower() then
+					E:Print(L["The name you have selected is already in use by another element."])
+					return
+				end
+			end
+
+			E.db.nameplates.units[unit].customTexts[textName] = {
+				text_format = '',
+				size = E.db.nameplates.fontSize,
+				font = E.db.nameplates.font,
+				xOffset = 0,
+				yOffset = 0,
+				justifyH = 'CENTER',
+				fontOutline = E.db.nameplates.fontOutline,
+				attachTextTo = 'Health',
+				enable = true,
+			}
+
+			CreateCustomTextGroup(textName)
+			NP:ConfigureAll()
+		end)
+
+	if E.db.nameplates.units[unit].customTexts then
+		for objectName in pairs(E.db.nameplates.units[unit].customTexts) do
+			CreateCustomTextGroup(objectName)
+		end
+	end
+
 	ORDER = ORDER + 2
 	return group
 end
@@ -936,3 +1018,33 @@ Units.TARGET.args.classpower.args.xOffset                          = ACH:Range(L
 	{ min = -200, max = 200, step = 1 })
 Units.TARGET.args.classpower.args.yOffset                          = ACH:Range(L["Y-Offset"], nil, 6,
 	{ min = -100, max = 100, step = 1 })
+
+-- Target arrows / glow settings
+Units.TARGET.args.targetIndicator = ACH:Group(L["Target Indicator"], nil, 2, nil,
+	function(info) return E.db.nameplates.units.TARGET[info[#info]] end,
+	function(info, value)
+		E.db.nameplates.units.TARGET[info[#info]] = value
+		NP:ConfigureAll()
+	end)
+-- Units.TARGET.args.targetIndicator.args.glowStyle = ACH:Select(L["Style"], nil, 1, {
+-- 	none = L["None"],
+-- 	style1 = L["Border"],
+-- 	style2 = L["Background Glow"],
+-- 	style3 = L["Top Arrow"],
+-- 	style4 = L["Side Arrows"],
+-- 	style5 = L["Border"] .. ' + ' .. L["Top Arrow"],
+-- 	style6 = L["Background Glow"] .. ' + ' .. L["Top Arrow"],
+-- 	style7 = L["Border"] .. ' + ' .. L["Side Arrows"],
+-- 	style8 = L["Background Glow"] .. ' + ' .. L["Side Arrows"],
+-- })
+Units.TARGET.args.targetIndicator.args.arrow = ACH:Select(L["Texture"], nil, 2,
+	function()
+		local values = {}
+		for key in pairs(E.Media.Arrows) do
+			values[key] = E:TextureString(E.Media.Arrows[key], ':16:16:0:0') .. ' ' .. key
+		end
+		return values
+	end)
+Units.TARGET.args.targetIndicator.args.arrowSize = ACH:Range(L["Size"], nil, 3, { min = 6, max = 80, step = 1 })
+Units.TARGET.args.targetIndicator.args.arrowXOffset = ACH:Range(L["X-Offset"], nil, 4, { min = -100, max = 100, step = 1 })
+Units.TARGET.args.targetIndicator.args.arrowYOffset = ACH:Range(L["Y-Offset"], nil, 5, { min = -100, max = 100, step = 1 })
