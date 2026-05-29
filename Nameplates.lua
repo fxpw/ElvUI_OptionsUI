@@ -105,17 +105,9 @@ local function BuildAuraGroup(unit, auraType, name, order)
 		L["What point to anchor to the frame you set to attach to."], 12, C.Values.Anchors)
 
 	aura.args.growthX                                             = ACH:Select(L["Growth X-Direction"], nil, 14,
-		{ LEFT = L["Left"], RIGHT = L["Right"] }, nil, nil, nil, nil,
-		function()
-			local p = E.db.nameplates.units[unit][auraType].anchorPoint
-			return p == 'LEFT' or p == 'RIGHT'
-		end)
+		{ LEFT = L["Left"], RIGHT = L["Right"] })
 	aura.args.growthY                                             = ACH:Select(L["Growth Y-Direction"], nil, 15,
-		{ UP = L["Up"], DOWN = L["Down"] }, nil, nil, nil, nil,
-		function()
-			local p = E.db.nameplates.units[unit][auraType].anchorPoint
-			return p == 'TOP' or p == 'BOTTOM'
-		end)
+		{ UP = L["Up"], DOWN = L["Down"] })
 	aura.args.sortMethod                                          = ACH:Select(L["Sort By"], L["Method to sort by."], 16,
 		{
 			TIME_REMAINING = L["Time Remaining"],
