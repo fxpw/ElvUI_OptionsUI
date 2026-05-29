@@ -765,8 +765,7 @@ NamePlates.generalGroup.args.overlapV                                         = 
 	L["Percentage amount for vertical overlap of Nameplates."], 10, { min = 0, max = 3, step = .1 })
 NamePlates.generalGroup.args.overlapH                                         = ACH:Range(L["Overlap Horizontal"],
 	L["Percentage amount for horizontal overlap of Nameplates."], 10, { min = 0, max = 3, step = .1 })
-NamePlates.generalGroup.args.highlight                                        = ACH:Toggle(L["Hover Highlight"], nil, 13)
-NamePlates.generalGroup.args.fadeIn                                           = ACH:Toggle(L["Alpha Fading"], nil, 14)
+NamePlates.generalGroup.args.fadeIn                                           = ACH:Toggle(L["Alpha Fading"], nil, 13)
 
 NamePlates.generalGroup.args.useTargetScale                                   = ACH:Toggle(L["Use Target Scale"],
 	L["Scale up the targeted nameplate."], 16)
@@ -1156,32 +1155,3 @@ Units.TARGET.args.classpower.args.xOffset                          = ACH:Range(L
 Units.TARGET.args.classpower.args.yOffset                          = ACH:Range(L["Y-Offset"], nil, 6,
 	{ min = -100, max = 100, step = 1 })
 
--- Target arrows / glow settings
-Units.TARGET.args.targetIndicator = ACH:Group(L["Target Indicator"], nil, 2, nil,
-	function(info) return E.db.nameplates.units.TARGET[info[#info]] end,
-	function(info, value)
-		E.db.nameplates.units.TARGET[info[#info]] = value
-		NP:ConfigureAll()
-	end)
--- Units.TARGET.args.targetIndicator.args.glowStyle = ACH:Select(L["Style"], nil, 1, {
--- 	none = L["None"],
--- 	style1 = L["Border"],
--- 	style2 = L["Background Glow"],
--- 	style3 = L["Top Arrow"],
--- 	style4 = L["Side Arrows"],
--- 	style5 = L["Border"] .. ' + ' .. L["Top Arrow"],
--- 	style6 = L["Background Glow"] .. ' + ' .. L["Top Arrow"],
--- 	style7 = L["Border"] .. ' + ' .. L["Side Arrows"],
--- 	style8 = L["Background Glow"] .. ' + ' .. L["Side Arrows"],
--- })
-Units.TARGET.args.targetIndicator.args.arrow = ACH:Select(L["Texture"], nil, 2,
-	function()
-		local values = {}
-		for key in pairs(E.Media.Arrows) do
-			values[key] = E:TextureString(E.Media.Arrows[key], ':16:16:0:0') .. ' ' .. key
-		end
-		return values
-	end)
-Units.TARGET.args.targetIndicator.args.arrowSize = ACH:Range(L["Size"], nil, 3, { min = 6, max = 80, step = 1 })
-Units.TARGET.args.targetIndicator.args.arrowXOffset = ACH:Range(L["X-Offset"], nil, 4, { min = -100, max = 100, step = 1 })
-Units.TARGET.args.targetIndicator.args.arrowYOffset = ACH:Range(L["Y-Offset"], nil, 5, { min = -100, max = 100, step = 1 })

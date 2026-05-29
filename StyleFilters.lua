@@ -235,12 +235,14 @@ StyleFilters.triggers.args.targeting.args.types = ACH:Group('', nil, 1)
 StyleFilters.triggers.args.targeting.args.types.inline = true
 StyleFilters.triggers.args.targeting.args.types.args.isTarget = ACH:Toggle(L["Is Targeted"], L["If enabled then the filter will only activate when you are targeting the unit."], 1)
 StyleFilters.triggers.args.targeting.args.types.args.notTarget = ACH:Toggle(L["Not Targeted"], L["If enabled then the filter will only activate when you are not targeting the unit."], 2)
-StyleFilters.triggers.args.targeting.args.types.args.requireTarget = ACH:Toggle(L["Require Target"], L["If enabled then the filter will only activate when you have a target."], 3)
-StyleFilters.triggers.args.targeting.args.types.args.noTarget = ACH:Toggle(L["No Target"], nil, 4)
-StyleFilters.triggers.args.targeting.args.types.args.targetMe = ACH:Toggle(L["Targeting Player"] or "Targeting Player", L["If enabled then the filter will only activate when the unit is targeting you."], 5)
-StyleFilters.triggers.args.targeting.args.types.args.notTargetMe = ACH:Toggle(L["Not Targeting Player"] or "Not Targeting Player", L["If enabled then the filter will only activate when the unit is not targeting you."], 6)
-StyleFilters.triggers.args.targeting.args.types.args.targetPet = ACH:Toggle(L["Targeting Pet"] or "Targeting Pet", L["If enabled then the filter will only activate when the unit is targeting your pet."], 7)
-StyleFilters.triggers.args.targeting.args.types.args.notTargetPet = ACH:Toggle(L["Not Targeting Pet"] or "Not Targeting Pet", L["If enabled then the filter will only activate when the unit is not targeting your pet."], 8)
+StyleFilters.triggers.args.targeting.args.types.args.isMouseover = ACH:Toggle(L["Is Mouseover"] or "Is Mouseover", L["If enabled then the filter will only activate when the unit is under your mouse cursor."], 3)
+StyleFilters.triggers.args.targeting.args.types.args.notMouseover = ACH:Toggle(L["Not Mouseover"] or "Not Mouseover", L["If enabled then the filter will only activate when the unit is not under your mouse cursor."], 4)
+StyleFilters.triggers.args.targeting.args.types.args.requireTarget = ACH:Toggle(L["Require Target"], L["If enabled then the filter will only activate when you have a target."], 5)
+StyleFilters.triggers.args.targeting.args.types.args.noTarget = ACH:Toggle(L["No Target"], nil, 6)
+StyleFilters.triggers.args.targeting.args.types.args.targetMe = ACH:Toggle(L["Targeting Player"] or "Targeting Player", L["If enabled then the filter will only activate when the unit is targeting you."], 7)
+StyleFilters.triggers.args.targeting.args.types.args.notTargetMe = ACH:Toggle(L["Not Targeting Player"] or "Not Targeting Player", L["If enabled then the filter will only activate when the unit is not targeting you."], 8)
+StyleFilters.triggers.args.targeting.args.types.args.targetPet = ACH:Toggle(L["Targeting Pet"] or "Targeting Pet", L["If enabled then the filter will only activate when the unit is targeting your pet."], 9)
+StyleFilters.triggers.args.targeting.args.types.args.notTargetPet = ACH:Toggle(L["Not Targeting Pet"] or "Not Targeting Pet", L["If enabled then the filter will only activate when the unit is not targeting your pet."], 10)
 
 -- Casting -------------------------------------------------------------
 StyleFilters.triggers.args.casting = ACH:Group(L["Casting"], nil, 8, nil,
@@ -683,3 +685,24 @@ StyleFilters.actions.args.targetIndicator.args.targetIndicatorStyle = ACH:Select
 	style7 = L["Border"] .. ' + ' .. L["Side Arrows"],
 	style8 = L["Background Glow"] .. ' + ' .. L["Side Arrows"],
 }, nil, nil, nil, nil, actionTIStyleDisabled)
+StyleFilters.actions.args.targetIndicator.args.targetIndicatorArrow = ACH:Select(L["Texture"], nil, 3,
+	function()
+		local values = {}
+		for key in pairs(E.Media.Arrows) do
+			values[key] = E:TextureString(E.Media.Arrows[key], ':16:16:0:0') .. ' ' .. key
+		end
+		return values
+	end, nil, nil, nil, nil, actionTIStyleDisabled)
+StyleFilters.actions.args.targetIndicator.args.targetIndicatorArrowSize = ACH:Range(L["Size"], nil, 4,
+	{ min = 6, max = 80, step = 1 }, nil, nil, nil, nil, actionTIStyleDisabled)
+StyleFilters.actions.args.targetIndicator.args.targetIndicatorArrowXOffset = ACH:Range(L["X-Offset"], nil, 5,
+	{ min = -100, max = 100, step = 1 }, nil, nil, nil, nil, actionTIStyleDisabled)
+StyleFilters.actions.args.targetIndicator.args.targetIndicatorArrowYOffset = ACH:Range(L["Y-Offset"], nil, 6,
+	{ min = -100, max = 100, step = 1 }, nil, nil, nil, nil, actionTIStyleDisabled)
+
+StyleFilters.actions.args.mouseoverHighlight = ACH:Group(L["Mouseover Highlight"] or "Mouseover Highlight", nil, 14, nil,
+	function(info) local _, a = GetFilter(true) return a and a[info[#info]] end,
+	function(info, value) local _, a = GetFilter(true) a[info[#info]] = value NP:ConfigureAll() end,
+	actionHidePlate)
+StyleFilters.actions.args.mouseoverHighlight.inline = true
+StyleFilters.actions.args.mouseoverHighlight.args.showMouseoverHighlight = ACH:Toggle(L["Show Mouseover Highlight"] or "Show Mouseover Highlight", nil, 1)
