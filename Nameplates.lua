@@ -15,6 +15,48 @@ local SetCVar = SetCVar
 local carryFilterFrom, carryFilterTo
 
 local ORDER = 100
+
+local function BlizzardL(key)
+	return _G[key] or L[key] or key
+end
+
+local function EngineGetKey(key)
+	return function()
+		return NP:GetEngineCVar(key)
+	end
+end
+
+local function EngineSetKey(key)
+	return function(_, value)
+		if not E.db.nameplates.engine then
+			E.db.nameplates.engine = E:CopyTable(P.nameplates.engine)
+		end
+		E.db.nameplates.engine[key] = value
+		NP:ApplyEngineOption(key)
+		if NP.Initialized then
+			NP:ConfigureAll()
+		end
+		E:RefreshGUI()
+	end
+end
+
+local showOnlyNamesValues = {
+	['0'] = BlizzardL('NAMEPLATE_SHOW_ONLY_NAMES_OPTION_0'),
+	['1'] = BlizzardL('NAMEPLATE_SHOW_ONLY_NAMES_OPTION_1'),
+	['2'] = BlizzardL('NAMEPLATE_SHOW_ONLY_NAMES_OPTION_2'),
+	['3'] = BlizzardL('NAMEPLATE_SHOW_ONLY_NAMES_OPTION_3'),
+}
+
+local targetRadialValues = {
+	['0'] = BlizzardL('NAMEPLATE_TARGET_RADIAL_POSITION_OPTION_0'),
+	['1'] = BlizzardL('NAMEPLATE_TARGET_RADIAL_POSITION_OPTION_1'),
+}
+
+local personalShowWithTargetValues = {
+	['0'] = BlizzardL('DISPLAY_PERSONAL_SHOW_WITH_TARGET_OPTION_0'),
+	['1'] = BlizzardL('DISPLAY_PERSONAL_SHOW_WITH_TARGET_OPTION_1'),
+	['2'] = BlizzardL('DISPLAY_PERSONAL_SHOW_WITH_TARGET_OPTION_2'),
+}
 local filters = {}
 
 local minHeight, minWidth = 2, 40
@@ -213,8 +255,7 @@ local function GetUnitSettings(unit, name)
 		function(info, value)
 			E.db.nameplates.units[unit][info[#info]] = value
 			NP:ConfigureAll()
-		end,
-		function() return not NP.Initialized end)
+		end)
 
 	group.args.enable                                                                = ACH:Toggle(L["Enable"], nil, -10)
 	group.args.showTestFrame                                                         = ACH:Execute(
@@ -696,6 +737,8 @@ E.Options.args.nameplates                                                     = 
 local NamePlates                                                              = E.Options.args.nameplates.args
 
 NamePlates.intro                                                              = ACH:Description(L["NAMEPLATE_DESC"], 0)
+NamePlates.reloadHint                                                         = ACH:Description(L["NAMEPLATE_ENABLE_RELOAD"], 2, nil, nil, nil, nil, nil, 'full',
+	function() return not E.private.nameplates.enable or NP.Initialized end)
 NamePlates.enable                                                             = ACH:Toggle(L["Enable"], nil, 1, nil, nil,
 	nil,
 	function(info) return E.private.nameplates[info[#info]] end,
@@ -712,13 +755,13 @@ NamePlates.resetFilters                                                       = 
 -- General Group
 -- ============================================================
 
-NamePlates.generalGroup                                                       = ACH:Group(L["General"], nil, 5, nil, nil,
+NamePlates.generalGroup                                                       = ACH:Group(L["General"], nil, 5, nil,
+	function(info) return E.db.nameplates[info[#info]] end,
 	function(info, value)
 		E.db.nameplates[info[#info]] = value
 		NP:UpdateCVars()
 		NP:ConfigureAll()
-	end,
-	function() return not NP.Initialized end)
+	end)
 
 NamePlates.generalGroup.args.motionType                                       = ACH:Select(L["UNIT_NAMEPLATES_TYPES"],
 	L["Set to either stack nameplates vertically or allow them to overlap."], 1,
@@ -732,19 +775,20 @@ NamePlates.generalGroup.args.overlapH                                         = 
 	L["Percentage amount for horizontal overlap of Nameplates."], 10, { min = 0, max = 3, step = .1 })
 NamePlates.generalGroup.args.highlight                                        = ACH:Toggle(L["Hover Highlight"], nil, 13)
 NamePlates.generalGroup.args.fadeIn                                           = ACH:Toggle(L["Alpha Fading"], nil, 14)
-NamePlates.generalGroup.args.loadDistance                                     = ACH:Range(L["Load Distance"],
-	L["Maximum distance (yards) at which nameplates are loaded."], 15, { min = 41, max = 79, step = 1 }, nil,
-	function() return E.db.nameplates.plateSize.loadDistance end,
-	function(info, value)
-		E.db.nameplates.plateSize.loadDistance = value
-		NP:UpdateCVars()
-	end)
 
 NamePlates.generalGroup.args.useTargetScale                                   = ACH:Toggle(L["Use Target Scale"],
 	L["Scale up the targeted nameplate."], 16)
 NamePlates.generalGroup.args.targetScale                                      = ACH:Range(L["Target Scale"], nil, 17,
-	{ min = 0.3, max = 2, step = 0.01 }, nil, nil, nil,
+	{ min = 1, max = 2, step = 0.1 }, nil, nil, nil,
 	function() return not E.db.nameplates.useTargetScale end)
+NamePlates.generalGroup.args.nonTargetTransparency                            = ACH:Range(L["Non-Target Alpha"],
+	L["Alpha of nameplates that are not your current target."], 18,
+	{ min = 0.05, max = 1, step = 0.05 }, nil,
+	function() return E.db.nameplates.nonTargetTransparency end,
+	function(_, value)
+		E.db.nameplates.nonTargetTransparency = value
+		NP:ApplyEngineOption('notSelectedAlpha')
+	end)
 
 NamePlates.generalGroup.args.spacer2                                          = ACH:Spacer(20, 'full')
 
@@ -847,11 +891,114 @@ NamePlates.generalGroup.args.threatGroup.args.indicator                       = 
 	nil, nil, nil, nil, function() return not E.db.nameplates.threat.enable end)
 
 -- ============================================================
+-- Blizzard Engine / CVar Group (Interface Options NamePlate panel)
+-- ============================================================
+
+NamePlates.engineGroup                                                        = ACH:Group(L["Nameplate Engine"], nil, 4,
+	L["Client nameplate engine settings (CVar). Replaces the default Interface > Names panel."])
+
+local Engine                                                                    = NamePlates.engineGroup.args
+
+Engine.intro                                                                    = ACH:Description(L["NAMEPLATE_ENGINE_HELP"], 0)
+Engine.resetDefaults                                                            = ACH:Execute(L["Restore Engine Defaults"], nil, 1,
+	function()
+		NP:ResetEngineDefaults()
+		E:RefreshGUI()
+	end)
+Engine.spacerIntro                                                              = ACH:Spacer(2, 'full')
+
+Engine.core                                                                     = ACH:Group(BlizzardL('NAMEPLATE_LABEL'), nil, 2)
+Engine.core.args.predictedHealthAndPower                                        = ACH:Toggle(
+	BlizzardL('NAMEPLATE_PREDICTED_HEALTH_AND_POWER'), nil, 1, nil, nil, nil, EngineGetKey('predictedHealthAndPower'),
+	EngineSetKey('predictedHealthAndPower'))
+Engine.core.args.loadDistance                                                   = ACH:Range(BlizzardL('NAMEPLATE_MAX_DISTANCE'),
+	L["Maximum distance (yards) at which nameplates are loaded."], 2, { min = 41, max = 79, step = 1 }, nil,
+	EngineGetKey('loadDistance'), EngineSetKey('loadDistance'))
+Engine.core.args.dynamicScale                                                   = ACH:Toggle(
+	BlizzardL('NAMEPLATES_MAKE_DYNAMIC_SCALE'), nil, 3, nil, nil, nil, EngineGetKey('dynamicScale'),
+	EngineSetKey('dynamicScale'))
+Engine.core.args.dynamicAlpha                                                   = ACH:Toggle(
+	BlizzardL('NAMEPLATES_MAKE_DYNAMIC_ALPHA'), nil, 4, nil, nil, nil, EngineGetKey('dynamicAlpha'),
+	EngineSetKey('dynamicAlpha'))
+Engine.core.args.offsetY                                                        = ACH:Range(BlizzardL('NAMEPLATE_OFFSET_Y'),
+	nil, 5, { min = -25, max = 25, step = 1 }, nil, EngineGetKey('offsetY'), EngineSetKey('offsetY'))
+Engine.core.args.showOnlyNames                                                  = ACH:Select(
+	BlizzardL('NAMEPLATE_SHOW_ONLY_NAMES'), nil, 6, showOnlyNamesValues, nil, nil,
+	function() return tostring(NP:GetEngineCVar('showOnlyNames')) end,
+	function(_, value) EngineSetKey('showOnlyNames')(nil, tonumber(value)) end)
+
+Engine.friendly                                                                 = ACH:Group(L["Friendly"], nil, 3)
+Engine.friendly.args.showClassColorFriendly                                     = ACH:Toggle(
+	BlizzardL('SHOW_CLASS_COLOR_IN_FRIENDLY_NAMEPLATE'), nil, 1, nil, nil, nil, EngineGetKey('showClassColorFriendly'),
+	EngineSetKey('showClassColorFriendly'))
+Engine.friendly.args.showNameClassColorFriendly                                 = ACH:Toggle(
+	BlizzardL('SHOW_NAME_CLASS_COLOR_IN_FRIENDLY_NAMEPLATE'), nil, 2, nil, nil, nil,
+	EngineGetKey('showNameClassColorFriendly'), EngineSetKey('showNameClassColorFriendly'))
+Engine.friendly.args.showDebuffsOnFriendly                                      = ACH:Toggle(
+	BlizzardL('NAMEPLATE_SHOW_DEBUFF_ON_FRIENDLY'), nil, 3, nil, nil, nil, EngineGetKey('showDebuffsOnFriendly'),
+	EngineSetKey('showDebuffsOnFriendly'))
+Engine.friendly.args.otherAtBase                                                = ACH:Toggle(
+	BlizzardL('NAMEPLATE_OTHER_AT_BASE'), nil, 4, nil, nil, nil, EngineGetKey('otherAtBase'),
+	EngineSetKey('otherAtBase'))
+Engine.friendly.args.targetRadialPosition                                       = ACH:Select(
+	BlizzardL('NAMEPLATE_TARGET_RADIAL_POSITION'), nil, 5, targetRadialValues, nil, nil,
+	function() return tostring(NP:GetEngineCVar('targetRadialPosition')) end,
+	function(_, value) EngineSetKey('targetRadialPosition')(nil, tonumber(value)) end)
+
+Engine.scaleAlpha                                                               = ACH:Group(L["Scale & Alpha"], nil, 4)
+Engine.scaleAlpha.args.horizontalScale                                          = ACH:Range(
+	BlizzardL('NAMEPLATE_HORIZONTAL_SCALE'), nil, 1, { min = 0, max = 2, step = 0.05 }, nil,
+	EngineGetKey('horizontalScale'), EngineSetKey('horizontalScale'))
+Engine.scaleAlpha.args.verticalScale                                            = ACH:Range(
+	BlizzardL('NAMEPLATE_VERTICAL_SCALE'), nil, 2, { min = 0, max = 2, step = 0.05 }, nil,
+	EngineGetKey('verticalScale'), EngineSetKey('verticalScale'))
+Engine.scaleAlpha.args.globalScale                                              = ACH:Range(
+	BlizzardL('NAMEPLATE_GLOBAL_SCALE'), nil, 3, { min = 0.5, max = 1.5, step = 0.1 }, nil,
+	EngineGetKey('globalScale'), EngineSetKey('globalScale'))
+Engine.scaleAlpha.args.selectedScale                                            = ACH:Range(BlizzardL('NAMEPLATE_SELECTED_SCALE'),
+	L["Used when |cff1784d1Use Target Scale|r is disabled in General."], 4, { min = 1, max = 2, step = 0.1 }, nil,
+	EngineGetKey('selectedScale'), EngineSetKey('selectedScale'), nil,
+	function() return E.db.nameplates.useTargetScale end)
+Engine.scaleAlpha.args.occludedAlphaMult                                        = ACH:Range(
+	BlizzardL('NAMEPLATE_OCCLUDED_ALPHA_MULT'), nil, 10, { min = 0.05, max = 1, step = 0.05 }, nil,
+	EngineGetKey('occludedAlphaMult'), EngineSetKey('occludedAlphaMult'))
+Engine.scaleAlpha.args.selectedAlpha                                            = ACH:Range(
+	BlizzardL('NAMEPLATE_SELECTED_ALPHA'), nil, 11, { min = 0.05, max = 1, step = 0.05 }, nil,
+	EngineGetKey('selectedAlpha'), EngineSetKey('selectedAlpha'))
+Engine.personal                                                                 = ACH:Group(L["Personal"], nil, 5)
+Engine.personal.args.showSelf                                                     = ACH:Toggle(
+	BlizzardL('DISPLAY_PERSONAL_RESOURCE'), nil, 1, nil, nil, nil, EngineGetKey('showSelf'), EngineSetKey('showSelf'))
+Engine.personal.args.personalClickThrough                                       = ACH:Toggle(
+	BlizzardL('PERSONAL_RESOURCE_CLICK_THROUGH'), nil, 2, nil, nil, nil, EngineGetKey('personalClickThrough'),
+	EngineSetKey('personalClickThrough'))
+Engine.personal.args.selfAlpha                                                  = ACH:Range(
+	BlizzardL('PERSONAL_RESOURCE_ALPHA'), nil, 3, { min = 0.05, max = 1, step = 0.05 }, nil, EngineGetKey('selfAlpha'),
+	EngineSetKey('selfAlpha'))
+Engine.personal.args.personalShowAlways                                         = ACH:Toggle(
+	BlizzardL('DISPLAY_PERSONAL_SHOW_ALWAYS'), nil, 4, nil, nil, nil, EngineGetKey('personalShowAlways'),
+	EngineSetKey('personalShowAlways'))
+Engine.personal.args.personalShowInCombat                                       = ACH:Toggle(
+	BlizzardL('DISPLAY_PERSONAL_SHOW_IN_COMBAT'), nil, 5, nil, nil, nil, EngineGetKey('personalShowInCombat'),
+	EngineSetKey('personalShowInCombat'))
+Engine.personal.args.personalShowWithTarget                                     = ACH:Select(
+	BlizzardL('DISPLAY_PERSONAL_SHOW_WITH_TARGET'), nil, 6, personalShowWithTargetValues, nil, nil,
+	function() return tostring(NP:GetEngineCVar('personalShowWithTarget')) end,
+	function(_, value) EngineSetKey('personalShowWithTarget')(nil, tonumber(value)) end)
+Engine.personal.args.personalOffsetY                                            = ACH:Range(
+	BlizzardL('NAMEPLATE_PERSONAL_OFFSET_Y'), nil, 7, { min = -25, max = 25, step = 1 }, nil,
+	EngineGetKey('personalOffsetY'), EngineSetKey('personalOffsetY'))
+Engine.personal.args.resourceOnTarget                                           = ACH:Toggle(
+	BlizzardL('DISPLAY_PERSONAL_RESOURCE_ON_ENEMY'), nil, 8, nil, nil, nil, EngineGetKey('resourceOnTarget'),
+	EngineSetKey('resourceOnTarget'))
+Engine.personal.args.classResourceTopInset                                      = ACH:Range(
+	BlizzardL('NAMEPLATE_PERSONAL_RESOURCE_TOP_INSET'), nil, 9, { min = 0, max = 0.5, step = 0.01 }, nil,
+	EngineGetKey('classResourceTopInset'), EngineSetKey('classResourceTopInset'))
+
+-- ============================================================
 -- Colors Group
 -- ============================================================
 
-NamePlates.colorsGroup                                                        = ACH:Group(L["Colors"], nil, 15, nil, nil,
-	nil, function() return not NP.Initialized end)
+NamePlates.colorsGroup                                                        = ACH:Group(L["Colors"], nil, 20)
 
 NamePlates.colorsGroup.args.general                                           = ACH:Group(L["General"], nil, 1, nil,
 	function(info)
@@ -966,8 +1113,7 @@ NamePlates.colorsGroup.args.misc.args.tapped                       = ACH:Color(L
 -- Per-Unit Settings
 -- ============================================================
 
-NamePlates.unitsGroup                                              = ACH:Group(L["Units"], nil, 20, 'tree', nil, nil,
-	function() return not NP.Initialized end)
+NamePlates.unitsGroup                                              = ACH:Group(L["Units"], nil, 15, 'tree')
 local Units                                                        = NamePlates.unitsGroup.args
 
 Units.FRIENDLY_PLAYER                                              = GetUnitSettings('FRIENDLY_PLAYER',
@@ -998,8 +1144,7 @@ Units.PLAYER.args.classpower.args.yOffset                         = ACH:Range(L[
 	{ min = -100, max = 100, step = 1 })
 
 -- Target unit: classpower (combo points for Rogue/Druid, DK runes on the targeted nameplate)
-Units.TARGET                                                       = ACH:Group(L["TARGET"], nil, 10, 'tree', nil, nil,
-	function() return not NP.Initialized end)
+Units.TARGET                                                       = ACH:Group(L["TARGET"], nil, 10, 'tree')
 Units.TARGET.args.classpower                                       = ACH:Group(L["Class Power"], nil, 1, nil,
 	function(info) return E.db.nameplates.units.TARGET.classpower[info[#info]] end,
 	function(info, value)
