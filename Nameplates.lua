@@ -4,7 +4,7 @@ local NP = E:GetModule('NamePlates')
 local ACD = E.Libs.AceConfigDialog
 local ACH = E.Libs.ACH
 
-local _G = _G
+-- local _G = _G
 local max, strfind, wipe = math.max, string.find, wipe
 local pairs, type, strsplit = pairs, type, strsplit
 local next, tonumber, format = next, tonumber, string.format
