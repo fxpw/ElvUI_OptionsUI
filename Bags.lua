@@ -699,7 +699,7 @@ E.Options.args.bags = {
 					type = "range",
 					name = L["Sell Interval"],
 					desc = L["Will attempt to sell another item in set interval after previous one was sold."],
-					min = 0.1, max = 1, step = 0.1,
+					min = 0.01, max = 1, step = 0.01,
 					disabled = function() return not E.db.bags.vendorGrays.enable end
 				},
 				details = {
