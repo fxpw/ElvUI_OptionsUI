@@ -649,6 +649,7 @@ local function GetUnitSettings(unit, name)
 		group.args.general.args.markTanks         = ACH:Toggle(L["Tank Icon"],
 			L["Display a tank icon over known tanks inside battlegrounds or arenas."], 106)
 		group.args.healthGroup.args.useClassColor = ACH:Toggle(L["Use Class Color"], nil, 10)
+		group.args.nameGroup.args.useClassColor   = ACH:Toggle(L["Use Class Color"], nil, 4)
 	end
 
 	if unit == 'ENEMY_NPC' or unit == 'FRIENDLY_NPC' then
