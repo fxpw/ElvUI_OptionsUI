@@ -1115,20 +1115,7 @@ NamePlates.colorsGroup.args.reactions.inline                       = true
 NamePlates.colorsGroup.args.reactions.args.bad                     = ACH:Color(L["Enemy"], nil, 1)
 NamePlates.colorsGroup.args.reactions.args.neutral                 = ACH:Color(L["Neutral"], nil, 2)
 NamePlates.colorsGroup.args.reactions.args.good                    = ACH:Color(L["Friendly"], nil, 3)
-NamePlates.colorsGroup.args.reactions.args.friendlyPlayer          = ACH:Color(L["Friendly Player"], nil, 4)
-
-NamePlates.colorsGroup.args.misc                                   = ACH:Group(L["Misc"], nil, 6, nil,
-	function(info)
-		local t, d = E.db.nameplates.colors[info[#info]], P.nameplates.colors[info[#info]]
-		return t.r, t.g, t.b, t.a, d.r, d.g, d.b
-	end,
-	function(info, r, g, b)
-		local t = E.db.nameplates.colors[info[#info]]
-		t.r, t.g, t.b = r, g, b
-		NP:ConfigureAll()
-	end)
-NamePlates.colorsGroup.args.misc.inline                            = true
-NamePlates.colorsGroup.args.misc.args.tapped                       = ACH:Color(L["Tapped"], nil, 1)
+NamePlates.colorsGroup.args.reactions.args.tapped                  = ACH:Color(L["Tapped"], nil, 4, nil, nil, function(info) local t, d = E.db.nameplates.colors[info[#info]], P.nameplates.colors[info[#info]] return t.r, t.g, t.b, t.a, d.r, d.g, d.b end, function(info, r, g, b) local t = E.db.nameplates.colors[info[#info]] t.r, t.g, t.b = r, g, b NP:ConfigureAll() end)
 
 -- ============================================================
 -- Per-Unit Settings
