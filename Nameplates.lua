@@ -4,7 +4,6 @@ local NP = E:GetModule('NamePlates')
 local ACD = E.Libs.AceConfigDialog
 local ACH = E.Libs.ACH
 
--- local _G = _G
 local max, strfind, wipe = math.max, string.find, wipe
 local pairs, type, strsplit = pairs, type, strsplit
 local next, tonumber, format = next, tonumber, string.format
@@ -717,9 +716,7 @@ local function GetUnitSettings(unit, name)
 	return group
 end
 
--- ============================================================
--- Main Nameplates Options Entry Point
--- ============================================================
+-- Main Nameplates options entry point
 
 E.Options.args.nameplates                                                     = ACH:Group(L["NamePlates"], nil, 2, 'tab',
 	function(info) return E.db.nameplates[info[#info]] end,
@@ -744,9 +741,7 @@ NamePlates.statusbar                                                          = 
 NamePlates.resetFilters                                                       = ACH:Execute(L["Reset Aura Filters"], nil,
 	3, function() E:StaticPopup_Show('RESET_NP_AF') end)
 
--- ============================================================
--- General Group
--- ============================================================
+-- General group
 
 NamePlates.generalGroup                                                       = ACH:Group(L["General"], nil, 5, nil,
 	function(info) return E.db.nameplates[info[#info]] end,
@@ -912,9 +907,7 @@ NamePlates.generalGroup.args.threatGroup.args.beingTankedByTank               = 
 NamePlates.generalGroup.args.threatGroup.args.indicator                       = ACH:Toggle(L["Show Icon"], nil, 5, nil,
 	nil, nil, nil, nil, function() return not E.db.nameplates.threat.enable end)
 
--- ============================================================
--- Blizzard Engine / CVar Group (Interface Options NamePlate panel)
--- ============================================================
+-- Blizzard engine / CVar group
 
 NamePlates.engineGroup                                                        = ACH:Group(L["Nameplate Engine"], nil, 4,
 	L["Client nameplate engine settings (CVar). Replaces the default Interface > Names panel."])
@@ -1016,9 +1009,7 @@ Engine.personal.args.classResourceTopInset                                      
 	BlizzardL('NAMEPLATE_PERSONAL_RESOURCE_TOP_INSET'), nil, 9, { min = 0, max = 0.5, step = 0.01 }, nil,
 	EngineGetKey('classResourceTopInset'), EngineSetKey('classResourceTopInset'))
 
--- ============================================================
--- Colors Group
--- ============================================================
+-- Colors group
 
 NamePlates.colorsGroup                                                        = ACH:Group(L["Colors"], nil, 20)
 
@@ -1118,9 +1109,7 @@ NamePlates.colorsGroup.args.reactions.args.neutral                 = ACH:Color(L
 NamePlates.colorsGroup.args.reactions.args.good                    = ACH:Color(L["Friendly"], nil, 3)
 NamePlates.colorsGroup.args.reactions.args.tapped                  = ACH:Color(L["Tapped"], nil, 4, nil, nil, function(info) local t, d = E.db.nameplates.colors[info[#info]], P.nameplates.colors[info[#info]] return t.r, t.g, t.b, t.a, d.r, d.g, d.b end, function(info, r, g, b) local t = E.db.nameplates.colors[info[#info]] t.r, t.g, t.b = r, g, b NP:ConfigureAll() end)
 
--- ============================================================
--- Per-Unit Settings
--- ============================================================
+-- Per-unit settings
 
 NamePlates.unitsGroup                                              = ACH:Group(L["Units"], nil, 15, 'tree')
 local Units                                                        = NamePlates.unitsGroup.args
