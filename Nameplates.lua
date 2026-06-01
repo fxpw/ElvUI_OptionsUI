@@ -955,7 +955,8 @@ Engine.core.args.offsetY                                                        
 Engine.core.args.showOnlyNames                                                  = ACH:Select(
 	BlizzardL('NAMEPLATE_SHOW_ONLY_NAMES'), nil, 6, showOnlyNamesValues, nil, nil,
 	function() return tostring(NP:GetEngineCVar('showOnlyNames')) end,
-	function(_, value) EngineSetKey('showOnlyNames')(nil, tonumber(value)) end)
+	function(_, value) EngineSetKey('showOnlyNames')(nil, tonumber(value)) end,
+	nil, function() return E.private.nameplates.enable end)
 
 Engine.friendly                                                                 = ACH:Group(L["Friendly"], nil, 3)
 Engine.friendly.args.showClassColorFriendly                                     = ACH:Toggle(
