@@ -859,6 +859,19 @@ NamePlates.generalGroup.args.clickableRange.args.personal.args.personalWidth  = 
 NamePlates.generalGroup.args.clickableRange.args.personal.args.personalHeight = ACH:Range(L["Clickable Height"],
 	L["Height of your own (personal) nameplate."], 2, { min = 10, max = 75, step = 1 })
 
+NamePlates.generalGroup.args.serviceAuras                                     = ACH:Group("Служебные ауры Sirus", "Скрывать на плашках служебные ауры сервера: категория/ранг, премиум, VIP, зодиак, фракция.", 78, nil,
+	function(info) return E.db.nameplates.serviceAuras[info[#info]] end,
+	function(info, value)
+		E.db.nameplates.serviceAuras[info[#info]] = value
+		NP:ConfigureAll()
+	end)
+NamePlates.generalGroup.args.serviceAuras.inline                              = true
+NamePlates.generalGroup.args.serviceAuras.args.category                       = ACH:Toggle("Скрыть категории", "Ауры категорий и рангов игроков (1-я … 7-я, вне категории).", 1)
+NamePlates.generalGroup.args.serviceAuras.args.premium                        = ACH:Toggle("Скрыть премиум", nil, 2)
+NamePlates.generalGroup.args.serviceAuras.args.vip                            = ACH:Toggle("Скрыть VIP", nil, 3)
+NamePlates.generalGroup.args.serviceAuras.args.zodiac                         = ACH:Toggle("Скрыть зодиак", nil, 4)
+NamePlates.generalGroup.args.serviceAuras.args.faction                        = ACH:Toggle("Скрыть фракционные", "Служебные дебафы подмены фракции (FACTION_OVERRIDE).", 5)
+
 NamePlates.generalGroup.args.cutaway                                          = ACH:Group(L["Cutaway Bars"], nil, 75)
 NamePlates.generalGroup.args.cutaway.args.health                              = ACH:Group(L["Health"], nil, 1, nil,
 	function(info) return E.db.nameplates.cutaway.health[info[#info]] end,

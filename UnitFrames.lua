@@ -2768,6 +2768,22 @@ E.Options.args.unitframe = {
 							name = L["СlearAuraClickMiddleBitton"],
 							desc = L["СlearAuraClickMiddleBitton"],
 						},
+						serviceAuras = {
+							order = 10,
+							type = "group",
+							guiInline = true,
+							name = "Служебные ауры Sirus",
+							desc = "Скрывать на фреймах служебные ауры сервера: категория/ранг, премиум, VIP, зодиак, фракция.",
+							get = function(info) return E.db.unitframe.serviceAuras[info[#info]] end,
+							set = function(info, value) E.db.unitframe.serviceAuras[info[#info]] = value UF:Update_AllFrames() end,
+							args = {
+								category = { order = 1, type = "toggle", name = "Скрыть категории", desc = "Ауры категорий и рангов игроков (1-я … 7-я, вне категории)." },
+								premium = { order = 2, type = "toggle", name = "Скрыть премиум" },
+								vip = { order = 3, type = "toggle", name = "Скрыть VIP" },
+								zodiac = { order = 4, type = "toggle", name = "Скрыть зодиак" },
+								faction = { order = 5, type = "toggle", name = "Скрыть фракционные", desc = "Служебные дебафы подмены фракции (FACTION_OVERRIDE)." },
+							}
+						},
 					}
 				},
 				frameGlowGroup = {

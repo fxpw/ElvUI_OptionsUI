@@ -202,6 +202,21 @@ E.Options.args.auras = {
 					name = L["Count yOffset"],
 					min = -60, max = 60, step = 1
 				},
+				serviceAuras = {
+					order = 11,
+					type = "group",
+					name = "Служебные ауры Sirus",
+					guiInline = true,
+					get = function(info) return E.db.auras.serviceAuras[info[#info]] end,
+					set = function(info, value) E.db.auras.serviceAuras[info[#info]] = value; A:UpdateHeader(ElvUIPlayerBuffs); A:UpdateHeader(ElvUIPlayerDebuffs) end,
+					args = {
+						category = { order = 1, type = "toggle", name = "Скрыть категории", desc = "Ауры категорий и рангов игроков (1-я … 7-я, вне категории)." },
+						premium = { order = 2, type = "toggle", name = "Скрыть премиум" },
+						vip = { order = 3, type = "toggle", name = "Скрыть VIP" },
+						zodiac = { order = 4, type = "toggle", name = "Скрыть зодиак" },
+						faction = { order = 5, type = "toggle", name = "Скрыть фракционные", desc = "Служебные дебафы подмены фракции (FACTION_OVERRIDE)." },
+					}
+				},
 				statusBar = {
 					order = 10,
 					type = "group",
