@@ -39,6 +39,24 @@ local function EngineSetKey(key)
 	end
 end
 
+local function SetShowSelf(_, value)
+	if not E.db.nameplates.engine then
+		E.db.nameplates.engine = E:CopyTable(P.nameplates.engine)
+	end
+	local e = E.db.nameplates.engine
+	e.showSelf = value
+	NP:ApplyEngineOption('showSelf')
+	-- Sirus рисует плашку игрока только при showSelf И хотя бы одном условии показа; иначе тумблер - no-op.
+	if value and not e.personalShowAlways and not e.personalShowInCombat and (tonumber(e.personalShowWithTarget) or 0) == 0 then
+		e.personalShowAlways = true
+		NP:ApplyEngineOption('personalShowAlways')
+	end
+	if NP.Initialized then
+		NP:ConfigureAll()
+	end
+	E:RefreshGUI()
+end
+
 local showOnlyNamesValues = {
 	['0'] = BlizzardL('NAMEPLATE_SHOW_ONLY_NAMES_OPTION_0'),
 	['1'] = BlizzardL('NAMEPLATE_SHOW_ONLY_NAMES_OPTION_1'),
@@ -982,7 +1000,7 @@ Engine.scaleAlpha.args.selectedAlpha                                            
 	EngineGetKey('selectedAlpha'), EngineSetKey('selectedAlpha'))
 Engine.personal                                                                 = ACH:Group(L["Personal"], nil, 5)
 Engine.personal.args.showSelf                                                     = ACH:Toggle(
-	BlizzardL('DISPLAY_PERSONAL_RESOURCE'), nil, 1, nil, nil, nil, EngineGetKey('showSelf'), EngineSetKey('showSelf'))
+	BlizzardL('DISPLAY_PERSONAL_RESOURCE'), 'Показывает индикатор под вашим персонажем. Если не выбрано ни одно условие показа (Всегда / В бою / С целью), при включении автоматически включится «Показывать всегда».', 1, nil, nil, nil, EngineGetKey('showSelf'), SetShowSelf)
 Engine.personal.args.personalClickThrough                                       = ACH:Toggle(
 	BlizzardL('PERSONAL_RESOURCE_CLICK_THROUGH'), nil, 2, nil, nil, nil, EngineGetKey('personalClickThrough'),
 	EngineSetKey('personalClickThrough'))
