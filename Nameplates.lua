@@ -46,7 +46,7 @@ local function SetShowSelf(_, value)
 	local e = E.db.nameplates.engine
 	e.showSelf = value
 	NP:ApplyEngineOption('showSelf')
-	-- Sirus рисует плашку игрока только при showSelf И хотя бы одном условии показа; иначе тумблер - no-op.
+	-- Sirus shows the personal plate only with showSelf AND a show condition; else toggle is a no-op.
 	if value and not e.personalShowAlways and not e.personalShowInCombat and (tonumber(e.personalShowWithTarget) or 0) == 0 then
 		e.personalShowAlways = true
 		NP:ApplyEngineOption('personalShowAlways')
@@ -319,7 +319,6 @@ local function GetUnitSettings(unit, name)
 		}
 	end
 
-	-- General
 	group.args.general                                                               = ACH:Group(L["General"], nil, 1,
 		nil,
 		function(info) return E.db.nameplates.units[unit][info[#info]] end,
@@ -335,7 +334,6 @@ local function GetUnitSettings(unit, name)
 		L["Will show Buffs in the Debuff position when there are no Debuffs active, or vice versa."], 104,
 		C.Values.SmartAuraPositions)
 
-	-- Health
 	group.args.healthGroup                                                           = ACH:Group(L["Health"], nil, 10,
 		nil,
 		function(info) return E.db.nameplates.units[unit].health[info[#info]] end,
@@ -375,7 +373,6 @@ local function GetUnitSettings(unit, name)
 	group.args.healthGroup.args.textGroup.args.fontGroup.args.fontOutline            = ACH:FontFlags(L["Font Outline"],
 		nil, 3)
 
-	-- Heal Prediction (incoming heals + absorbs)
 	group.args.healthGroup.args.healPrediction                                       = ACH:Group(L["Heal Prediction"],
 		nil, 300, nil,
 		function(info) return E.db.nameplates.units[unit].health.healPrediction[info[#info]] end,
@@ -432,7 +429,6 @@ local function GetUnitSettings(unit, name)
 	group.args.healthGroup.args.healPrediction.args.colorsGroup.args.overhealabsorbs = ACH:Color(L["Over Heal Absorbs"],
 		nil, 6, true)
 
-	-- Power
 	group.args.powerGroup                                                            = ACH:Group(L["Power"], nil, 15, nil,
 		function(info) return E.db.nameplates.units[unit].power[info[#info]] end,
 		function(info, value)
@@ -478,7 +474,6 @@ local function GetUnitSettings(unit, name)
 	group.args.powerGroup.args.textGroup.args.fontGroup.args.fontOutline             = ACH:FontFlags(L["Font Outline"],
 		nil, 3)
 
-	-- Cast Bar
 	group.args.castGroup                                                             = ACH:Group(L["Cast Bar"], nil, 20,
 		nil,
 		function(info) return E.db.nameplates.units[unit].castbar[info[#info]] end,
@@ -551,13 +546,11 @@ local function GetUnitSettings(unit, name)
 	group.args.castGroup.args.fontGroup.args.fontOutline                             = ACH:FontFlags(L["Font Outline"],
 		nil, 3)
 
-	-- Buffs / Debuffs
 	group.args.buffsGroup                                                            = BuildAuraGroup(unit, 'buffs',
 		L["Buffs"], 25)
 	group.args.debuffsGroup                                                          = BuildAuraGroup(unit, 'debuffs',
 		L["Debuffs"], 30)
 
-	-- Portrait
 	group.args.portraitGroup                                                         = ACH:Group(L["Portrait"], nil, 40,
 		nil,
 		function(info) return E.db.nameplates.units[unit].portrait[info[#info]] end,
@@ -579,7 +572,6 @@ local function GetUnitSettings(unit, name)
 	group.args.portraitGroup.args.yOffset                                            = ACH:Range(L["Y-Offset"], nil, 6,
 		{ min = -100, max = 100, step = 1 })
 
-	-- Level
 	group.args.levelGroup                                                            = ACH:Group(L["Level"], nil, 45, nil,
 		function(info) return E.db.nameplates.units[unit].level[info[#info]] end,
 		function(info, value)
@@ -604,7 +596,6 @@ local function GetUnitSettings(unit, name)
 	group.args.levelGroup.args.fontGroup.args.fontOutline                            = ACH:FontFlags(L["Font Outline"],
 		nil, 3)
 
-	-- Name
 	group.args.nameGroup                                                             = ACH:Group(L["Name"], nil, 50, nil,
 		function(info) return E.db.nameplates.units[unit].name[info[#info]] end,
 		function(info, value)
@@ -629,7 +620,6 @@ local function GetUnitSettings(unit, name)
 	group.args.nameGroup.args.fontGroup.args.fontOutline                             = ACH:FontFlags(L["Font Outline"],
 		nil, 3)
 
-	-- Raid Target Indicator
 	group.args.raidTargetIndicator                                                   = ACH:Group(L["Target Marker Icon"],
 		nil, 65, nil,
 		function(info) return E.db.nameplates.units[unit].raidTargetIndicator[info[#info]] end,
@@ -734,8 +724,6 @@ local function GetUnitSettings(unit, name)
 	return group
 end
 
--- Main Nameplates options entry point
-
 E.Options.args.nameplates                                                     = ACH:Group(L["NamePlates"], nil, 2, 'tab',
 	function(info) return E.db.nameplates[info[#info]] end,
 	function(info, value)
@@ -758,8 +746,6 @@ NamePlates.statusbar                                                          = 
 	L["StatusBar Texture"], nil, 2)
 NamePlates.resetFilters                                                       = ACH:Execute(L["Reset Aura Filters"], nil,
 	3, function() E:StaticPopup_Show('RESET_NP_AF') end)
-
--- General group
 
 NamePlates.generalGroup                                                       = ACH:Group(L["General"], nil, 5, nil,
 	function(info) return E.db.nameplates[info[#info]] end,
@@ -925,8 +911,6 @@ NamePlates.generalGroup.args.threatGroup.args.beingTankedByTank               = 
 NamePlates.generalGroup.args.threatGroup.args.indicator                       = ACH:Toggle(L["Show Icon"], nil, 5, nil,
 	nil, nil, nil, nil, function() return not E.db.nameplates.threat.enable end)
 
--- Blizzard engine / CVar group
-
 NamePlates.engineGroup                                                        = ACH:Group(L["Nameplate Engine"], nil, 4,
 	L["Client nameplate engine settings (CVar). Replaces the default Interface > Names panel."])
 
@@ -1027,8 +1011,6 @@ Engine.personal.args.classResourceTopInset                                      
 	BlizzardL('NAMEPLATE_PERSONAL_RESOURCE_TOP_INSET'), nil, 9, { min = 0, max = 0.5, step = 0.01 }, nil,
 	EngineGetKey('classResourceTopInset'), EngineSetKey('classResourceTopInset'))
 
--- Colors group
-
 NamePlates.colorsGroup                                                        = ACH:Group(L["Colors"], nil, 20)
 
 NamePlates.colorsGroup.args.general                                           = ACH:Group(L["General"], nil, 1, nil,
@@ -1127,8 +1109,6 @@ NamePlates.colorsGroup.args.reactions.args.neutral                 = ACH:Color(L
 NamePlates.colorsGroup.args.reactions.args.good                    = ACH:Color(L["Friendly"], nil, 3)
 NamePlates.colorsGroup.args.reactions.args.tapped                  = ACH:Color(L["Tapped"], nil, 4, nil, nil, function(info) local t, d = E.db.nameplates.colors[info[#info]], P.nameplates.colors[info[#info]] return t.r, t.g, t.b, t.a, d.r, d.g, d.b end, function(info, r, g, b) local t = E.db.nameplates.colors[info[#info]] t.r, t.g, t.b = r, g, b NP:ConfigureAll() end)
 
--- Per-unit settings
-
 NamePlates.unitsGroup                                              = ACH:Group(L["Units"], nil, 15, 'tree')
 local Units                                                        = NamePlates.unitsGroup.args
 
@@ -1139,7 +1119,6 @@ Units.FRIENDLY_NPC                                                 = GetUnitSett
 Units.ENEMY_NPC                                                    = GetUnitSettings('ENEMY_NPC', L["ENEMY_NPC"])
 Units.PLAYER                                                       = GetUnitSettings('PLAYER', L["Player"])
 
--- Player unit: classpower (combo points under the player's own nameplate, Rogue/Druid only)
 Units.PLAYER.args.classpower                                       = ACH:Group(L["Class Power"], nil, 10, nil,
 	function(info) return E.db.nameplates.units.PLAYER.classpower[info[#info]] end,
 	function(info, value)
@@ -1159,7 +1138,6 @@ Units.PLAYER.args.classpower.args.xOffset                         = ACH:Range(L[
 Units.PLAYER.args.classpower.args.yOffset                         = ACH:Range(L["Y-Offset"], nil, 6,
 	{ min = -100, max = 100, step = 1 })
 
--- Target unit: classpower (combo points for Rogue/Druid, DK runes on the targeted nameplate)
 Units.TARGET                                                       = ACH:Group(L["TARGET"], nil, 10, 'tree')
 Units.TARGET.args.classpower                                       = ACH:Group(L["Class Power"], nil, 1, nil,
 	function(info) return E.db.nameplates.units.TARGET.classpower[info[#info]] end,
