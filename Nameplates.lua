@@ -35,7 +35,6 @@ local function EngineSetKey(key)
 		if NP.Initialized then
 			NP:ConfigureAll()
 		end
-		E:RefreshGUI()
 	end
 end
 
