@@ -35,7 +35,6 @@ local function EngineSetKey(key)
 		if NP.Initialized then
 			NP:ConfigureAll()
 		end
-		E:RefreshGUI()
 	end
 end
 
@@ -809,7 +808,8 @@ NamePlates.generalGroup.args.nonTargetTransparency                            = 
 	function(_, value)
 		E.db.nameplates.nonTargetTransparency = value
 		NP:ApplyEngineOption('notSelectedAlpha')
-	end)
+	end,
+	nil, function() return E.private.nameplates.enable end)
 
 NamePlates.generalGroup.args.spacer2                                          = ACH:Spacer(20, 'full')
 
@@ -858,6 +858,19 @@ NamePlates.generalGroup.args.clickableRange.args.personal.args.personalWidth  = 
 	L["Width of your own (personal) nameplate."], 1, { min = 50, max = 250, step = 1 })
 NamePlates.generalGroup.args.clickableRange.args.personal.args.personalHeight = ACH:Range(L["Clickable Height"],
 	L["Height of your own (personal) nameplate."], 2, { min = 10, max = 75, step = 1 })
+
+NamePlates.generalGroup.args.serviceAuras                                     = ACH:Group("Служебные ауры Sirus", "Скрывать на плашках служебные ауры сервера: категория/ранг, премиум, VIP, зодиак, фракция.", 78, nil,
+	function(info) return E.db.nameplates.serviceAuras[info[#info]] end,
+	function(info, value)
+		E.db.nameplates.serviceAuras[info[#info]] = value
+		NP:ConfigureAll()
+	end)
+NamePlates.generalGroup.args.serviceAuras.inline                              = true
+NamePlates.generalGroup.args.serviceAuras.args.category                       = ACH:Toggle("Скрыть категории", "Ауры категорий и рангов игроков (1-я … 7-я, вне категории).", 1)
+NamePlates.generalGroup.args.serviceAuras.args.premium                        = ACH:Toggle("Скрыть премиум", nil, 2)
+NamePlates.generalGroup.args.serviceAuras.args.vip                            = ACH:Toggle("Скрыть VIP", nil, 3)
+NamePlates.generalGroup.args.serviceAuras.args.zodiac                         = ACH:Toggle("Скрыть зодиак", nil, 4)
+NamePlates.generalGroup.args.serviceAuras.args.faction                        = ACH:Toggle("Скрыть фракционные", "Служебные дебафы подмены фракции (FACTION_OVERRIDE).", 5)
 
 NamePlates.generalGroup.args.cutaway                                          = ACH:Group(L["Cutaway Bars"], nil, 75)
 NamePlates.generalGroup.args.cutaway.args.health                              = ACH:Group(L["Health"], nil, 1, nil,
@@ -936,13 +949,14 @@ Engine.core.args.dynamicScale                                                   
 	EngineSetKey('dynamicScale'))
 Engine.core.args.dynamicAlpha                                                   = ACH:Toggle(
 	BlizzardL('NAMEPLATES_MAKE_DYNAMIC_ALPHA'), nil, 4, nil, nil, nil, EngineGetKey('dynamicAlpha'),
-	EngineSetKey('dynamicAlpha'))
+	EngineSetKey('dynamicAlpha'), nil, function() return E.private.nameplates.enable end)
 Engine.core.args.offsetY                                                        = ACH:Range(BlizzardL('NAMEPLATE_OFFSET_Y'),
 	nil, 5, { min = -25, max = 25, step = 1 }, nil, EngineGetKey('offsetY'), EngineSetKey('offsetY'))
 Engine.core.args.showOnlyNames                                                  = ACH:Select(
 	BlizzardL('NAMEPLATE_SHOW_ONLY_NAMES'), nil, 6, showOnlyNamesValues, nil, nil,
 	function() return tostring(NP:GetEngineCVar('showOnlyNames')) end,
-	function(_, value) EngineSetKey('showOnlyNames')(nil, tonumber(value)) end)
+	function(_, value) EngineSetKey('showOnlyNames')(nil, tonumber(value)) end,
+	nil, function() return E.private.nameplates.enable end)
 
 Engine.friendly                                                                 = ACH:Group(L["Friendly"], nil, 3)
 Engine.friendly.args.showClassColorFriendly                                     = ACH:Toggle(
@@ -978,10 +992,10 @@ Engine.scaleAlpha.args.selectedScale                                            
 	function() return E.db.nameplates.useTargetScale end)
 Engine.scaleAlpha.args.occludedAlphaMult                                        = ACH:Range(
 	BlizzardL('NAMEPLATE_OCCLUDED_ALPHA_MULT'), nil, 10, { min = 0.05, max = 1, step = 0.05 }, nil,
-	EngineGetKey('occludedAlphaMult'), EngineSetKey('occludedAlphaMult'))
+	EngineGetKey('occludedAlphaMult'), EngineSetKey('occludedAlphaMult'), nil, function() return E.private.nameplates.enable end)
 Engine.scaleAlpha.args.selectedAlpha                                            = ACH:Range(
 	BlizzardL('NAMEPLATE_SELECTED_ALPHA'), nil, 11, { min = 0.05, max = 1, step = 0.05 }, nil,
-	EngineGetKey('selectedAlpha'), EngineSetKey('selectedAlpha'))
+	EngineGetKey('selectedAlpha'), EngineSetKey('selectedAlpha'), nil, function() return E.private.nameplates.enable end)
 Engine.personal                                                                 = ACH:Group(L["Personal"], nil, 5)
 Engine.personal.args.showSelf                                                     = ACH:Toggle(
 	BlizzardL('DISPLAY_PERSONAL_RESOURCE'), 'Показывает индикатор под вашим персонажем. Если не выбрано ни одно условие показа (Всегда / В бою / С целью), при включении автоматически включится «Показывать всегда».', 1, nil, nil, nil, EngineGetKey('showSelf'), SetShowSelf)
@@ -990,7 +1004,7 @@ Engine.personal.args.personalClickThrough                                       
 	EngineSetKey('personalClickThrough'))
 Engine.personal.args.selfAlpha                                                  = ACH:Range(
 	BlizzardL('PERSONAL_RESOURCE_ALPHA'), nil, 3, { min = 0.05, max = 1, step = 0.05 }, nil, EngineGetKey('selfAlpha'),
-	EngineSetKey('selfAlpha'))
+	EngineSetKey('selfAlpha'), nil, function() return E.private.nameplates.enable end)
 Engine.personal.args.personalShowAlways                                         = ACH:Toggle(
 	BlizzardL('DISPLAY_PERSONAL_SHOW_ALWAYS'), nil, 4, nil, nil, nil, EngineGetKey('personalShowAlways'),
 	EngineSetKey('personalShowAlways'))
