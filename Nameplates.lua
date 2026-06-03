@@ -795,11 +795,6 @@ NamePlates.generalGroup.args.stacking.args.upperborder                        = 
 NamePlates.generalGroup.args.stacking.args.originpos                          = ACH:Range(L["Origin Offset"], L["Additional offset relative to the base plate position."], 9, { min = -80, max = 80, step = 1 })
 NamePlates.generalGroup.args.fadeIn                                           = ACH:Toggle(L["Alpha Fading"], nil, 13)
 
-NamePlates.generalGroup.args.useTargetScale                                   = ACH:Toggle(L["Use Target Scale"],
-	L["Scale up the targeted nameplate."], 16)
-NamePlates.generalGroup.args.targetScale                                      = ACH:Range(L["Target Scale"], nil, 17,
-	{ min = 1, max = 2, step = 0.1 }, nil, nil, nil,
-	function() return not E.db.nameplates.useTargetScale end)
 NamePlates.generalGroup.args.nonTargetTransparency                            = ACH:Range(L["Non-Target Alpha"],
 	L["Alpha of nameplates that are not your current target."], 18,
 	{ min = 0.05, max = 1, step = 0.05 }, nil,
@@ -990,9 +985,8 @@ Engine.scaleAlpha.args.globalScale                                              
 	BlizzardL('NAMEPLATE_GLOBAL_SCALE'), nil, 3, { min = 0.5, max = 1.5, step = 0.1 }, nil,
 	EngineGetKey('globalScale'), EngineSetKey('globalScale'))
 Engine.scaleAlpha.args.selectedScale                                            = ACH:Range(BlizzardL('NAMEPLATE_SELECTED_SCALE'),
-	L["Used when |cff1784d1Use Target Scale|r is disabled in General."], 4, { min = 1, max = 2, step = 0.1 }, nil,
-	EngineGetKey('selectedScale'), EngineSetKey('selectedScale'), nil,
-	function() return E.db.nameplates.useTargetScale end)
+	L["Scale of the selected (target) nameplate."], 4, { min = 1, max = 2, step = 0.1 }, nil,
+	EngineGetKey('selectedScale'), EngineSetKey('selectedScale'))
 Engine.scaleAlpha.args.occludedAlphaMult                                        = ACH:Range(
 	BlizzardL('NAMEPLATE_OCCLUDED_ALPHA_MULT'), nil, 10, { min = 0.05, max = 1, step = 0.05 }, nil,
 	EngineGetKey('occludedAlphaMult'), EngineSetKey('occludedAlphaMult'), nil, function() return E.private.nameplates.enable end)
