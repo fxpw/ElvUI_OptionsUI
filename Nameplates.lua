@@ -755,10 +755,6 @@ NamePlates.generalGroup.args.motionType                                       = 
 NamePlates.generalGroup.args.smoothbars                                       = ACH:Toggle(L["Smooth Bars"],
 	L["Bars will transition smoothly."], 4)
 NamePlates.generalGroup.args.spacer1                                          = ACH:Spacer(6, 'full')
-NamePlates.generalGroup.args.overlapV                                         = ACH:Range(L["Overlap Vertical"],
-	L["Percentage amount for vertical overlap of Nameplates."], 10, { min = 0, max = 3, step = .1 })
-NamePlates.generalGroup.args.overlapH                                         = ACH:Range(L["Overlap Horizontal"],
-	L["Percentage amount for horizontal overlap of Nameplates."], 11, { min = 0, max = 3, step = .1 })
 
 local function StackingHidden()
 	return E.db.nameplates.motionType ~= 'OVERLAP_STACK'
@@ -794,23 +790,7 @@ NamePlates.generalGroup.args.occludedAlphaMult                                = 
 
 NamePlates.generalGroup.args.spacer2                                          = ACH:Spacer(20, 'full')
 
-NamePlates.generalGroup.args.clickThrough                                     = ACH:Group(L["Click Through"], nil, 65,
-	nil, function(info) return E.db.nameplates.clickThrough[info[#info]] end)
-NamePlates.generalGroup.args.clickThrough.inline                              = true
-NamePlates.generalGroup.args.clickThrough.args.friendly                       = ACH:Toggle(L["Friendly"], nil, 1, nil,
-	nil, nil, nil,
-	function(info, value)
-		E.db.nameplates.clickThrough[info[#info]] = value
-		NP:ConfigureAll()
-	end)
-NamePlates.generalGroup.args.clickThrough.args.enemy                          = ACH:Toggle(L["Enemy"], nil, 2, nil, nil,
-	nil, nil,
-	function(info, value)
-		E.db.nameplates.clickThrough[info[#info]] = value
-		NP:ConfigureAll()
-	end)
-
-NamePlates.generalGroup.args.clickableRange                                   = ACH:Group(L["Clickable Size"], nil, 70,
+NamePlates.generalGroup.args.clickableRange                                   = ACH:Group("Размер плейта", nil, 70,
 	nil,
 	function(info) return E.db.nameplates.plateSize[info[#info]] end,
 	function(info, value)
@@ -820,27 +800,27 @@ NamePlates.generalGroup.args.clickableRange                                   = 
 NamePlates.generalGroup.args.clickableRange.inline                            = true
 NamePlates.generalGroup.args.clickableRange.args.friendly                     = ACH:Group(L["Friendly"], nil, 1)
 NamePlates.generalGroup.args.clickableRange.args.friendly.inline              = true
-NamePlates.generalGroup.args.clickableRange.args.friendly.args.friendlyWidth  = ACH:Range(L["Clickable Width / Width"],
-	L["Change the width and controls how big of an area on the screen will accept clicks to target unit."], 1,
+NamePlates.generalGroup.args.clickableRange.args.friendly.args.friendlyWidth  = ACH:Range(L["Width"],
+	"Ширина плейта.", 1,
 	{ min = 50, max = 250, step = 1 })
-NamePlates.generalGroup.args.clickableRange.args.friendly.args.friendlyHeight = ACH:Range(L["Clickable Height"],
-	L["Controls how big of an area on the screen will accept clicks to target unit."], 2,
+NamePlates.generalGroup.args.clickableRange.args.friendly.args.friendlyHeight = ACH:Range(L["Height"],
+	"Высота плейта.", 2,
 	{ min = 10, max = 75, step = 1 })
 NamePlates.generalGroup.args.clickableRange.args.enemy                        = ACH:Group(L["Enemy"], nil, 2)
 NamePlates.generalGroup.args.clickableRange.args.enemy.inline                 = true
-NamePlates.generalGroup.args.clickableRange.args.enemy.args.enemyWidth        = ACH:Range(L["Clickable Width / Width"],
-	L["Change the width and controls how big of an area on the screen will accept clicks to target unit."], 1,
+NamePlates.generalGroup.args.clickableRange.args.enemy.args.enemyWidth        = ACH:Range(L["Width"],
+	"Ширина плейта.", 1,
 	{ min = 50, max = 250, step = 1 })
-NamePlates.generalGroup.args.clickableRange.args.enemy.args.enemyHeight       = ACH:Range(L["Clickable Height"],
-	L["Controls how big of an area on the screen will accept clicks to target unit."], 2,
+NamePlates.generalGroup.args.clickableRange.args.enemy.args.enemyHeight       = ACH:Range(L["Height"],
+	"Высота плейта.", 2,
 	{ min = 10, max = 75, step = 1 })
 
 NamePlates.generalGroup.args.clickableRange.args.personal                     = ACH:Group(L["Personal"], nil, 3)
 NamePlates.generalGroup.args.clickableRange.args.personal.inline              = true
-NamePlates.generalGroup.args.clickableRange.args.personal.args.personalWidth  = ACH:Range(L["Clickable Width / Width"],
-	L["Width of your own (personal) nameplate."], 1, { min = 50, max = 250, step = 1 })
-NamePlates.generalGroup.args.clickableRange.args.personal.args.personalHeight = ACH:Range(L["Clickable Height"],
-	L["Height of your own (personal) nameplate."], 2, { min = 10, max = 75, step = 1 })
+NamePlates.generalGroup.args.clickableRange.args.personal.args.personalWidth  = ACH:Range(L["Width"],
+	"Ширина личного плейта.", 1, { min = 50, max = 250, step = 1 })
+NamePlates.generalGroup.args.clickableRange.args.personal.args.personalHeight = ACH:Range(L["Height"],
+	"Высота личного плейта.", 2, { min = 10, max = 75, step = 1 })
 
 NamePlates.generalGroup.args.serviceAuras                                     = ACH:Group("Служебные ауры Sirus", "Скрывать на плашках служебные ауры сервера: категория/ранг, премиум, VIP, зодиак, фракция.", 78, nil,
 	function(info) return E.db.nameplates.serviceAuras[info[#info]] end,
