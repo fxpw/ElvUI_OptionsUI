@@ -655,7 +655,6 @@ local function GetUnitSettings(unit, name)
 		group.args.general.args.markTanks         = ACH:Toggle(L["Tank Icon"],
 			L["Display a tank icon over known tanks inside battlegrounds or arenas."], 106)
 		group.args.healthGroup.args.useClassColor = ACH:Toggle(L["Use Class Color"], nil, 10)
-		group.args.nameGroup.args.useClassColor   = ACH:Toggle(L["Use Class Color"], nil, 4)
 	end
 
 	if unit == 'ENEMY_NPC' or unit == 'FRIENDLY_NPC' then
@@ -767,10 +766,10 @@ NamePlates.generalGroup.args.spacer1                                          = 
 NamePlates.generalGroup.args.overlapV                                         = ACH:Range(L["Overlap Vertical"],
 	L["Percentage amount for vertical overlap of Nameplates."], 10, { min = 0, max = 3, step = .1 })
 NamePlates.generalGroup.args.overlapH                                         = ACH:Range(L["Overlap Horizontal"],
-	L["Percentage amount for horizontal overlap of Nameplates."], 10, { min = 0, max = 3, step = .1 })
+	L["Percentage amount for horizontal overlap of Nameplates."], 11, { min = 0, max = 3, step = .1 })
 
-local function IsOverlapStackMode()
-	return E.db.nameplates.motionType == 'OVERLAP_STACK'
+local function StackingHidden()
+	return E.db.nameplates.motionType ~= 'OVERLAP_STACK'
 end
 
 NamePlates.generalGroup.args.stacking                                         = ACH:Group(L["Nameplate Soft Stacking"], nil, 11, nil,
@@ -783,7 +782,7 @@ NamePlates.generalGroup.args.stacking                                         = 
 		E.db.nameplates.stacking[info[#info]] = value
 		NP:UpdateStackingState()
 	end,
-	nil, nil, IsOverlapStackMode)
+	nil, StackingHidden)
 NamePlates.generalGroup.args.stacking.inline                                  = true
 NamePlates.generalGroup.args.stacking.args.xspace                             = ACH:Range(L["Horizontal Detection"], L["Horizontal distance within which plates affect each other."], 1, { min = 40, max = 220, step = 1 })
 NamePlates.generalGroup.args.stacking.args.yspace                             = ACH:Range(L["Vertical Gap"], L["Desired minimum vertical gap between overlapping enemy nameplates."], 2, { min = 8, max = 80, step = 1 })
@@ -796,11 +795,6 @@ NamePlates.generalGroup.args.stacking.args.upperborder                        = 
 NamePlates.generalGroup.args.stacking.args.originpos                          = ACH:Range(L["Origin Offset"], L["Additional offset relative to the base plate position."], 9, { min = -80, max = 80, step = 1 })
 NamePlates.generalGroup.args.fadeIn                                           = ACH:Toggle(L["Alpha Fading"], nil, 13)
 
-NamePlates.generalGroup.args.useTargetScale                                   = ACH:Toggle(L["Use Target Scale"],
-	L["Scale up the targeted nameplate."], 16)
-NamePlates.generalGroup.args.targetScale                                      = ACH:Range(L["Target Scale"], nil, 17,
-	{ min = 1, max = 2, step = 0.1 }, nil, nil, nil,
-	function() return not E.db.nameplates.useTargetScale end)
 NamePlates.generalGroup.args.nonTargetTransparency                            = ACH:Range(L["Non-Target Alpha"],
 	L["Alpha of nameplates that are not your current target."], 18,
 	{ min = 0.05, max = 1, step = 0.05 }, nil,
@@ -815,6 +809,7 @@ NamePlates.generalGroup.args.spacer2                                          = 
 
 NamePlates.generalGroup.args.clickThrough                                     = ACH:Group(L["Click Through"], nil, 65,
 	nil, function(info) return E.db.nameplates.clickThrough[info[#info]] end)
+NamePlates.generalGroup.args.clickThrough.inline                              = true
 NamePlates.generalGroup.args.clickThrough.args.friendly                       = ACH:Toggle(L["Friendly"], nil, 1, nil,
 	nil, nil, nil,
 	function(info, value)
@@ -835,6 +830,7 @@ NamePlates.generalGroup.args.clickableRange                                   = 
 		E.db.nameplates.plateSize[info[#info]] = value
 		NP:ConfigureAll()
 	end)
+NamePlates.generalGroup.args.clickableRange.inline                            = true
 NamePlates.generalGroup.args.clickableRange.args.friendly                     = ACH:Group(L["Friendly"], nil, 1)
 NamePlates.generalGroup.args.clickableRange.args.friendly.inline              = true
 NamePlates.generalGroup.args.clickableRange.args.friendly.args.friendlyWidth  = ACH:Range(L["Clickable Width / Width"],
@@ -873,6 +869,7 @@ NamePlates.generalGroup.args.serviceAuras.args.zodiac                         = 
 NamePlates.generalGroup.args.serviceAuras.args.faction                        = ACH:Toggle("Скрыть фракционные", "Служебные дебафы подмены фракции (FACTION_OVERRIDE).", 5)
 
 NamePlates.generalGroup.args.cutaway                                          = ACH:Group(L["Cutaway Bars"], nil, 75)
+NamePlates.generalGroup.args.cutaway.inline                                   = true
 NamePlates.generalGroup.args.cutaway.args.health                              = ACH:Group(L["Health"], nil, 1, nil,
 	function(info) return E.db.nameplates.cutaway.health[info[#info]] end,
 	function(info, value)
@@ -910,6 +907,7 @@ NamePlates.generalGroup.args.threatGroup                                      = 
 		E.db.nameplates.threat[info[#info]] = value
 		NP:ConfigureAll()
 	end)
+NamePlates.generalGroup.args.threatGroup.inline                              = true
 NamePlates.generalGroup.args.threatGroup.args.enable                          = ACH:Toggle(L["Enable"], nil, 0)
 NamePlates.generalGroup.args.threatGroup.args.goodScale                       = ACH:Range(L["Good Scale"], nil, 1,
 	{ min = .5, max = 1.5, step = .01, isPercent = true }, nil, nil, nil,
@@ -924,8 +922,8 @@ NamePlates.generalGroup.args.threatGroup.args.beingTankedByTank               = 
 NamePlates.generalGroup.args.threatGroup.args.indicator                       = ACH:Toggle(L["Show Icon"], nil, 5, nil,
 	nil, nil, nil, nil, function() return not E.db.nameplates.threat.enable end)
 
-NamePlates.engineGroup                                                        = ACH:Group(L["Nameplate Engine"], nil, 4,
-	L["Client nameplate engine settings (CVar). Replaces the default Interface > Names panel."])
+NamePlates.engineGroup                                                        = ACH:Group(L["Nameplate Engine"],
+	L["Client nameplate engine settings (CVar). Replaces the default Interface > Names panel."], 4)
 
 local Engine                                                                    = NamePlates.engineGroup.args
 
@@ -987,9 +985,8 @@ Engine.scaleAlpha.args.globalScale                                              
 	BlizzardL('NAMEPLATE_GLOBAL_SCALE'), nil, 3, { min = 0.5, max = 1.5, step = 0.1 }, nil,
 	EngineGetKey('globalScale'), EngineSetKey('globalScale'))
 Engine.scaleAlpha.args.selectedScale                                            = ACH:Range(BlizzardL('NAMEPLATE_SELECTED_SCALE'),
-	L["Used when |cff1784d1Use Target Scale|r is disabled in General."], 4, { min = 1, max = 2, step = 0.1 }, nil,
-	EngineGetKey('selectedScale'), EngineSetKey('selectedScale'), nil,
-	function() return E.db.nameplates.useTargetScale end)
+	L["Scale of the selected (target) nameplate."], 4, { min = 1, max = 2, step = 0.1 }, nil,
+	EngineGetKey('selectedScale'), EngineSetKey('selectedScale'))
 Engine.scaleAlpha.args.occludedAlphaMult                                        = ACH:Range(
 	BlizzardL('NAMEPLATE_OCCLUDED_ALPHA_MULT'), nil, 10, { min = 0.05, max = 1, step = 0.05 }, nil,
 	EngineGetKey('occludedAlphaMult'), EngineSetKey('occludedAlphaMult'), nil, function() return E.private.nameplates.enable end)
