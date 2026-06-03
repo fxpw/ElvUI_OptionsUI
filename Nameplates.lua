@@ -766,10 +766,10 @@ NamePlates.generalGroup.args.spacer1                                          = 
 NamePlates.generalGroup.args.overlapV                                         = ACH:Range(L["Overlap Vertical"],
 	L["Percentage amount for vertical overlap of Nameplates."], 10, { min = 0, max = 3, step = .1 })
 NamePlates.generalGroup.args.overlapH                                         = ACH:Range(L["Overlap Horizontal"],
-	L["Percentage amount for horizontal overlap of Nameplates."], 10, { min = 0, max = 3, step = .1 })
+	L["Percentage amount for horizontal overlap of Nameplates."], 11, { min = 0, max = 3, step = .1 })
 
-local function IsOverlapStackMode()
-	return E.db.nameplates.motionType == 'OVERLAP_STACK'
+local function StackingHidden()
+	return E.db.nameplates.motionType ~= 'OVERLAP_STACK'
 end
 
 NamePlates.generalGroup.args.stacking                                         = ACH:Group(L["Nameplate Soft Stacking"], nil, 11, nil,
@@ -782,7 +782,7 @@ NamePlates.generalGroup.args.stacking                                         = 
 		E.db.nameplates.stacking[info[#info]] = value
 		NP:UpdateStackingState()
 	end,
-	nil, nil, IsOverlapStackMode)
+	nil, StackingHidden)
 NamePlates.generalGroup.args.stacking.inline                                  = true
 NamePlates.generalGroup.args.stacking.args.xspace                             = ACH:Range(L["Horizontal Detection"], L["Horizontal distance within which plates affect each other."], 1, { min = 40, max = 220, step = 1 })
 NamePlates.generalGroup.args.stacking.args.yspace                             = ACH:Range(L["Vertical Gap"], L["Desired minimum vertical gap between overlapping enemy nameplates."], 2, { min = 8, max = 80, step = 1 })
