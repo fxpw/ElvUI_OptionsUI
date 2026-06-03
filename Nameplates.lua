@@ -56,13 +56,6 @@ local function SetShowSelf(_, value)
 	E:RefreshGUI()
 end
 
-local showOnlyNamesValues = {
-	['0'] = BlizzardL('NAMEPLATE_SHOW_ONLY_NAMES_OPTION_0'),
-	['1'] = BlizzardL('NAMEPLATE_SHOW_ONLY_NAMES_OPTION_1'),
-	['2'] = BlizzardL('NAMEPLATE_SHOW_ONLY_NAMES_OPTION_2'),
-	['3'] = BlizzardL('NAMEPLATE_SHOW_ONLY_NAMES_OPTION_3'),
-}
-
 local targetRadialValues = {
 	['0'] = BlizzardL('NAMEPLATE_TARGET_RADIAL_POSITION_OPTION_0'),
 	['1'] = BlizzardL('NAMEPLATE_TARGET_RADIAL_POSITION_OPTION_1'),
@@ -419,14 +412,6 @@ local function GetUnitSettings(unit, name)
 		true)
 	group.args.healthGroup.args.healPrediction.args.colorsGroup.args.otherBar        = ACH:Color(L["Others"], nil, 2,
 		true)
-	group.args.healthGroup.args.healPrediction.args.colorsGroup.args.absorbs         = ACH:Color(L["Absorbs"], nil, 3,
-		true)
-	group.args.healthGroup.args.healPrediction.args.colorsGroup.args.healAbsorbs     = ACH:Color(L["Heal Absorbs"], nil,
-		4, true)
-	group.args.healthGroup.args.healPrediction.args.colorsGroup.args.overabsorbs     = ACH:Color(L["Over Absorbs"], nil,
-		5, true)
-	group.args.healthGroup.args.healPrediction.args.colorsGroup.args.overhealabsorbs = ACH:Color(L["Over Heal Absorbs"],
-		nil, 6, true)
 
 	group.args.powerGroup                                                            = ACH:Group(L["Power"], nil, 15, nil,
 		function(info) return E.db.nameplates.units[unit].power[info[#info]] end,
@@ -763,10 +748,6 @@ NamePlates.generalGroup.args.motionType                                       = 
 NamePlates.generalGroup.args.smoothbars                                       = ACH:Toggle(L["Smooth Bars"],
 	L["Bars will transition smoothly."], 4)
 NamePlates.generalGroup.args.spacer1                                          = ACH:Spacer(6, 'full')
-NamePlates.generalGroup.args.overlapV                                         = ACH:Range(L["Overlap Vertical"],
-	L["Percentage amount for vertical overlap of Nameplates."], 10, { min = 0, max = 3, step = .1 })
-NamePlates.generalGroup.args.overlapH                                         = ACH:Range(L["Overlap Horizontal"],
-	L["Percentage amount for horizontal overlap of Nameplates."], 11, { min = 0, max = 3, step = .1 })
 
 local function StackingHidden()
 	return E.db.nameplates.motionType ~= 'OVERLAP_STACK'
@@ -794,36 +775,15 @@ NamePlates.generalGroup.args.stacking.args.maxOffset                          = 
 NamePlates.generalGroup.args.stacking.args.upperborder                        = ACH:Range(L["Top Screen Clamp"], L["Top screen inset while stacking is active."], 8, { min = -40, max = 80, step = 1 })
 NamePlates.generalGroup.args.stacking.args.originpos                          = ACH:Range(L["Origin Offset"], L["Additional offset relative to the base plate position."], 9, { min = -80, max = 80, step = 1 })
 NamePlates.generalGroup.args.fadeIn                                           = ACH:Toggle(L["Alpha Fading"], nil, 13)
+NamePlates.generalGroup.args.absorbSpark                                      = ACH:Toggle("Spark поглощения", "Показывать индикатор-вспышку на краю щита поглощения.", 14)
 
-NamePlates.generalGroup.args.nonTargetTransparency                            = ACH:Range(L["Non-Target Alpha"],
-	L["Alpha of nameplates that are not your current target."], 18,
-	{ min = 0.05, max = 1, step = 0.05 }, nil,
-	function() return E.db.nameplates.nonTargetTransparency end,
-	function(_, value)
-		E.db.nameplates.nonTargetTransparency = value
-		NP:ApplyEngineOption('notSelectedAlpha')
-	end,
-	nil, function() return E.private.nameplates.enable end)
+NamePlates.generalGroup.args.occludedAlphaMult                                = ACH:Range(BlizzardL('NAMEPLATE_OCCLUDED_ALPHA_MULT'),
+	nil, 18, { min = 0.05, max = 1, step = 0.05 }, nil,
+	EngineGetKey('occludedAlphaMult'), EngineSetKey('occludedAlphaMult'))
 
 NamePlates.generalGroup.args.spacer2                                          = ACH:Spacer(20, 'full')
 
-NamePlates.generalGroup.args.clickThrough                                     = ACH:Group(L["Click Through"], nil, 65,
-	nil, function(info) return E.db.nameplates.clickThrough[info[#info]] end)
-NamePlates.generalGroup.args.clickThrough.inline                              = true
-NamePlates.generalGroup.args.clickThrough.args.friendly                       = ACH:Toggle(L["Friendly"], nil, 1, nil,
-	nil, nil, nil,
-	function(info, value)
-		E.db.nameplates.clickThrough[info[#info]] = value
-		NP:ConfigureAll()
-	end)
-NamePlates.generalGroup.args.clickThrough.args.enemy                          = ACH:Toggle(L["Enemy"], nil, 2, nil, nil,
-	nil, nil,
-	function(info, value)
-		E.db.nameplates.clickThrough[info[#info]] = value
-		NP:ConfigureAll()
-	end)
-
-NamePlates.generalGroup.args.clickableRange                                   = ACH:Group(L["Clickable Size"], nil, 70,
+NamePlates.generalGroup.args.clickableRange                                   = ACH:Group("Размер плейта", nil, 70,
 	nil,
 	function(info) return E.db.nameplates.plateSize[info[#info]] end,
 	function(info, value)
@@ -833,27 +793,27 @@ NamePlates.generalGroup.args.clickableRange                                   = 
 NamePlates.generalGroup.args.clickableRange.inline                            = true
 NamePlates.generalGroup.args.clickableRange.args.friendly                     = ACH:Group(L["Friendly"], nil, 1)
 NamePlates.generalGroup.args.clickableRange.args.friendly.inline              = true
-NamePlates.generalGroup.args.clickableRange.args.friendly.args.friendlyWidth  = ACH:Range(L["Clickable Width / Width"],
-	L["Change the width and controls how big of an area on the screen will accept clicks to target unit."], 1,
+NamePlates.generalGroup.args.clickableRange.args.friendly.args.friendlyWidth  = ACH:Range(L["Width"],
+	"Ширина плейта.", 1,
 	{ min = 50, max = 250, step = 1 })
-NamePlates.generalGroup.args.clickableRange.args.friendly.args.friendlyHeight = ACH:Range(L["Clickable Height"],
-	L["Controls how big of an area on the screen will accept clicks to target unit."], 2,
+NamePlates.generalGroup.args.clickableRange.args.friendly.args.friendlyHeight = ACH:Range(L["Height"],
+	"Высота плейта.", 2,
 	{ min = 10, max = 75, step = 1 })
 NamePlates.generalGroup.args.clickableRange.args.enemy                        = ACH:Group(L["Enemy"], nil, 2)
 NamePlates.generalGroup.args.clickableRange.args.enemy.inline                 = true
-NamePlates.generalGroup.args.clickableRange.args.enemy.args.enemyWidth        = ACH:Range(L["Clickable Width / Width"],
-	L["Change the width and controls how big of an area on the screen will accept clicks to target unit."], 1,
+NamePlates.generalGroup.args.clickableRange.args.enemy.args.enemyWidth        = ACH:Range(L["Width"],
+	"Ширина плейта.", 1,
 	{ min = 50, max = 250, step = 1 })
-NamePlates.generalGroup.args.clickableRange.args.enemy.args.enemyHeight       = ACH:Range(L["Clickable Height"],
-	L["Controls how big of an area on the screen will accept clicks to target unit."], 2,
+NamePlates.generalGroup.args.clickableRange.args.enemy.args.enemyHeight       = ACH:Range(L["Height"],
+	"Высота плейта.", 2,
 	{ min = 10, max = 75, step = 1 })
 
 NamePlates.generalGroup.args.clickableRange.args.personal                     = ACH:Group(L["Personal"], nil, 3)
 NamePlates.generalGroup.args.clickableRange.args.personal.inline              = true
-NamePlates.generalGroup.args.clickableRange.args.personal.args.personalWidth  = ACH:Range(L["Clickable Width / Width"],
-	L["Width of your own (personal) nameplate."], 1, { min = 50, max = 250, step = 1 })
-NamePlates.generalGroup.args.clickableRange.args.personal.args.personalHeight = ACH:Range(L["Clickable Height"],
-	L["Height of your own (personal) nameplate."], 2, { min = 10, max = 75, step = 1 })
+NamePlates.generalGroup.args.clickableRange.args.personal.args.personalWidth  = ACH:Range(L["Width"],
+	"Ширина личного плейта.", 1, { min = 50, max = 250, step = 1 })
+NamePlates.generalGroup.args.clickableRange.args.personal.args.personalHeight = ACH:Range(L["Height"],
+	"Высота личного плейта.", 2, { min = 10, max = 75, step = 1 })
 
 NamePlates.generalGroup.args.serviceAuras                                     = ACH:Group("Служебные ауры Sirus", "Скрывать на плашках служебные ауры сервера: категория/ранг, премиум, VIP, зодиак, фракция.", 78, nil,
 	function(info) return E.db.nameplates.serviceAuras[info[#info]] end,
@@ -945,16 +905,8 @@ Engine.core.args.loadDistance                                                   
 Engine.core.args.dynamicScale                                                   = ACH:Toggle(
 	BlizzardL('NAMEPLATES_MAKE_DYNAMIC_SCALE'), nil, 3, nil, nil, nil, EngineGetKey('dynamicScale'),
 	EngineSetKey('dynamicScale'))
-Engine.core.args.dynamicAlpha                                                   = ACH:Toggle(
-	BlizzardL('NAMEPLATES_MAKE_DYNAMIC_ALPHA'), nil, 4, nil, nil, nil, EngineGetKey('dynamicAlpha'),
-	EngineSetKey('dynamicAlpha'), nil, function() return E.private.nameplates.enable end)
 Engine.core.args.offsetY                                                        = ACH:Range(BlizzardL('NAMEPLATE_OFFSET_Y'),
 	nil, 5, { min = -25, max = 25, step = 1 }, nil, EngineGetKey('offsetY'), EngineSetKey('offsetY'))
-Engine.core.args.showOnlyNames                                                  = ACH:Select(
-	BlizzardL('NAMEPLATE_SHOW_ONLY_NAMES'), nil, 6, showOnlyNamesValues, nil, nil,
-	function() return tostring(NP:GetEngineCVar('showOnlyNames')) end,
-	function(_, value) EngineSetKey('showOnlyNames')(nil, tonumber(value)) end,
-	nil, function() return E.private.nameplates.enable end)
 
 Engine.friendly                                                                 = ACH:Group(L["Friendly"], nil, 3)
 Engine.friendly.args.showClassColorFriendly                                     = ACH:Toggle(
@@ -987,21 +939,12 @@ Engine.scaleAlpha.args.globalScale                                              
 Engine.scaleAlpha.args.selectedScale                                            = ACH:Range(BlizzardL('NAMEPLATE_SELECTED_SCALE'),
 	L["Scale of the selected (target) nameplate."], 4, { min = 1, max = 2, step = 0.1 }, nil,
 	EngineGetKey('selectedScale'), EngineSetKey('selectedScale'))
-Engine.scaleAlpha.args.occludedAlphaMult                                        = ACH:Range(
-	BlizzardL('NAMEPLATE_OCCLUDED_ALPHA_MULT'), nil, 10, { min = 0.05, max = 1, step = 0.05 }, nil,
-	EngineGetKey('occludedAlphaMult'), EngineSetKey('occludedAlphaMult'), nil, function() return E.private.nameplates.enable end)
-Engine.scaleAlpha.args.selectedAlpha                                            = ACH:Range(
-	BlizzardL('NAMEPLATE_SELECTED_ALPHA'), nil, 11, { min = 0.05, max = 1, step = 0.05 }, nil,
-	EngineGetKey('selectedAlpha'), EngineSetKey('selectedAlpha'), nil, function() return E.private.nameplates.enable end)
 Engine.personal                                                                 = ACH:Group(L["Personal"], nil, 5)
 Engine.personal.args.showSelf                                                     = ACH:Toggle(
 	BlizzardL('DISPLAY_PERSONAL_RESOURCE'), 'Показывает индикатор под вашим персонажем. Если не выбрано ни одно условие показа (Всегда / В бою / С целью), при включении автоматически включится «Показывать всегда».', 1, nil, nil, nil, EngineGetKey('showSelf'), SetShowSelf)
 Engine.personal.args.personalClickThrough                                       = ACH:Toggle(
 	BlizzardL('PERSONAL_RESOURCE_CLICK_THROUGH'), nil, 2, nil, nil, nil, EngineGetKey('personalClickThrough'),
 	EngineSetKey('personalClickThrough'))
-Engine.personal.args.selfAlpha                                                  = ACH:Range(
-	BlizzardL('PERSONAL_RESOURCE_ALPHA'), nil, 3, { min = 0.05, max = 1, step = 0.05 }, nil, EngineGetKey('selfAlpha'),
-	EngineSetKey('selfAlpha'), nil, function() return E.private.nameplates.enable end)
 Engine.personal.args.personalShowAlways                                         = ACH:Toggle(
 	BlizzardL('DISPLAY_PERSONAL_SHOW_ALWAYS'), nil, 4, nil, nil, nil, EngineGetKey('personalShowAlways'),
 	EngineSetKey('personalShowAlways'))
@@ -1056,6 +999,8 @@ NamePlates.colorsGroup.args.general.args.lowHealthColor            = ACH:Color(L
 	L["Color when at Low Health Threshold"], 7, true)
 NamePlates.colorsGroup.args.general.args.lowHealthHalf             = ACH:Color(L["Low Health Half"],
 	L["Color when at half of the Low Health Threshold"], 8, true)
+NamePlates.colorsGroup.args.general.args.absorbs                   = ACH:Color(L["Absorbs"], nil, 9, true)
+NamePlates.colorsGroup.args.general.args.healAbsorbs               = ACH:Color(L["Heal Absorbs"], nil, 10, true)
 
 NamePlates.colorsGroup.args.threat                                 = ACH:Group(L["Threat"], nil, 2, nil,
 	function(info)
