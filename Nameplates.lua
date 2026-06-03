@@ -56,13 +56,6 @@ local function SetShowSelf(_, value)
 	E:RefreshGUI()
 end
 
-local showOnlyNamesValues = {
-	['0'] = BlizzardL('NAMEPLATE_SHOW_ONLY_NAMES_OPTION_0'),
-	['1'] = BlizzardL('NAMEPLATE_SHOW_ONLY_NAMES_OPTION_1'),
-	['2'] = BlizzardL('NAMEPLATE_SHOW_ONLY_NAMES_OPTION_2'),
-	['3'] = BlizzardL('NAMEPLATE_SHOW_ONLY_NAMES_OPTION_3'),
-}
-
 local targetRadialValues = {
 	['0'] = BlizzardL('NAMEPLATE_TARGET_RADIAL_POSITION_OPTION_0'),
 	['1'] = BlizzardL('NAMEPLATE_TARGET_RADIAL_POSITION_OPTION_1'),
@@ -912,16 +905,8 @@ Engine.core.args.loadDistance                                                   
 Engine.core.args.dynamicScale                                                   = ACH:Toggle(
 	BlizzardL('NAMEPLATES_MAKE_DYNAMIC_SCALE'), nil, 3, nil, nil, nil, EngineGetKey('dynamicScale'),
 	EngineSetKey('dynamicScale'))
-Engine.core.args.dynamicAlpha                                                   = ACH:Toggle(
-	BlizzardL('NAMEPLATES_MAKE_DYNAMIC_ALPHA'), nil, 4, nil, nil, nil, EngineGetKey('dynamicAlpha'),
-	EngineSetKey('dynamicAlpha'), nil, function() return E.private.nameplates.enable end)
 Engine.core.args.offsetY                                                        = ACH:Range(BlizzardL('NAMEPLATE_OFFSET_Y'),
 	nil, 5, { min = -25, max = 25, step = 1 }, nil, EngineGetKey('offsetY'), EngineSetKey('offsetY'))
-Engine.core.args.showOnlyNames                                                  = ACH:Select(
-	BlizzardL('NAMEPLATE_SHOW_ONLY_NAMES'), nil, 6, showOnlyNamesValues, nil, nil,
-	function() return tostring(NP:GetEngineCVar('showOnlyNames')) end,
-	function(_, value) EngineSetKey('showOnlyNames')(nil, tonumber(value)) end,
-	nil, function() return E.private.nameplates.enable end)
 
 Engine.friendly                                                                 = ACH:Group(L["Friendly"], nil, 3)
 Engine.friendly.args.showClassColorFriendly                                     = ACH:Toggle(
@@ -954,18 +939,12 @@ Engine.scaleAlpha.args.globalScale                                              
 Engine.scaleAlpha.args.selectedScale                                            = ACH:Range(BlizzardL('NAMEPLATE_SELECTED_SCALE'),
 	L["Scale of the selected (target) nameplate."], 4, { min = 1, max = 2, step = 0.1 }, nil,
 	EngineGetKey('selectedScale'), EngineSetKey('selectedScale'))
-Engine.scaleAlpha.args.selectedAlpha                                            = ACH:Range(
-	BlizzardL('NAMEPLATE_SELECTED_ALPHA'), nil, 11, { min = 0.05, max = 1, step = 0.05 }, nil,
-	EngineGetKey('selectedAlpha'), EngineSetKey('selectedAlpha'), nil, function() return E.private.nameplates.enable end)
 Engine.personal                                                                 = ACH:Group(L["Personal"], nil, 5)
 Engine.personal.args.showSelf                                                     = ACH:Toggle(
 	BlizzardL('DISPLAY_PERSONAL_RESOURCE'), 'Показывает индикатор под вашим персонажем. Если не выбрано ни одно условие показа (Всегда / В бою / С целью), при включении автоматически включится «Показывать всегда».', 1, nil, nil, nil, EngineGetKey('showSelf'), SetShowSelf)
 Engine.personal.args.personalClickThrough                                       = ACH:Toggle(
 	BlizzardL('PERSONAL_RESOURCE_CLICK_THROUGH'), nil, 2, nil, nil, nil, EngineGetKey('personalClickThrough'),
 	EngineSetKey('personalClickThrough'))
-Engine.personal.args.selfAlpha                                                  = ACH:Range(
-	BlizzardL('PERSONAL_RESOURCE_ALPHA'), nil, 3, { min = 0.05, max = 1, step = 0.05 }, nil, EngineGetKey('selfAlpha'),
-	EngineSetKey('selfAlpha'), nil, function() return E.private.nameplates.enable end)
 Engine.personal.args.personalShowAlways                                         = ACH:Toggle(
 	BlizzardL('DISPLAY_PERSONAL_SHOW_ALWAYS'), nil, 4, nil, nil, nil, EngineGetKey('personalShowAlways'),
 	EngineSetKey('personalShowAlways'))
