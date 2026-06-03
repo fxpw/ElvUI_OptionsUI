@@ -814,6 +814,7 @@ NamePlates.generalGroup.args.spacer2                                          = 
 
 NamePlates.generalGroup.args.clickThrough                                     = ACH:Group(L["Click Through"], nil, 65,
 	nil, function(info) return E.db.nameplates.clickThrough[info[#info]] end)
+NamePlates.generalGroup.args.clickThrough.inline                              = true
 NamePlates.generalGroup.args.clickThrough.args.friendly                       = ACH:Toggle(L["Friendly"], nil, 1, nil,
 	nil, nil, nil,
 	function(info, value)
@@ -834,6 +835,7 @@ NamePlates.generalGroup.args.clickableRange                                   = 
 		E.db.nameplates.plateSize[info[#info]] = value
 		NP:ConfigureAll()
 	end)
+NamePlates.generalGroup.args.clickableRange.inline                            = true
 NamePlates.generalGroup.args.clickableRange.args.friendly                     = ACH:Group(L["Friendly"], nil, 1)
 NamePlates.generalGroup.args.clickableRange.args.friendly.inline              = true
 NamePlates.generalGroup.args.clickableRange.args.friendly.args.friendlyWidth  = ACH:Range(L["Clickable Width / Width"],
@@ -872,6 +874,7 @@ NamePlates.generalGroup.args.serviceAuras.args.zodiac                         = 
 NamePlates.generalGroup.args.serviceAuras.args.faction                        = ACH:Toggle("Скрыть фракционные", "Служебные дебафы подмены фракции (FACTION_OVERRIDE).", 5)
 
 NamePlates.generalGroup.args.cutaway                                          = ACH:Group(L["Cutaway Bars"], nil, 75)
+NamePlates.generalGroup.args.cutaway.inline                                   = true
 NamePlates.generalGroup.args.cutaway.args.health                              = ACH:Group(L["Health"], nil, 1, nil,
 	function(info) return E.db.nameplates.cutaway.health[info[#info]] end,
 	function(info, value)
@@ -909,6 +912,7 @@ NamePlates.generalGroup.args.threatGroup                                      = 
 		E.db.nameplates.threat[info[#info]] = value
 		NP:ConfigureAll()
 	end)
+NamePlates.generalGroup.args.threatGroup.inline                              = true
 NamePlates.generalGroup.args.threatGroup.args.enable                          = ACH:Toggle(L["Enable"], nil, 0)
 NamePlates.generalGroup.args.threatGroup.args.goodScale                       = ACH:Range(L["Good Scale"], nil, 1,
 	{ min = .5, max = 1.5, step = .01, isPercent = true }, nil, nil, nil,
@@ -923,8 +927,8 @@ NamePlates.generalGroup.args.threatGroup.args.beingTankedByTank               = 
 NamePlates.generalGroup.args.threatGroup.args.indicator                       = ACH:Toggle(L["Show Icon"], nil, 5, nil,
 	nil, nil, nil, nil, function() return not E.db.nameplates.threat.enable end)
 
-NamePlates.engineGroup                                                        = ACH:Group(L["Nameplate Engine"], nil, 4,
-	L["Client nameplate engine settings (CVar). Replaces the default Interface > Names panel."])
+NamePlates.engineGroup                                                        = ACH:Group(L["Nameplate Engine"],
+	L["Client nameplate engine settings (CVar). Replaces the default Interface > Names panel."], 4)
 
 local Engine                                                                    = NamePlates.engineGroup.args
 
