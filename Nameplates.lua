@@ -795,15 +795,9 @@ NamePlates.generalGroup.args.stacking.args.upperborder                        = 
 NamePlates.generalGroup.args.stacking.args.originpos                          = ACH:Range(L["Origin Offset"], L["Additional offset relative to the base plate position."], 9, { min = -80, max = 80, step = 1 })
 NamePlates.generalGroup.args.fadeIn                                           = ACH:Toggle(L["Alpha Fading"], nil, 13)
 
-NamePlates.generalGroup.args.nonTargetTransparency                            = ACH:Range(L["Non-Target Alpha"],
-	L["Alpha of nameplates that are not your current target."], 18,
-	{ min = 0.05, max = 1, step = 0.05 }, nil,
-	function() return E.db.nameplates.nonTargetTransparency end,
-	function(_, value)
-		E.db.nameplates.nonTargetTransparency = value
-		NP:ApplyEngineOption('notSelectedAlpha')
-	end,
-	nil, function() return E.private.nameplates.enable end)
+NamePlates.generalGroup.args.occludedAlphaMult                                = ACH:Range(BlizzardL('NAMEPLATE_OCCLUDED_ALPHA_MULT'),
+	nil, 18, { min = 0.05, max = 1, step = 0.05 }, nil,
+	EngineGetKey('occludedAlphaMult'), EngineSetKey('occludedAlphaMult'))
 
 NamePlates.generalGroup.args.spacer2                                          = ACH:Spacer(20, 'full')
 
@@ -987,9 +981,6 @@ Engine.scaleAlpha.args.globalScale                                              
 Engine.scaleAlpha.args.selectedScale                                            = ACH:Range(BlizzardL('NAMEPLATE_SELECTED_SCALE'),
 	L["Scale of the selected (target) nameplate."], 4, { min = 1, max = 2, step = 0.1 }, nil,
 	EngineGetKey('selectedScale'), EngineSetKey('selectedScale'))
-Engine.scaleAlpha.args.occludedAlphaMult                                        = ACH:Range(
-	BlizzardL('NAMEPLATE_OCCLUDED_ALPHA_MULT'), nil, 10, { min = 0.05, max = 1, step = 0.05 }, nil,
-	EngineGetKey('occludedAlphaMult'), EngineSetKey('occludedAlphaMult'), nil, function() return E.private.nameplates.enable end)
 Engine.scaleAlpha.args.selectedAlpha                                            = ACH:Range(
 	BlizzardL('NAMEPLATE_SELECTED_ALPHA'), nil, 11, { min = 0.05, max = 1, step = 0.05 }, nil,
 	EngineGetKey('selectedAlpha'), EngineSetKey('selectedAlpha'), nil, function() return E.private.nameplates.enable end)
