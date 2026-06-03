@@ -419,14 +419,6 @@ local function GetUnitSettings(unit, name)
 		true)
 	group.args.healthGroup.args.healPrediction.args.colorsGroup.args.otherBar        = ACH:Color(L["Others"], nil, 2,
 		true)
-	group.args.healthGroup.args.healPrediction.args.colorsGroup.args.absorbs         = ACH:Color(L["Absorbs"], nil, 3,
-		true)
-	group.args.healthGroup.args.healPrediction.args.colorsGroup.args.healAbsorbs     = ACH:Color(L["Heal Absorbs"], nil,
-		4, true)
-	group.args.healthGroup.args.healPrediction.args.colorsGroup.args.overabsorbs     = ACH:Color(L["Over Absorbs"], nil,
-		5, true)
-	group.args.healthGroup.args.healPrediction.args.colorsGroup.args.overhealabsorbs = ACH:Color(L["Over Heal Absorbs"],
-		nil, 6, true)
 
 	group.args.powerGroup                                                            = ACH:Group(L["Power"], nil, 15, nil,
 		function(info) return E.db.nameplates.units[unit].power[info[#info]] end,
@@ -794,6 +786,7 @@ NamePlates.generalGroup.args.stacking.args.maxOffset                          = 
 NamePlates.generalGroup.args.stacking.args.upperborder                        = ACH:Range(L["Top Screen Clamp"], L["Top screen inset while stacking is active."], 8, { min = -40, max = 80, step = 1 })
 NamePlates.generalGroup.args.stacking.args.originpos                          = ACH:Range(L["Origin Offset"], L["Additional offset relative to the base plate position."], 9, { min = -80, max = 80, step = 1 })
 NamePlates.generalGroup.args.fadeIn                                           = ACH:Toggle(L["Alpha Fading"], nil, 13)
+NamePlates.generalGroup.args.absorbSpark                                      = ACH:Toggle("Spark поглощения", "Показывать индикатор-вспышку на краю щита поглощения.", 14)
 
 NamePlates.generalGroup.args.occludedAlphaMult                                = ACH:Range(BlizzardL('NAMEPLATE_OCCLUDED_ALPHA_MULT'),
 	nil, 18, { min = 0.05, max = 1, step = 0.05 }, nil,
@@ -1047,6 +1040,8 @@ NamePlates.colorsGroup.args.general.args.lowHealthColor            = ACH:Color(L
 	L["Color when at Low Health Threshold"], 7, true)
 NamePlates.colorsGroup.args.general.args.lowHealthHalf             = ACH:Color(L["Low Health Half"],
 	L["Color when at half of the Low Health Threshold"], 8, true)
+NamePlates.colorsGroup.args.general.args.absorbs                   = ACH:Color(L["Absorbs"], nil, 9, true)
+NamePlates.colorsGroup.args.general.args.healAbsorbs               = ACH:Color(L["Heal Absorbs"], nil, 10, true)
 
 NamePlates.colorsGroup.args.threat                                 = ACH:Group(L["Threat"], nil, 2, nil,
 	function(info)
