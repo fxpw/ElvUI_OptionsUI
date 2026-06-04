@@ -299,7 +299,7 @@ E.Options.args.auras = {
 					},
 				},
 				lbf = {
-					order = 11,
+					order = 12,
 					type = "group",
 					guiInline = true,
 					name = L["LBF Support"],

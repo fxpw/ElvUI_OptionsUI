@@ -990,7 +990,7 @@ E.Options.args.bags = {
 			}
 		},
 		search_syntax = {
-			order = 10,
+			order = 11,
 			type = "group",
 			name = L["Search Syntax"],
 			disabled = function() return not E.Bags.Initialized end,

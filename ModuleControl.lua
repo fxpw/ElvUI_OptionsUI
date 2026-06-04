@@ -149,14 +149,14 @@ local function CreateDatatbarsConfig()
 		set = function(info, value) E.global.profileCopy.databars[info[#info]] = value end
 	}
 	config.args.petExperience = {
-		order = 2,
+		order = 3,
 		type = "toggle",
 		name = L["Pet Experience"],
 		get = function(info) return E.global.profileCopy.databars[info[#info]] end,
 		set = function(info, value) E.global.profileCopy.databars[info[#info]] = value end
 	}
 	config.args.reputation = {
-		order = 3,
+		order = 4,
 		type = "toggle",
 		name = L["REPUTATION"],
 		get = function(info) return E.global.profileCopy.databars[info[#info]] end,
@@ -406,22 +406,22 @@ local function CreateUnitframesConfig()
 				name = L["Raid-25"]
 			},
 			["raid40"] = {
-				order = 11,
+				order = 12,
 				type = "toggle",
 				name = L["Raid-40"]
 			},
 			["raidpet"] = {
-				order = 12,
+				order = 13,
 				type = "toggle",
 				name = L["Raid Pet"]
 			},
 			["tank"] = {
-				order = 13,
+				order = 14,
 				type = "toggle",
 				name = L["Tank"]
 			},
 			["assist"] = {
-				order = 14,
+				order = 15,
 				type = "toggle",
 				name = L["Assist"]
 			}

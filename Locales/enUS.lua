@@ -625,6 +625,7 @@ L["Keywords"] = true
 L["LBF Support"] = true
 L["LEVEL_BOSS"] = "Set level to -1 for boss units or set to 0 to disable."
 L["LFD Frame"] = true
+L["LFG Icons"] = true
 L["LFG Queue"] = true
 L["LFR Frame"] = true
 L["Latency"] = true
