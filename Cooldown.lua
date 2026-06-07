@@ -205,13 +205,13 @@ local function group(order, db, label)
 					hhmmColorIndicator = {
 						order = 18,
 						type = "color",
-						name = L["MM:SS"],
+						name = L["HH:MM"],
 						disabled = function() return not (profile(db)).override end,
 					},
 					mmssColorIndicator = {
 						order = 19,
 						type = "color",
-						name = L["HH:MM"],
+						name = L["MM:SS"],
 						disabled = function() return not (profile(db)).override end,
 					},
 				}

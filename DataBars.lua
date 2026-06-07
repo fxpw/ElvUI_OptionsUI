@@ -61,17 +61,17 @@ E.Options.args.databars = {
 					set = function(info, value) mod.db.experience[info[#info]] = value mod:ExperienceBar_Update() end
 				},
 				showBubbles = {
-					order = 6,
+					order = 7,
 					type = "toggle",
 					name = L["Show Bubbles"]
 				},
 				spacer = {
-					order = 7,
+					order = 8,
 					type = "description",
 					name = " "
 				},
 				orientation = {
-					order = 8,
+					order = 9,
 					type = "select",
 					name = L["Statusbar Fill Orientation"],
 					desc = L["Direction the bar moves on gains/losses"],
@@ -81,37 +81,37 @@ E.Options.args.databars = {
 					}
 				},
 				width = {
-					order = 9,
+					order = 10,
 					type = "range",
 					name = L["Width"],
 					min = 5, max = ceil(GetScreenWidth() or 800), step = 1
 				},
 				height = {
-					order = 10,
+					order = 11,
 					type = "range",
 					name = L["Height"],
 					min = 5, max = ceil(GetScreenHeight() or 800), step = 1
 				},
 				font = {
-					order = 11,
+					order = 12,
 					type = "select", dialogControl = "LSM30_Font",
 					name = L["Font"],
 					values = AceGUIWidgetLSMlists.font
 				},
 				textSize = {
-					order = 12,
+					order = 13,
 					type = "range",
 					name = L["FONT_SIZE"],
 					min = 6, max = 22, step = 1
 				},
 				fontOutline = {
-					order = 13,
+					order = 14,
 					type = "select",
 					name = L["Font Outline"],
 					values = C.Values.FontFlags
 				},
 				textFormat = {
-					order = 14,
+					order = 15,
 					type = "select",
 					name = L["Text Format"],
 					width = "double",
@@ -128,7 +128,7 @@ E.Options.args.databars = {
 					set = function(info, value) mod.db.experience[info[#info]] = value mod:ExperienceBar_Update() end
 				},
 				questXP = {
-					order = 15,
+					order = 16,
 					type = "group",
 					name = L["Quest XP"],
 					guiInline = true,

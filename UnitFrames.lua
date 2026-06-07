@@ -3817,7 +3817,7 @@ E.Options.args.unitframe = {
 						icons = {
 							order = 2,
 							type = "select",
-							name = L["Dungeon & Raid Filter"],
+							name = L["LFG Icons"],
 							values = function()
 								local t = RoleIconValues()
 								return t
