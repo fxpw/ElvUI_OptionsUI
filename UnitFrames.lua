@@ -1758,13 +1758,13 @@ local function GetOptionsTable_SummonIcon(updateFunc, groupName, numUnits)
 	return config
 end
 
-local function GetOptionsTable_RaidDebuff(updateFunc, groupName)
+local function GetOptionsTable_RaidDebuff(updateFunc, groupName, numUnits)
 	local config = {
 		order = 800,
 		type = "group",
 		name = L["RaidDebuff Indicator"],
 		get = function(info) return E.db.unitframe.units[groupName].rdebuffs[info[#info]] end,
-		set = function(info, value) E.db.unitframe.units[groupName].rdebuffs[info[#info]] = value updateFunc(UF, groupName) end,
+		set = function(info, value) E.db.unitframe.units[groupName].rdebuffs[info[#info]] = value updateFunc(UF, groupName, numUnits) end,
 		args = {
 			header = {
 				order = 1,
@@ -1924,13 +1924,13 @@ local function GetOptionsTable_RaidDebuff(updateFunc, groupName)
 	return config
 end
 
-local function GetOptionsTable_ReadyCheckIcon(updateFunc, groupName)
+local function GetOptionsTable_ReadyCheckIcon(updateFunc, groupName, numUnits)
 	local config = {
 		order = 700,
 		type = "group",
 		name = L["Ready Check Icon"],
 		get = function(info) return E.db.unitframe.units[groupName].readycheckIcon[info[#info]] end,
-		set = function(info, value) E.db.unitframe.units[groupName].readycheckIcon[info[#info]] = value updateFunc(UF, groupName) end,
+		set = function(info, value) E.db.unitframe.units[groupName].readycheckIcon[info[#info]] = value updateFunc(UF, groupName, numUnits) end,
 		args = {
 			header = {
 				order = 1,
@@ -2206,13 +2206,14 @@ local function GetOptionsTable_CustomText(updateFunc, groupName, numUnits)
 	return config
 end
 
-local function GetOptionsTable_GPS(groupName)
+local function GetOptionsTable_GPS(groupName, updateFunc, numUnits)
+	updateFunc = updateFunc or UF.CreateAndUpdateHeaderGroup
 	local config = {
 		order = 3000,
 		type = "group",
 		name = L["GPS Arrow"],
 		get = function(info) return E.db.unitframe.units[groupName].GPSArrow[info[#info]] end,
-		set = function(info, value) E.db.unitframe.units[groupName].GPSArrow[info[#info]] = value UF:CreateAndUpdateHeaderGroup(groupName) end,
+		set = function(info, value) E.db.unitframe.units[groupName].GPSArrow[info[#info]] = value updateFunc(UF, groupName, numUnits) end,
 		args = {
 			header = {
 				order = 1,
@@ -2589,20 +2590,27 @@ E.Options.args.unitframe = {
 			func = function() ACD:SelectGroup("ElvUI", "unitframe", "boss") end,
 			disabled = function() return not E.UnitFrames.Initialized end
 		},
-		partyShortcut = {
+		nameplateShortcut = {
 			order = 23,
+			type = "execute",
+			name = L["Nameplate Frames"],
+			func = function() ACD:SelectGroup("ElvUI", "unitframe", "nameplate") end,
+			disabled = function() return not E.UnitFrames.Initialized end
+		},
+		partyShortcut = {
+			order = 24,
 			type = "execute",
 			name = L["PARTY"],
 			func = function() ACD:SelectGroup("ElvUI", "unitframe", "party") end,
 			disabled = function() return not E.UnitFrames.Initialized end
 		},
 		spacer6 = {
-			order = 24,
+			order = 25,
 			type = "description",
 			name = " "
 		},
 		raid10Shortcut = {
-			order = 25,
+			order = 26,
 			type = "execute",
 			name = L["Raid-10"],
 			func = function() ACD:SelectGroup("ElvUI", "unitframe", "raid10") end,
@@ -5956,6 +5964,274 @@ E.Options.args.unitframe.args.arena = {
 		debuffs = GetOptionsTable_Auras("debuffs", UF.CreateAndUpdateUFGroup, "arena", 5),
 		castbar = GetOptionsTable_Castbar(false, UF.CreateAndUpdateUFGroup, "arena", 5),
 		cutaway = GetOptionsTable_Cutaway(UF.CreateAndUpdateUFGroup, "arena", 5)
+	}
+}
+
+local NAMEPLATE_UF_COUNT = 40
+
+--Nameplate Frames
+E.Options.args.unitframe.args.nameplate = {
+	order = 1150,
+	type = "group",
+	name = L["Nameplate Frames"],
+	childGroups = "tab",
+	get = function(info) return E.db.unitframe.units.nameplate[info[#info]] end,
+	set = function(info, value) E.db.unitframe.units.nameplate[info[#info]] = value UF:CreateAndUpdateUFGroup("nameplate", NAMEPLATE_UF_COUNT) end,
+	disabled = function() return not E.UnitFrames.Initialized end,
+	args = {
+		enable = {
+			order = 1,
+			type = "toggle",
+			name = L["Enable"]
+		},
+		displayFrames = {
+			order = 2,
+			type = "execute",
+			name = L["Display Frames"],
+			desc = L["Force the frames to show, they will act as if they are the player frame."],
+			func = function() UF:ToggleForceShowGroupFrames("nameplate", NAMEPLATE_UF_COUNT) end
+		},
+		resetSettings = {
+			order = 3,
+			type = "execute",
+			name = L["Restore Defaults"],
+			func = function(info) E:StaticPopup_Show("RESET_UF_UNIT", L["Nameplate Frames"], nil, {unit="nameplate", mover="Nameplate Frames"}) end
+		},
+		copyFrom = {
+			order = 4,
+			type = "select",
+			name = L["Copy From"],
+			desc = L["Select a unit to copy settings from."],
+			values = {
+				["raid10"] = L["Raid-10"],
+				["raid25"] = L["Raid-25"],
+				["raid40"] = L["Raid-40"],
+				["party"] = L["PARTY"]
+			},
+			set = function(info, value) UF:MergeUnitSettings(value, "nameplate", true) end
+		},
+		customText = GetOptionsTable_CustomText(UF.CreateAndUpdateUFGroup, "nameplate", NAMEPLATE_UF_COUNT),
+		generalGroup = {
+			order = 5,
+			type = "group",
+			name = L["General"],
+			args = {
+				header = {
+					order = 1,
+					type = "header",
+					name = L["General"]
+				},
+				hideonnpc = {
+					order = 2,
+					type = "toggle",
+					name = L["Text Toggle On NPC"],
+					desc = L["Power text will be hidden on NPC targets, in addition the name text will be repositioned to the power texts anchor point."],
+					get = function(info) return E.db.unitframe.units.nameplate.power.hideonnpc end,
+					set = function(info, value) E.db.unitframe.units.nameplate.power.hideonnpc = value UF:CreateAndUpdateUFGroup("nameplate", NAMEPLATE_UF_COUNT) end
+				},
+				threatStyle = {
+					order = 3,
+					type = "select",
+					name = L["Threat Display Mode"],
+					values = threatValues
+				},
+				orientation = {
+					order = 5,
+					type = "select",
+					name = L["Frame Orientation"],
+					desc = L["Set the orientation of the UnitFrame."],
+					values = orientationValues
+				},
+				disableMouseoverGlow = {
+					order = 6,
+					type = "toggle",
+					name = L["Block Mouseover Glow"],
+					desc = L["Forces Mouseover Glow to be disabled for these frames"]
+				},
+				disableTargetGlow = {
+					order = 7,
+					type = "toggle",
+					name = L["Block Target Glow"],
+					desc = L["Forces Target Glow to be disabled for these frames"]
+				},
+				positionsGroup = {
+					order = 100,
+					type = "group",
+					name = L["Size and Positions"],
+					guiInline = true,
+					set = function(info, value) E.db.unitframe.units.nameplate[info[#info]] = value UF:CreateAndUpdateUFGroup("nameplate", NAMEPLATE_UF_COUNT) end,
+					args = {
+						width = {
+							order = 1,
+							type = "range",
+							name = L["Width"],
+							min = 10, max = 500, step = 1,
+							set = function(info, value) E.db.unitframe.units.nameplate[info[#info]] = value UF:CreateAndUpdateUFGroup("nameplate", NAMEPLATE_UF_COUNT) end
+						},
+						height = {
+							order = 2,
+							name = L["Height"],
+							type = "range",
+							min = 10, max = 500, step = 1,
+							set = function(info, value) E.db.unitframe.units.nameplate[info[#info]] = value UF:CreateAndUpdateUFGroup("nameplate", NAMEPLATE_UF_COUNT) end,
+						},
+						spacer = {
+							order = 3,
+							type = "description",
+							name = "",
+							width = "full"
+						},
+						growthDirection = {
+							order = 4,
+							type = "select",
+							name = L["Growth Direction"],
+							desc = L["Growth direction from the first unitframe."],
+							values = growthDirectionValues
+						},
+						groupsPerRowCol = {
+							order = 8,
+							type = "range",
+							name = L["Groups Per Row/Column"],
+							min = 1, max = 20, step = 1,
+							set = function(info, value)
+								E.db.unitframe.units.nameplate[info[#info]] = value
+								UF:CreateAndUpdateUFGroup("nameplate", NAMEPLATE_UF_COUNT)
+							end
+						},
+						horizontalSpacing = {
+							order = 9,
+							type = "range",
+							name = L["Horizontal Spacing"],
+							min = -1, max = 50, step = 1
+						},
+						verticalSpacing = {
+							order = 10,
+							type = "range",
+							name = L["Vertical Spacing"],
+							min = -1, max = 50, step = 1
+						}
+					}
+				},
+				visibilityGroup = {
+					order = 200,
+					name = L["Visibility"],
+					type = "group",
+					guiInline = true,
+					set = function(info, value) E.db.unitframe.units.nameplate[info[#info]] = value UF:CreateAndUpdateUFGroup("nameplate", NAMEPLATE_UF_COUNT) end,
+					args = {
+						visibility = {
+							order = 2,
+							type = "input",
+							name = L["Visibility"],
+							desc = L["The following macro must be true in order for the group to be shown, in addition to any filter that may already be set."],
+							width = "full"
+						}
+					}
+				}
+			}
+		},
+		health = GetOptionsTable_Health(true, UF.CreateAndUpdateUFGroup, "nameplate", NAMEPLATE_UF_COUNT),
+		healPrediction = GetOptionsTable_HealPrediction(UF.CreateAndUpdateUFGroup, "nameplate", NAMEPLATE_UF_COUNT),
+		absorbPrediction = GetOptionsTable_AbsorbPrediction(UF.CreateAndUpdateUFGroup, "nameplate", NAMEPLATE_UF_COUNT),
+		roleIcon = GetOptionsTable_RoleIcons(UF.CreateAndUpdateUFGroup, "nameplate", NAMEPLATE_UF_COUNT),
+		power = GetOptionsTable_Power(false, UF.CreateAndUpdateUFGroup, "nameplate", NAMEPLATE_UF_COUNT),
+		infoPanel = GetOptionsTable_InformationPanel(UF.CreateAndUpdateUFGroup, "nameplate", NAMEPLATE_UF_COUNT),
+		name = GetOptionsTable_Name(UF.CreateAndUpdateUFGroup, "nameplate", NAMEPLATE_UF_COUNT),
+		portrait = GetOptionsTable_Portrait(UF.CreateAndUpdateUFGroup, "nameplate", NAMEPLATE_UF_COUNT),
+		fader = GetOptionsTable_Fader(UF.CreateAndUpdateUFGroup, "nameplate", NAMEPLATE_UF_COUNT),
+		buffs = GetOptionsTable_Auras("buffs", UF.CreateAndUpdateUFGroup, "nameplate", NAMEPLATE_UF_COUNT),
+		debuffs = GetOptionsTable_Auras("debuffs", UF.CreateAndUpdateUFGroup, "nameplate", NAMEPLATE_UF_COUNT),
+		buffIndicator = {
+			order = 600,
+			type = "group",
+			name = L["Buff Indicator"],
+			get = function(info) return E.db.unitframe.units.nameplate.buffIndicator[info[#info]] end,
+			set = function(info, value) E.db.unitframe.units.nameplate.buffIndicator[info[#info]] = value UF:CreateAndUpdateUFGroup("nameplate", NAMEPLATE_UF_COUNT) end,
+			args = {
+				header = {
+					order = 1,
+					type = "header",
+					name = L["Buff Indicator"]
+				},
+				enable = {
+					order = 2,
+					type = "toggle",
+					name = L["Enable"]
+				},
+				size = {
+					order = 3,
+					type = "range",
+					name = L["Size"],
+					desc = L["Size of the indicator icon."],
+					min = 4, max = 50, step = 1
+				},
+				fontSize = {
+					order = 4,
+					type = "range",
+					name = L["FONT_SIZE"],
+					min = 7, max = 22, step = 1
+				},
+				profileSpecific = {
+					order = 5,
+					type = "toggle",
+					name = L["Profile Specific"],
+					desc = L["Use the profile specific filter 'Buff Indicator (Profile)' instead of the global filter 'Buff Indicator'."]
+				},
+				configureButton = {
+					order = 6,
+					type = "execute",
+					name = L["Configure Auras"],
+					func = function()
+						if E.db.unitframe.units.nameplate.buffIndicator.profileSpecific then
+							E:SetToFilterConfig("Buff Indicator (Profile)")
+						else
+							E:SetToFilterConfig("Buff Indicator")
+						end
+					end
+				}
+			}
+		},
+		raidRoleIcons = {
+			order = 750,
+			type = "group",
+			name = L["RL / ML Icons"],
+			get = function(info) return E.db.unitframe.units.nameplate.raidRoleIcons[info[#info]] end,
+			set = function(info, value) E.db.unitframe.units.nameplate.raidRoleIcons[info[#info]] = value UF:CreateAndUpdateUFGroup("nameplate", NAMEPLATE_UF_COUNT) end,
+			args = {
+				header = {
+					order = 1,
+					type = "header",
+					name = L["RL / ML Icons"]
+				},
+				enable = {
+					order = 2,
+					type = "toggle",
+					name = L["Enable"]
+				},
+				position = {
+					order = 3,
+					type = "select",
+					name = L["Position"],
+					values = {
+						["TOPLEFT"] = "TOPLEFT",
+						["TOPRIGHT"] = "TOPRIGHT"
+					}
+				},
+				size = {
+					order = 4,
+					type = "range",
+					name = L["Size"],
+					min = 4, max = 100, step = 1
+				}
+			}
+		},
+		rdebuffs = GetOptionsTable_RaidDebuff(UF.CreateAndUpdateUFGroup, "nameplate", NAMEPLATE_UF_COUNT),
+		raidicon = GetOptionsTable_RaidIcon(UF.CreateAndUpdateUFGroup, "nameplate", NAMEPLATE_UF_COUNT),
+		readycheckIcon = GetOptionsTable_ReadyCheckIcon(UF.CreateAndUpdateUFGroup, "nameplate", NAMEPLATE_UF_COUNT),
+		resurrectIcon = GetOptionsTable_ResurrectIcon(UF.CreateAndUpdateUFGroup, "nameplate", NAMEPLATE_UF_COUNT),
+		summonIcon = GetOptionsTable_SummonIcon(UF.CreateAndUpdateUFGroup, "nameplate", NAMEPLATE_UF_COUNT),
+		cutaway = GetOptionsTable_Cutaway(UF.CreateAndUpdateUFGroup, "nameplate", NAMEPLATE_UF_COUNT),
+		GPSArrow = GetOptionsTable_GPS("nameplate", UF.CreateAndUpdateUFGroup, NAMEPLATE_UF_COUNT)
 	}
 }
 
