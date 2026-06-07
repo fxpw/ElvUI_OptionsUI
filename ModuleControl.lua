@@ -415,13 +415,18 @@ local function CreateUnitframesConfig()
 				type = "toggle",
 				name = L["Raid Pet"]
 			},
-			["tank"] = {
+			["nameplate"] = {
 				order = 14,
+				type = "toggle",
+				name = L["Nameplate Frames"]
+			},
+			["tank"] = {
+				order = 15,
 				type = "toggle",
 				name = L["Tank"]
 			},
 			["assist"] = {
-				order = 15,
+				order = 16,
 				type = "toggle",
 				name = L["Assist"]
 			}
