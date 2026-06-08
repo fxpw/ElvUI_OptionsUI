@@ -131,8 +131,20 @@ local function BuildABConfig()
 					E:StaticPopup_Show("CONFIG_RL")
 				end
 			},
-			movementModifier = {
+			keepButtonSizeRatio = {
 				order = 13,
+				type = "toggle",
+				name = L["Keep Size Ratio"],
+				set = function(info, value)
+					E.db.actionbar.keepButtonSizeRatio = value
+					for i = 1, 6 do
+						AB:PositionAndSizeBar("bar"..i)
+					end
+					AB:PositionAndSizeBarShapeShift()
+				end
+			},
+			movementModifier = {
+				order = 14,
 				type = "select",
 				name = L["Pick Up Action Key"],
 				desc = L["The button you must hold down in order to drag an ability to another action button."],
@@ -145,7 +157,7 @@ local function BuildABConfig()
 				}
 			},
 			globalFadeAlpha = {
-				order = 14,
+				order = 15,
 				type = "range",
 				name = L["Global Fade Transparency"],
 				desc = L["Transparency level when not in combat, no target exists, full health, not casting, and no focus target exists."],
@@ -154,14 +166,14 @@ local function BuildABConfig()
 				set = function(info, value) E.db.actionbar[info[#info]] = value AB.fadeParent:SetAlpha(1-value) end
 			},
 			equippedItem = {
-				order = 15,
+				order = 16,
 				type = "toggle",
 				name = L["Equipped Item"],
 				get = function(info) return E.db.actionbar[info[#info]] end,
 				set = function(info, value) E.db.actionbar[info[#info]] = value AB:UpdateButtonSettings() end
 			},
 			equippedItemColor = {
-				order = 16,
+				order = 17,
 				type = "color",
 				name = L["Equipped Item Color"],
 				get = function(info)
@@ -177,7 +189,7 @@ local function BuildABConfig()
 				disabled = function() return not E.db.actionbar.equippedItem end
 			},
 			colorGroup = {
-				order = 17,
+				order = 18,
 				type = "group",
 				name = L["COLORS"],
 				guiInline = true,
@@ -219,7 +231,7 @@ local function BuildABConfig()
 				}
 			},
 			fontGroup = {
-				order = 18,
+				order = 19,
 				type = "group",
 				name = L["Fonts"],
 				guiInline = true,
@@ -307,7 +319,7 @@ local function BuildABConfig()
 				}
 			},
 			lbf = {
-				order = 19,
+				order = 20,
 				type = "group",
 				guiInline = true,
 				name = L["LBF Support"],
@@ -384,8 +396,21 @@ local function BuildABConfig()
 					min = 15, max = 60, step = 1,
 					disabled = function() return not E.db.actionbar.barTotem.enabled end
 				},
-				buttonspacing = {
+				buttonheight = {
 					order = 8,
+					type = "range",
+					name = L["Height"],
+					min = 15, max = 60, step = 1,
+					disabled = function() return not E.db.actionbar.barTotem.enabled or E.db.actionbar.barTotem.keepButtonSizeRatio end
+				},
+				keepButtonSizeRatio = {
+					order = 9,
+					type = "toggle",
+					name = L["Keep Size Ratio"],
+					disabled = function() return not E.db.actionbar.barTotem.enabled end
+				},
+				buttonspacing = {
+					order = 10,
 					type = "range",
 					name = L["Button Spacing"],
 					desc = L["The spacing between buttons."],
@@ -393,7 +418,7 @@ local function BuildABConfig()
 					disabled = function() return not E.db.actionbar.barTotem.enabled end
 				},
 				flyoutSpacing = {
-					order = 9,
+					order = 11,
 					type = "range",
 					name = L["Flyout Spacing"],
 					desc = L["The spacing between buttons."],
@@ -401,7 +426,7 @@ local function BuildABConfig()
 					disabled = function() return not E.db.actionbar.barTotem.enabled end
 				},
 				alpha = {
-					order = 10,
+					order = 12,
 					type = "range",
 					name = L["Alpha"],
 					isPercent = true,
@@ -409,7 +434,7 @@ local function BuildABConfig()
 					disabled = function() return not E.db.actionbar.barTotem.enabled end
 				},
 				visibility = {
-					order = 11,
+					order = 13,
 					type = "input",
 					name = L["Visibility State"],
 					desc = L["This works like a macro, you can run different situations to get the actionbar to show/hide differently.\n Example: '[combat] show;hide'"],
@@ -656,8 +681,15 @@ local function BuildABConfig()
 				min = 15, max = 60, step = 1,
 				disabled = function() return not E.db.actionbar.stanceBar.enabled end
 			},
-			buttonspacing = {
+			buttonheight = {
 				order = 13,
+				type = "range",
+				name = L["Height"],
+				min = 15, max = 60, step = 1,
+				disabled = function() return not E.db.actionbar.stanceBar.enabled or E.db.actionbar.keepButtonSizeRatio end
+			},
+			buttonspacing = {
+				order = 14,
 				type = "range",
 				name = L["Button Spacing"],
 				desc = L["The spacing between buttons."],
@@ -665,7 +697,7 @@ local function BuildABConfig()
 				disabled = function() return not E.db.actionbar.stanceBar.enabled end
 			},
 			backdropSpacing = {
-				order = 14,
+				order = 15,
 				type = "range",
 				name = L["Backdrop Spacing"],
 				desc = L["The spacing between the backdrop and the buttons."],
@@ -673,7 +705,7 @@ local function BuildABConfig()
 				disabled = function() return not E.db.actionbar.stanceBar.enabled end
 			},
 			heightMult = {
-				order = 15,
+				order = 16,
 				type = "range",
 				name = L["Height Multiplier"],
 				desc = L["Multiply the backdrops height or width by this value. This is usefull if you wish to have more than one bar behind a backdrop."],
@@ -681,7 +713,7 @@ local function BuildABConfig()
 				disabled = function() return not E.db.actionbar.stanceBar.enabled end
 			},
 			widthMult = {
-				order = 16,
+				order = 17,
 				type = "range",
 				name = L["Width Multiplier"],
 				desc = L["Multiply the backdrops height or width by this value. This is usefull if you wish to have more than one bar behind a backdrop."],
@@ -689,7 +721,7 @@ local function BuildABConfig()
 				disabled = function() return not E.db.actionbar.stanceBar.enabled end
 			},
 			alpha = {
-				order = 17,
+				order = 18,
 				type = "range",
 				name = L["Alpha"],
 				isPercent = true,
@@ -697,7 +729,7 @@ local function BuildABConfig()
 				disabled = function() return not E.db.actionbar.stanceBar.enabled end
 			},
 			style = {
-				order = 18,
+				order = 19,
 				type = "select",
 				name = L["Style"],
 				desc = L["This setting will be updated upon changing stances."],
@@ -708,7 +740,7 @@ local function BuildABConfig()
 				disabled = function() return not E.db.actionbar.stanceBar.enabled end
 			},
 			visibility = {
-				order = 19,
+				order = 20,
 				type = "input",
 				name = L["Visibility State"],
 				desc = L["This works like a macro, you can run different situations to get the actionbar to show/hide differently.\n Example: '[combat] show;hide'"],
@@ -922,8 +954,15 @@ local function BuildABConfig()
 					min = 15, max = 60, step = 1,
 					disabled = function() return not E.db.actionbar["bar"..i].enabled end
 				},
-				buttonspacing = {
+				buttonheight = {
 					order = 14,
+					type = "range",
+					name = L["Height"],
+					min = 15, max = 60, step = 1,
+					disabled = function() return not E.db.actionbar["bar"..i].enabled or E.db.actionbar.keepButtonSizeRatio end
+				},
+				buttonspacing = {
+					order = 15,
 					type = "range",
 					name = L["Button Spacing"],
 					desc = L["The spacing between buttons."],
@@ -931,7 +970,7 @@ local function BuildABConfig()
 					disabled = function() return not E.db.actionbar["bar"..i].enabled end
 				},
 				backdropSpacing = {
-					order = 15,
+					order = 16,
 					type = "range",
 					name = L["Backdrop Spacing"],
 					desc = L["The spacing between the backdrop and the buttons."],
@@ -939,7 +978,7 @@ local function BuildABConfig()
 					disabled = function() return not E.db.actionbar["bar"..i].enabled end
 				},
 				heightMult = {
-					order = 16,
+					order = 17,
 					type = "range",
 					name = L["Height Multiplier"],
 					desc = L["Multiply the backdrops height or width by this value. This is usefull if you wish to have more than one bar behind a backdrop."],
@@ -947,7 +986,7 @@ local function BuildABConfig()
 					disabled = function() return not E.db.actionbar["bar"..i].enabled end
 				},
 				widthMult = {
-					order = 17,
+					order = 18,
 					type = "range",
 					name = L["Width Multiplier"],
 					desc = L["Multiply the backdrops height or width by this value. This is usefull if you wish to have more than one bar behind a backdrop."],
@@ -955,7 +994,7 @@ local function BuildABConfig()
 					disabled = function() return not E.db.actionbar["bar"..i].enabled end
 				},
 				alpha = {
-					order = 18,
+					order = 19,
 					type = "range",
 					name = L["Alpha"],
 					isPercent = true,
@@ -963,7 +1002,7 @@ local function BuildABConfig()
 					disabled = function() return not E.db.actionbar["bar"..i].enabled end
 				},
 				paging = {
-					order = 19,
+					order = 20,
 					type = "input",
 					name = L["Action Paging"],
 					desc = L["This works like a macro, you can run different situations to get the actionbar to page differently.\n Example: '[combat] 2;'"],
@@ -985,7 +1024,7 @@ local function BuildABConfig()
 					disabled = function() return not E.db.actionbar["bar"..i].enabled end
 				},
 				visibility = {
-					order = 20,
+					order = 21,
 					type = "input",
 					name = L["Visibility State"],
 					desc = L["This works like a macro, you can run different situations to get the actionbar to show/hide differently.\n Example: '[combat] show;hide'"],

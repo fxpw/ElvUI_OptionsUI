@@ -423,15 +423,28 @@ E.Options.args.general = {
 					min = 24, max = 60, step = 1,
 					disabled = function() return not E.db.general.totems.enable end
 				},
-				spacing = {
+				height = {
 					order = 4,
+					type = "range",
+					name = L["Height"],
+					min = 24, max = 60, step = 1,
+					disabled = function() return not E.db.general.totems.enable or E.db.general.totems.keepButtonSizeRatio end
+				},
+				keepButtonSizeRatio = {
+					order = 5,
+					type = "toggle",
+					name = L["Keep Size Ratio"],
+					disabled = function() return not E.db.general.totems.enable end
+				},
+				spacing = {
+					order = 6,
 					type = "range",
 					name = L["Button Spacing"],
 					min = 1, max = 10, step = 1,
 					disabled = function() return not E.db.general.totems.enable end
 				},
 				sortDirection = {
-					order = 5,
+					order = 7,
 					type = "select",
 					name = L["Sort Direction"],
 					values = {
@@ -441,7 +454,7 @@ E.Options.args.general = {
 					disabled = function() return not E.db.general.totems.enable end
 				},
 				growthDirection = {
-					order = 6,
+					order = 8,
 					type = "select",
 					name = L["Bar Direction"],
 					values = {

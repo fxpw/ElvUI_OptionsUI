@@ -16,24 +16,36 @@ local function GetAuraOptions(headerName)
 		size = {
 			order = 2,
 			type = "range",
-			name = L["Size"],
+			name = function(info) return E.db.auras[info[#info - 1]].keepSizeRatio ~= false and L["Size"] or L["Width"] end,
 			desc = L["Set the size of the individual auras."],
 			min = 16, max = 60, step = 2
 		},
-		durationFontSize = {
+		keepSizeRatio = {
 			order = 3,
+			type = "toggle",
+			name = L["Keep Size Ratio"],
+		},
+		height = {
+			order = 4,
+			type = "range",
+			name = L["Height"],
+			min = 16, max = 60, step = 2,
+			disabled = function(info) return E.db.auras[info[#info - 1]].keepSizeRatio ~= false end
+		},
+		durationFontSize = {
+			order = 5,
 			type = "range",
 			name = L["Duration Font Size"],
 			min = 4, max = 32, step = 1,
 		},
 		countFontSize = {
-			order = 4,
+			order = 6,
 			type = "range",
 			name = L["Count Font Size"],
 			min = 4, max = 32, step = 1,
 		},
 		growthDirection = {
-			order = 5,
+			order = 7,
 			type = "select",
 			name = L["Growth Direction"],
 			desc = L["The direction the auras will grow and then the direction they will grow after they reach the wrap after limit."],
@@ -49,33 +61,33 @@ local function GetAuraOptions(headerName)
 			}
 		},
 		wrapAfter = {
-			order = 6,
+			order = 8,
 			type = "range",
 			name = L["Wrap After"],
 			desc = L["Begin a new row or column after this many auras."],
 			min = 1, max = 32, step = 1
 		},
 		maxWraps = {
-			order = 7,
+			order = 9,
 			type = "range",
 			name = L["Max Wraps"],
 			desc = L["Limit the number of rows or columns."],
 			min = 1, max = 32, step = 1
 		},
 		horizontalSpacing = {
-			order = 8,
+			order = 10,
 			type = "range",
 			name = L["Horizontal Spacing"],
 			min = 0, max = 50, step = 1
 		},
 		verticalSpacing = {
-			order = 9,
+			order = 11,
 			type = "range",
 			name = L["Vertical Spacing"],
 			min = 0, max = 50, step = 1
 		},
 		sortMethod = {
-			order = 10,
+			order = 12,
 			type = "select",
 			name = L["Sort Method"],
 			desc = L["Defines how the group is sorted."],
@@ -86,7 +98,7 @@ local function GetAuraOptions(headerName)
 			}
 		},
 		sortDir = {
-			order = 11,
+			order = 13,
 			type = "select",
 			name = L["Sort Direction"],
 			desc = L["Defines the sort order of the selected sort method."],
@@ -96,7 +108,7 @@ local function GetAuraOptions(headerName)
 			}
 		},
 		seperateOwn = {
-			order = 12,
+			order = 14,
 			type = "select",
 			name = L["Seperate"],
 			desc = L["Indicate whether buffs you cast yourself should be separated before or after."],
@@ -380,6 +392,19 @@ E.Options.args.auras = {
 								["LEFT"] = L["Left"],
 								["RIGHT"] = L["Right"]
 							}
+						}
+						,
+						keepButtonSizeRatio = {
+							order = 4,
+							type = "toggle",
+							name = L["Keep Size Ratio"]
+						},
+						height = {
+							order = 5,
+							type = "range",
+							name = L["Height"],
+							min = 8, max = 64, step = 1,
+							disabled = function() return E.db.general.reminder.keepButtonSizeRatio ~= false end
 						}
 					}
 				},

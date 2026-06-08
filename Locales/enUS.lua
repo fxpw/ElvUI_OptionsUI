@@ -507,6 +507,7 @@ L["Health Length"] = true
 L["Health Threshold"] = true
 L["Health"] = true
 L["Height Multiplier"] = true
+L["Keep Size Ratio"] = true
 L["Height of the objective tracker. Increase size to be able to see more objectives."] = true
 L["Height"] = true
 L["Help Frame"] = true
