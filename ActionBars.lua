@@ -538,8 +538,15 @@ local function BuildABConfig()
 				min = 15, max = 60, step = 1,
 				disabled = function() return not E.db.actionbar.barPet.enabled end
 			},
-			buttonspacing = {
+			buttonheight = {
 				order = 12,
+				type = "range",
+				name = L["Height"],
+				min = 15, max = 60, step = 1,
+				disabled = function() return not E.db.actionbar.barPet.enabled or E.db.actionbar.keepButtonSizeRatio end
+			},
+			buttonspacing = {
+				order = 13,
 				type = "range",
 				name = L["Button Spacing"],
 				desc = L["The spacing between buttons."],
@@ -547,7 +554,7 @@ local function BuildABConfig()
 				disabled = function() return not E.db.actionbar.barPet.enabled end
 			},
 			backdropSpacing = {
-				order = 13,
+				order = 14,
 				type = "range",
 				name = L["Backdrop Spacing"],
 				desc = L["The spacing between the backdrop and the buttons."],
@@ -555,7 +562,7 @@ local function BuildABConfig()
 				disabled = function() return not E.db.actionbar.barPet.enabled end
 			},
 			heightMult = {
-				order = 14,
+				order = 15,
 				type = "range",
 				name = L["Height Multiplier"],
 				desc = L["Multiply the backdrops height or width by this value. This is usefull if you wish to have more than one bar behind a backdrop."],
@@ -563,7 +570,7 @@ local function BuildABConfig()
 				disabled = function() return not E.db.actionbar.barPet.enabled end
 			},
 			widthMult = {
-				order = 15,
+				order = 16,
 				type = "range",
 				name = L["Width Multiplier"],
 				desc = L["Multiply the backdrops height or width by this value. This is usefull if you wish to have more than one bar behind a backdrop."],
@@ -571,7 +578,7 @@ local function BuildABConfig()
 				disabled = function() return not E.db.actionbar.barPet.enabled end
 			},
 			alpha = {
-				order = 16,
+				order = 17,
 				type = "range",
 				name = L["Alpha"],
 				isPercent = true,
@@ -579,7 +586,7 @@ local function BuildABConfig()
 				disabled = function() return not E.db.actionbar.barPet.enabled end
 			},
 			visibility = {
-				order = 17,
+				order = 18,
 				type = "input",
 				name = L["Visibility State"],
 				desc = L["This works like a macro, you can run different situations to get the actionbar to show/hide differently.\n Example: '[combat] show;hide'"],
