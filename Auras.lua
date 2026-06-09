@@ -13,24 +13,24 @@ local function GetAuraOptions(headerName)
 			type = "header",
 			name = headerName
 		},
-		size = {
+		keepSizeRatio = {
 			order = 2,
+			type = "toggle",
+			name = L["Keep Size Ratio"],
+		},
+		size = {
+			order = 3,
 			type = "range",
 			name = function(info) return E.db.auras[info[#info - 1]].keepSizeRatio ~= false and L["Size"] or L["Width"] end,
 			desc = L["Set the size of the individual auras."],
 			min = 16, max = 60, step = 2
-		},
-		keepSizeRatio = {
-			order = 3,
-			type = "toggle",
-			name = L["Keep Size Ratio"],
 		},
 		height = {
 			order = 4,
 			type = "range",
 			name = L["Height"],
 			min = 16, max = 60, step = 2,
-			disabled = function(info) return E.db.auras[info[#info - 1]].keepSizeRatio ~= false end
+			hidden = function(info) return E.db.auras[info[#info - 1]].keepSizeRatio ~= false end
 		},
 		durationFontSize = {
 			order = 5,
