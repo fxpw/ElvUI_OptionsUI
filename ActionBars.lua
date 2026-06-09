@@ -391,7 +391,7 @@ local function BuildABConfig()
 				buttonsize = {
 					order = 7,
 					type = "range",
-					name = L["Button Size"],
+					name = function() return E.db.actionbar.keepButtonSizeRatio and L["Button Size"] or L["Width"] end,
 					desc = L["The size of the action buttons."],
 					min = 15, max = 60, step = 1,
 					disabled = function() return not E.db.actionbar.barTotem.enabled end
@@ -401,7 +401,7 @@ local function BuildABConfig()
 					type = "range",
 					name = L["Height"],
 					min = 15, max = 60, step = 1,
-					disabled = function() return not E.db.actionbar.barTotem.enabled or E.db.actionbar.barTotem.keepButtonSizeRatio end
+					hidden = function() return not E.db.actionbar.barTotem.enabled or E.db.actionbar.barTotem.keepButtonSizeRatio end
 				},
 				keepButtonSizeRatio = {
 					order = 9,
@@ -533,7 +533,7 @@ local function BuildABConfig()
 			buttonsize = {
 				order = 11,
 				type = "range",
-				name = L["Button Size"],
+				name = function() return E.db.actionbar.keepButtonSizeRatio and L["Button Size"] or L["Width"] end,
 				desc = L["The size of the action buttons."],
 				min = 15, max = 60, step = 1,
 				disabled = function() return not E.db.actionbar.barPet.enabled end
@@ -543,7 +543,7 @@ local function BuildABConfig()
 				type = "range",
 				name = L["Height"],
 				min = 15, max = 60, step = 1,
-				disabled = function() return not E.db.actionbar.barPet.enabled or E.db.actionbar.keepButtonSizeRatio end
+				hidden = function() return not E.db.actionbar.barPet.enabled or E.db.actionbar.keepButtonSizeRatio end
 			},
 			buttonspacing = {
 				order = 13,
@@ -683,7 +683,7 @@ local function BuildABConfig()
 			buttonsize = {
 				order = 12,
 				type = "range",
-				name = L["Button Size"],
+				name = function() return E.db.actionbar.keepButtonSizeRatio and L["Button Size"] or L["Width"] end,
 				desc = L["The size of the action buttons."],
 				min = 15, max = 60, step = 1,
 				disabled = function() return not E.db.actionbar.stanceBar.enabled end
@@ -693,7 +693,7 @@ local function BuildABConfig()
 				type = "range",
 				name = L["Height"],
 				min = 15, max = 60, step = 1,
-				disabled = function() return not E.db.actionbar.stanceBar.enabled or E.db.actionbar.keepButtonSizeRatio end
+				hidden = function() return not E.db.actionbar.stanceBar.enabled or E.db.actionbar.keepButtonSizeRatio end
 			},
 			buttonspacing = {
 				order = 14,
@@ -956,7 +956,7 @@ local function BuildABConfig()
 				buttonsize = {
 					order = 13,
 					type = "range",
-					name = L["Button Size"],
+					name = function() return E.db.actionbar.keepButtonSizeRatio and L["Button Size"] or L["Width"] end,
 					desc = L["The size of the action buttons."],
 					min = 15, max = 60, step = 1,
 					disabled = function() return not E.db.actionbar["bar"..i].enabled end
@@ -966,7 +966,7 @@ local function BuildABConfig()
 					type = "range",
 					name = L["Height"],
 					min = 15, max = 60, step = 1,
-					disabled = function() return not E.db.actionbar["bar"..i].enabled or E.db.actionbar.keepButtonSizeRatio end
+					hidden = function() return not E.db.actionbar["bar"..i].enabled or E.db.actionbar.keepButtonSizeRatio end
 				},
 				buttonspacing = {
 					order = 15,
