@@ -401,7 +401,7 @@ local function BuildABConfig()
 					type = "range",
 					name = L["Height"],
 					min = 15, max = 60, step = 1,
-					hidden = function() return not E.db.actionbar.barTotem.enabled or E.db.actionbar.barTotem.keepButtonSizeRatio end
+					hidden = function() return not E.db.actionbar.barTotem.enabled or E.db.actionbar.keepButtonSizeRatio end
 				},
 				keepButtonSizeRatio = {
 					order = 9,
