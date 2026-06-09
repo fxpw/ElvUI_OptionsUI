@@ -141,6 +141,9 @@ local function BuildABConfig()
 						AB:PositionAndSizeBar("bar"..i)
 					end
 					AB:PositionAndSizeBarShapeShift()
+					if E.myclass == "SHAMAN" then
+						AB:PositionAndSizeBarTotem()
+					end
 				end
 			},
 			movementModifier = {
