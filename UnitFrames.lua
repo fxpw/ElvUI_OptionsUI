@@ -4022,10 +4022,10 @@ E.Options.args.unitframe.args.player = {
 					hidden = function() return E.myclass ~= "DRUID" end,
 					disabled = function() return not E.db.unitframe.units.player.classbar.enable end
 				},
-				hideRuneTimer = {
+				showRuneTimer = {
 					order = 6.5,
 					type = "toggle",
-					name = L["Hide Rune Timer"],
+					name = L["Show Rune Timer"],
 					hidden = function() return E.myclass ~= "DEATHKNIGHT" end,
 					disabled = function() return not E.db.unitframe.units.player.classbar.enable end
 				},
