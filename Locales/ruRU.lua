@@ -1637,4 +1637,4 @@ L["Display the class icon for players instead of the unit portrait."] = "Ото�
 L["PvP Indicator"] = "Индикатор PvP"
 L["Horde / Alliance / Renegade"] = "Орда / Альянс / Ренегаты"
 L["Target Marker Icon"] = "Метка цели"
-L["Hide Rune Timer"] = "Скрыть таймер рун"
+L["Show Rune Timer"] = "Показать таймер рун"
