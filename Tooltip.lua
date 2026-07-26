@@ -382,27 +382,6 @@ E.Options.args.tooltip = {
 					disabled = function() return not E.db.tooltip.healthBar.text end
 				}
 			}
-		},
-		mythicPlus = {
-			order = 6,
-			type = "group",
-			name = L["Mythic+"],
-			get = function(info) return E.db.tooltip[info[#info]] end,
-			set = function(info, value) E.db.tooltip[info[#info]] = value end,
-			disabled = function() return not E.Tooltip.Initialized end,
-			args = {
-				header = {
-					order = 1,
-					type = "header",
-					name = L["Mythic+"]
-				},
-				mythicRating = {
-					order = 2,
-					type = "toggle",
-					name = L["Mythic+ Rating"],
-					desc = L["Display Mythic+ rating in tooltip when hovering over a player."]
-				},
-			}
 		}
 	}
 }
