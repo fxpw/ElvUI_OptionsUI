@@ -96,8 +96,8 @@ E.Options.args.tooltip = {
                 	name = L["Zodiac name"],
                 	desc = L["Display player zodiac name."]
                 },
-				spellID = {
-					order = 11,
+                spellID = {
+                    order = 11,
 					type = "toggle",
 					name = L["Spell/Item IDs"],
 					desc = L["Display the spell or item ID when mousing over a spell or item tooltip."]
