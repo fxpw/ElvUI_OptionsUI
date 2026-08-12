@@ -17,6 +17,29 @@ AceConfigDialog.Status = AceConfigDialog.Status or {}
 AceConfigDialog.frame = AceConfigDialog.frame or CreateFrame("Frame")
 AceConfigDialog.tooltip = AceConfigDialog.tooltip or CreateFrame("GameTooltip", "ElvUIAceConfigDialogTooltip", UIParent, "GameTooltipTemplate")
 
+-- ElvUI: apply the ElvUI backdrop to the tooltip right away (defense-in-depth).
+-- The Ace3 skin normally hooks lib.tooltip OnShow via LibStub.NewLibrary, but
+-- if the skin hook is ever missing (module failed to load, hook ordering, etc.)
+-- the tooltip would stay vanilla. Styling is idempotent, so re-applying on
+-- every OnShow is harmless and keeps the frame correct after any restyle.
+do
+	local tt = AceConfigDialog.tooltip
+	if tt and not tt.__elvuiTooltipStyled and type(tt.SetTemplate) == "function" then
+		tt.__elvuiTooltipStyled = true
+		local function style()
+			local E = _G.E
+			if E and E.private and E.private.skins and E.private.skins.blizzard
+				and E.private.skins.blizzard.enable and E.private.skins.blizzard.tooltip then
+				pcall(tt.SetTemplate, tt, "Transparent")
+			end
+		end
+		style()
+		if tt.HookScript then
+			tt:HookScript("OnShow", style)
+		end
+	end
+end
+
 AceConfigDialog.frame.apps = AceConfigDialog.frame.apps or {}
 AceConfigDialog.frame.closing = AceConfigDialog.frame.closing or {}
 AceConfigDialog.frame.closeAllOverride = AceConfigDialog.frame.closeAllOverride or {}
