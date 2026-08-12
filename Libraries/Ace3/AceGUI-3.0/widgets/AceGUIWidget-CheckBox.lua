@@ -196,7 +196,7 @@ local methods = {
 		self.text:SetText(label)
 		self.text:SetWordWrap(false)
 
-		-- обрезаем длинные (русские) подписи многоточием; полный текст
+		-- длинные (русские) подписи обрезаем многоточием; полный текст
 		-- показывает тултип AceConfigDialog
 		local maxWidth = (self.frame:GetWidth() or 0) - 30
 		if maxWidth > 0 and self.text:GetStringWidth() > maxWidth then

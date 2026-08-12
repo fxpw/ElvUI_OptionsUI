@@ -148,7 +148,6 @@ local function Constructor()
 	frame:SetScript("OnEnter", Control_OnEnter)
 	frame:SetScript("OnLeave", Control_OnLeave)
 
-	-- dragdrop
 	if not dragdropButton then
 		dragdropButton = CreateFrame("Button", "ElvUIAceGUI30DragDropButton", UIParent, "UIPanelButtonTemplate")
 		dragdropButton:SetFrameStrata("TOOLTIP")

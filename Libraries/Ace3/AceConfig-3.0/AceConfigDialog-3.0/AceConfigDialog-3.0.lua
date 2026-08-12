@@ -17,11 +17,9 @@ AceConfigDialog.Status = AceConfigDialog.Status or {}
 AceConfigDialog.frame = AceConfigDialog.frame or CreateFrame("Frame")
 AceConfigDialog.tooltip = AceConfigDialog.tooltip or CreateFrame("GameTooltip", "ElvUIAceConfigDialogTooltip", UIParent, "GameTooltipTemplate")
 
--- ElvUI: сразу применяем фон ElvUI к тултипу (на всякий случай). Обычно скин
--- Ace3 вешает хук на OnShow тултипа через LibStub.NewLibrary, но если хук
--- вдруг отсутствует (модуль не загрузился, порядок хуков и т.д.), тултип
--- останется стандартным. Стилизация идемпотентна, повторное применение
--- на каждый OnShow безвредно и держит рамку в правильном виде.
+-- ElvUI: сразу применяем фон ElvUI к тултипу. Обычно скин Ace3 вешает хук
+-- на OnShow тултипа, но если хук вдруг отсутствует, тултип останется
+-- стандартным. Стилизация идемпотентна, повторное применение безвредно.
 do
 	local tt = AceConfigDialog.tooltip
 	if tt and not tt.__elvuiTooltipStyled and type(tt.SetTemplate) == "function" then
@@ -636,7 +634,7 @@ do
 		frame:Hide()
 		frame:SetPoint("CENTER", UIParent, "CENTER")
 		frame:SetSize(320, 72)
-		frame:EnableMouse(true) -- чтобы не было сквозных кликов по рамке
+		frame:EnableMouse(true) -- чтобы рамка не пропускала клики
 		frame:SetFrameStrata("TOOLTIP")
 		frame:SetFrameLevel(100)
 		frame:SetScript("OnKeyDown", function(self, key)
@@ -644,7 +642,7 @@ do
 				self:EnableKeyboard(false)
 				if self.cancel:IsShown() then
 					self.cancel:Click()
-				else -- показываем ошибку валидации
+				else -- ошибка валидации
 					self:Hide()
 				end
 			else
@@ -689,7 +687,7 @@ local function confirmPopup(appName, rootframe, basepath, info, message, func, .
 	local frame = AceConfigDialog.popup
 	frame:Show()
 	frame.text:SetText(message)
-	-- высота взята из StaticPopup.lua: 32 + 2 + 6 + 21 (высота кнопки) == 61
+	-- высота из StaticPopup.lua: 32 + 2 + 6 + 21 (высота кнопки) == 61
 	local height = 61 + frame.text:GetHeight()
 	frame:SetHeight(height)
 
@@ -700,7 +698,7 @@ local function confirmPopup(appName, rootframe, basepath, info, message, func, .
 	local t = {...}
 	local tCount = select("#", ...)
 	frame.accept:SetScript("OnClick", function(self)
-		safecall(func, unpack(t, 1, tCount)) -- задаем количество вручную: unpack() останавливается на nil (баг #)
+		safecall(func, unpack(t, 1, tCount)) -- задаем количество вручную: unpack() останавливается на nil
 		AceConfigDialog:Open(appName, rootframe, unpack(basepath or emptyTbl))
 		frame:Hide()
 		self:SetScript("OnClick", nil)
@@ -720,7 +718,7 @@ local function validationErrorPopup(message)
 	local frame = AceConfigDialog.popup
 	frame:Show()
 	frame.text:SetText(message)
-	-- высота взята из StaticPopup.lua: 32 + 2 + 6 + 21 (высота кнопки) == 61
+	-- высота из StaticPopup.lua: 32 + 2 + 6 + 21 (высота кнопки) == 61
 	local height = 61 + frame.text:GetHeight()
 	frame:SetHeight(height)
 
@@ -836,7 +834,7 @@ local function ActivateControl(widget, event, ...)
 		else
 			validationErrorPopup(validated)
 		end
-		PlaySound(882) -- SOUNDKIT.IG_PLAYER_INVITE_DECLINE: _DECLINE отсутствует в таблице
+		PlaySound(882) -- SOUNDKIT.IG_PLAYER_INVITE_DECLINE: _DECLINE нет в таблице
 		del(info)
 		return true
 	else
@@ -1900,9 +1898,9 @@ function AceConfigDialog:FeedGroup(appName,options,container,rootframe,path, isR
 
 			container:AddChild(tree)
 
-			-- ElvUI рисует своё левое меню (хром окна), поэтому для таких корневых
-			-- групп держим дерево AceGUI скрытым, чтобы его кнопки не просвечивали
-			-- сквозь хром (в дополнение к скину Ace3)
+			-- ElvUI рисует своё левое меню (хром окна); для таких корневых
+			-- групп прячем дерево AceGUI, чтобы его кнопки не просвечивали
+			-- сквозь хром (в дополнение к скину Ace3).
 			if (group.childGroups or "") == "ElvUI_HiddenTree" and tree.treeframe then
 				tree.treeframe:Hide()
 			end

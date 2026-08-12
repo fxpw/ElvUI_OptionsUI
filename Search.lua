@@ -158,7 +158,8 @@ function C:Search_GetReturn(value, ...)
 	end
 end
 
--- если hidden задан функцией, поиск покажет опцию (доступа к её info-таблице нет)
+-- если hidden задан функцией, поиск показывает опцию:
+-- доступа к её info-таблице нет
 function C:Search_IsHidden(info)
 	if type(info.hidden) == 'boolean' then
 		return info.hidden
