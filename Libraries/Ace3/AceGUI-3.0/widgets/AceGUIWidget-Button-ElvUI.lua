@@ -1,28 +1,31 @@
 --[[-----------------------------------------------------------------------------
-Button Widget (Modified to change text color on SetDisabled method)
+Button Widget (Modified to change text color on SetDisabled method and add Drag and Drop support for Filter lists)
 Graphical Button.
 -------------------------------------------------------------------------------]]
-local Type, Version = "Button-ElvUI", 2
+local Type, Version = "Button-ElvUI", 4
 local AceGUI = LibStub and LibStub("AceGUI-3.0", true)
 if not AceGUI or (AceGUI:GetWidgetVersion(Type) or 0) >= Version then return end
 
--- Lua APIs
-local pairs = pairs
-
--- WoW APIs
 local _G = _G
-local PlaySound, CreateFrame, UIParent = PlaySound, CreateFrame, UIParent
+local pairs = pairs
+local CreateFrame = CreateFrame
 local IsShiftKeyDown = IsShiftKeyDown
--- GLOBALS: GameTooltip, ElvUI
+local PlaySound = PlaySound
+local UIParent = UIParent
+local DragTooltip = CreateFrame("GameTooltip", "ElvUIAceGUIWidgetDragTooltip", UIParent, "GameTooltipTemplate")
+-- GLOBALS: ElvUI
 
 --[[-----------------------------------------------------------------------------
 Scripts
 -------------------------------------------------------------------------------]]
 local dragdropButton
 local function lockTooltip()
-	GameTooltip:SetOwner(UIParent, "ANCHOR_CURSOR")
-	GameTooltip:SetText(" ")
-	GameTooltip:Show()
+	_G.ElvUIAceConfigDialogTooltip:Hide()
+
+	DragTooltip:ClearAllPoints()
+	DragTooltip:SetOwner(UIParent, "ANCHOR_CURSOR")
+	DragTooltip:SetText(" ")
+	DragTooltip:Show()
 end
 local function dragdrop_OnMouseDown(frame, ...)
 	if frame.obj.dragOnMouseDown then
@@ -35,12 +38,13 @@ end
 local function dragdrop_OnMouseUp(frame, ...)
 	if frame.obj.dragOnMouseUp then
 		frame:SetAlpha(1)
-		GameTooltip:Hide()
-		dragdropButton:Hide()
 		if dragdropButton.enteredFrame and dragdropButton.enteredFrame ~= frame and dragdropButton.enteredFrame:IsMouseOver() then
 			frame.obj.dragOnMouseUp(frame, ...)
 			frame.obj.ActivateMultiControl(frame.obj, ...)
 		end
+
+		DragTooltip:Hide()
+		dragdropButton:Hide()
 		dragdropButton.enteredFrame = nil
 		dragdropButton.mouseDownFrame = nil
 	end
@@ -77,7 +81,7 @@ end
 
 local function Button_OnClick(frame, ...)
 	AceGUI:ClearFocus()
-	PlaySound("igMainMenuOption")
+	PlaySound(852) -- SOUNDKIT.IG_MAINMENU_OPTION
 	frame.obj:Fire("OnClick", ...)
 end
 
@@ -133,9 +137,10 @@ local methods = {
 --[[-----------------------------------------------------------------------------
 Constructor
 -------------------------------------------------------------------------------]]
+local S -- ссылка на модуль Skins в ElvUI
 local function Constructor()
 	local name = "AceGUI30Button" .. AceGUI:GetNextWidgetNum(Type)
-	local frame = CreateFrame("Button", name, UIParent, "UIPanelButtonTemplate2")
+	local frame = CreateFrame("Button", name, UIParent, "UIPanelButtonTemplate")
 	frame:Hide()
 	frame:EnableMouse(true)
 	frame:RegisterForClicks("AnyUp")
@@ -143,15 +148,19 @@ local function Constructor()
 	frame:SetScript("OnEnter", Control_OnEnter)
 	frame:SetScript("OnLeave", Control_OnLeave)
 
-	-- dragdrop
 	if not dragdropButton then
 		dragdropButton = CreateFrame("Button", "ElvUIAceGUI30DragDropButton", UIParent, "UIPanelButtonTemplate")
 		dragdropButton:SetFrameStrata("TOOLTIP")
 		dragdropButton:SetFrameLevel(5)
-		dragdropButton:SetPoint('BOTTOM', GameTooltip, "BOTTOM", 0, 10)
+		dragdropButton:SetPoint('BOTTOM', DragTooltip, "BOTTOM", 0, 10)
 		dragdropButton:Hide()
-		ElvUI[1]:GetModule('Skins'):HandleButton(dragdropButton)
+
+		if not S and ElvUI[1].private.skins.ace3.enable then
+			S = ElvUI[1]:GetModule('Skins')
+			S:HandleButton(dragdropButton)
+		end
 	end
+
 	frame:HookScript("OnClick", dragdrop_OnClick)
 	frame:HookScript("OnEnter", dragdrop_OnEnter)
 	frame:HookScript("OnLeave", dragdrop_OnLeave)

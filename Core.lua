@@ -2,7 +2,12 @@ local E = unpack(ElvUI) --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalD
 local D = E:GetModule("Distributor")
 
 local _, Engine = ...
-Engine[1] = {Blank = function() return '' end }
+Engine[1] = {
+	Blank = function() return '' end,
+	SearchCache = {},
+	SearchText = '',
+}
+E.Config = Engine
 Engine[2] = E.Libs.ACL:GetLocale("ElvUI", E.global.general.locale or "enUS")
 local C, L = Engine[1], Engine[2]
 local format = string.format
@@ -27,6 +32,7 @@ C.Values = {
 		FLUID_BUFFS_ON_DEBUFFS = L["Fluid Buffs on Debuffs"],
 		FLUID_DEBUFFS_ON_BUFFS = L["Fluid Debuffs on Buffs"],
 	},
+	Strata = { BACKGROUND = 'BACKGROUND', LOW = 'LOW', MEDIUM = 'MEDIUM', HIGH = 'HIGH', DIALOG = 'DIALOG', TOOLTIP = 'TOOLTIP' },
 }
 
 do
@@ -112,78 +118,9 @@ end
 
 E.Libs.AceConfig:RegisterOptionsTable("ElvUI", E.Options)
 E.Libs.AceConfigDialog:SetDefaultSize("ElvUI", E:GetConfigDefaultSize())
+E.Options.name = format("%s: |cff99ff33%s|r", L["Version"], E.version)
 
-E.Options.args = {
-	ElvUI_Header = {
-		order = 1,
-		type = "header",
-		name = format("%s: |cff99ff33%s|r", L["Version"], E.version),
-		width = "full"
-	},
-	RepositionWindow = {
-		order = 3,
-		type = "execute",
-		name = L["Reposition Window"],
-		desc = L["Reset the size and position of this frame."],
-		customWidth = 175,
-		func = function()
-			E:UpdateConfigSize(true)
-		end
-	},
-	ToggleTutorial = {
-		order = 4,
-		type = "execute",
-		name = L["Toggle Tutorials"],
-		customWidth = 150,
-		func = function()
-			E:Tutorials(true)
-			E:ToggleOptionsUI()
-		end
-	},
-	Install = {
-		order = 5,
-		type = "execute",
-		name = L["Install"],
-		customWidth = 100,
-		desc = L["Run the installation process."],
-		func = function()
-			E:Install()
-			E:ToggleOptionsUI()
-		end
-	},
-	ResetAllMovers = {
-		order = 6,
-		type = "execute",
-		name = L["Reset Anchors"],
-		customWidth = 150,
-		desc = L["Reset all frames to their original positions."],
-		func = function()
-			E:ResetUI()
-		end
-	},
-	ToggleAnchors = {
-		order = 7,
-		type = "execute",
-		name = L["Toggle Anchors"],
-		customWidth = 150,
-		desc = L["Unlock various elements of the UI to be repositioned."],
-		func = function()
-			E:ToggleMoveMode()
-		end
-	},
-	LoginMessage = {
-		order = 8,
-		type = "toggle",
-		name = L["Login Message"],
-		customWidth = 150,
-		get = function(info)
-			return E.db.general.loginmessage
-		end,
-		set = function(info, value)
-			E.db.general.loginmessage = value
-		end
-	}
-}
+E.Options.args = {}
 
 local DEVELOPERS = {
 	"Tukz",
@@ -228,7 +165,7 @@ do
 	)
 
 	E.Options.args.credits = {
-		order = -1,
+		order = 10,
 		type = "group",
 		name = L["Credits"],
 		args = {
@@ -276,7 +213,7 @@ local function ExportImport_Open(mode)
 	Frame.frame:SetFrameStrata("FULLSCREEN_DIALOG")
 	Frame:SetLayout("flow")
 
-	local Box = E.Libs.AceGUI:Create("MultiLineEditBox")
+	local Box = E.Libs.AceGUI:Create("MultiLineEditBox-ElvUI")
 	Box:SetNumLines(30)
 	Box:DisableButton(true)
 	Box:SetWidth(800)

@@ -194,6 +194,18 @@ local methods = {
 
 	["SetLabel"] = function(self, label)
 		self.text:SetText(label)
+		self.text:SetWordWrap(false)
+
+		-- длинные (русские) подписи обрезаем многоточием; полный текст
+		-- показывает тултип AceConfigDialog
+		local maxWidth = (self.frame:GetWidth() or 0) - 30
+		if maxWidth > 0 and self.text:GetStringWidth() > maxWidth then
+			local cut = #label
+			while cut > 0 and self.text:GetStringWidth() > maxWidth do
+				cut = cut - 1
+				self.text:SetText(label:sub(1, cut) .. "...")
+			end
+		end
 	end,
 
 	["SetDescription"] = function(self, desc)

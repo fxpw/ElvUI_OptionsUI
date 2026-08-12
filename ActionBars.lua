@@ -275,6 +275,78 @@ local function BuildABConfig()
 							AB:UpdateButtonSettings()
 						end
 					},
+					useHotkeyColor = {
+						order = 4.1,
+						type = "toggle",
+						name = L["Use Keybind Color"],
+						desc = L["Use a separate color for keybind text."],
+						set = function(info, value) E.db.actionbar[info[#info]] = value AB:UpdateButtonSettings() end
+					},
+					hotkeyColor = {
+						order = 4.2,
+						type = "color",
+						name = L["Keybind Text Color"],
+						width = "full",
+						disabled = function() return not E.db.actionbar.useHotkeyColor end,
+						get = function(info)
+							local t = E.db.actionbar[info[#info]]
+							local d = P.actionbar[info[#info]]
+							return t.r, t.g, t.b, t.a, d.r, d.g, d.b
+						end,
+						set = function(info, r, g, b)
+							local t = E.db.actionbar[info[#info]]
+							t.r, t.g, t.b = r, g, b
+							AB:UpdateButtonSettings()
+						end
+					},
+					useCountColor = {
+						order = 4.3,
+						type = "toggle",
+						name = L["Use Stack Count Color"],
+						desc = L["Use a separate color for stack count text."],
+						set = function(info, value) E.db.actionbar[info[#info]] = value AB:UpdateButtonSettings() end
+					},
+					countColor = {
+						order = 4.4,
+						type = "color",
+						name = L["Stack Count Color"],
+						width = "full",
+						disabled = function() return not E.db.actionbar.useCountColor end,
+						get = function(info)
+							local t = E.db.actionbar[info[#info]]
+							local d = P.actionbar[info[#info]]
+							return t.r, t.g, t.b, t.a, d.r, d.g, d.b
+						end,
+						set = function(info, r, g, b)
+							local t = E.db.actionbar[info[#info]]
+							t.r, t.g, t.b = r, g, b
+							AB:UpdateButtonSettings()
+						end
+					},
+					useMacroColor = {
+						order = 4.5,
+						type = "toggle",
+						name = L["Use Macro Color"],
+						desc = L["Use a separate color for macro text."],
+						set = function(info, value) E.db.actionbar[info[#info]] = value AB:UpdateButtonSettings() end
+					},
+					macroColor = {
+						order = 4.6,
+						type = "color",
+						name = L["Macro Color"],
+						width = "full",
+						disabled = function() return not E.db.actionbar.useMacroColor end,
+						get = function(info)
+							local t = E.db.actionbar[info[#info]]
+							local d = P.actionbar[info[#info]]
+							return t.r, t.g, t.b, t.a, d.r, d.g, d.b
+						end,
+						set = function(info, r, g, b)
+							local t = E.db.actionbar[info[#info]]
+							t.r, t.g, t.b = r, g, b
+							AB:UpdateButtonSettings()
+						end
+					},
 					textPosition = {
 						order = 5,
 						type = "group",

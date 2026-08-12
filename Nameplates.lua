@@ -655,6 +655,19 @@ local function GetUnitSettings(unit, name)
 		group.args.eliteIcon.args.xOffset       = ACH:Range(L["X-Offset"], nil, 5, { min = -100, max = 100, step = 1 })
 		group.args.eliteIcon.args.yOffset       = ACH:Range(L["Y-Offset"], nil, 6, { min = -100, max = 100, step = 1 })
 
+		group.args.iconFrame                   = ACH:Group(L["Icon Frame"],
+			L["Displays an icon on totem nameplates."], 76, nil,
+			function(info) return E.db.nameplates.units[unit].iconFrame[info[#info]] end,
+			function(info, value)
+				E.db.nameplates.units[unit].iconFrame[info[#info]] = value
+				NP:ConfigureAll()
+			end)
+		group.args.iconFrame.args.enable       = ACH:Toggle(L["Enable"], nil, 1)
+		group.args.iconFrame.args.size         = ACH:Range(L["Size"], nil, 3, { min = 12, max = 64, step = 1 })
+		group.args.iconFrame.args.position     = ACH:Select(L["Position"], nil, 4, C.Values.AllPositions)
+		group.args.iconFrame.args.xOffset      = ACH:Range(L["X-Offset"], nil, 5, { min = -100, max = 100, step = 1 })
+		group.args.iconFrame.args.yOffset      = ACH:Range(L["Y-Offset"], nil, 6, { min = -100, max = 100, step = 1 })
+
 		group.args.castGroup.args.displayTarget = ACH:Toggle(L["Display Target"],
 			L["Display the target of current cast."], 4)
 	end

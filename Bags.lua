@@ -318,6 +318,69 @@ E.Options.args.bags = {
 				}
 			}
 		},
+		autoToggle = {
+			order = 4.5,
+			type = "group",
+			name = L["Auto Toggle"],
+			disabled = function() return not E.Bags.Initialized end,
+			get = function(info) return E.db.bags.autoToggle[info[#info]] end,
+			set = function(info, value) E.db.bags.autoToggle[info[#info]] = value end,
+			args = {
+				enable = {
+					order = 1,
+					type = "toggle",
+					name = L["Enable"],
+					set = function(info, value) E.db.bags.autoToggle.enable = value B:SetupAutoToggle() end
+				},
+				spacer = {
+					order = 2,
+					type = "description",
+					name = " "
+				},
+				bank = {
+					order = 3,
+					type = "toggle",
+					name = L["Bank"],
+					disabled = function() return not E.db.bags.autoToggle.enable end
+				},
+				mail = {
+					order = 4,
+					type = "toggle",
+					name = L["MAIL_LABEL"],
+					disabled = function() return not E.db.bags.autoToggle.enable end
+				},
+				vendor = {
+					order = 5,
+					type = "toggle",
+					name = L["Vendor"],
+					disabled = function() return not E.db.bags.autoToggle.enable end
+				},
+				auctionHouse = {
+					order = 6,
+					type = "toggle",
+					name = L["Auction House"],
+					disabled = function() return not E.db.bags.autoToggle.enable end
+				},
+				professions = {
+					order = 7,
+					type = "toggle",
+					name = L["Professions"],
+					disabled = function() return not E.db.bags.autoToggle.enable end
+				},
+				trade = {
+					order = 8,
+					type = "toggle",
+					name = L["TRADE"],
+					disabled = function() return not E.db.bags.autoToggle.enable end
+				},
+				guildBank = {
+					order = 9,
+					type = "toggle",
+					name = L["Guild Bank"],
+					disabled = function() return not E.db.bags.autoToggle.enable end
+				}
+			}
+		},
 		colorGroup = {
 			order = 5,
 			type = "group",
