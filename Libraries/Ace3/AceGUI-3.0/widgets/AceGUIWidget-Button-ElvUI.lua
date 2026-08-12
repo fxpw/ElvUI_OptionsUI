@@ -137,7 +137,7 @@ local methods = {
 --[[-----------------------------------------------------------------------------
 Constructor
 -------------------------------------------------------------------------------]]
-local S -- ref for Skins module in ElvUI
+local S -- ссылка на модуль Skins в ElvUI
 local function Constructor()
 	local name = "AceGUI30Button" .. AceGUI:GetNextWidgetNum(Type)
 	local frame = CreateFrame("Button", name, UIParent, "UIPanelButtonTemplate")

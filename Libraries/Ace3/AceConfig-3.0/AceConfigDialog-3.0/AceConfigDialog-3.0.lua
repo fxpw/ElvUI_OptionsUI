@@ -17,11 +17,11 @@ AceConfigDialog.Status = AceConfigDialog.Status or {}
 AceConfigDialog.frame = AceConfigDialog.frame or CreateFrame("Frame")
 AceConfigDialog.tooltip = AceConfigDialog.tooltip or CreateFrame("GameTooltip", "ElvUIAceConfigDialogTooltip", UIParent, "GameTooltipTemplate")
 
--- ElvUI: apply the ElvUI backdrop to the tooltip right away (defense-in-depth).
--- The Ace3 skin normally hooks lib.tooltip OnShow via LibStub.NewLibrary, but
--- if the skin hook is ever missing (module failed to load, hook ordering, etc.)
--- the tooltip would stay vanilla. Styling is idempotent, so re-applying on
--- every OnShow is harmless and keeps the frame correct after any restyle.
+-- ElvUI: сразу применяем фон ElvUI к тултипу (на всякий случай). Обычно скин
+-- Ace3 вешает хук на OnShow тултипа через LibStub.NewLibrary, но если хук
+-- вдруг отсутствует (модуль не загрузился, порядок хуков и т.д.), тултип
+-- останется стандартным. Стилизация идемпотентна, повторное применение
+-- на каждый OnShow безвредно и держит рамку в правильном виде.
 do
 	local tt = AceConfigDialog.tooltip
 	if tt and not tt.__elvuiTooltipStyled and type(tt.SetTemplate) == "function" then
@@ -636,20 +636,18 @@ do
 		frame:Hide()
 		frame:SetPoint("CENTER", UIParent, "CENTER")
 		frame:SetSize(320, 72)
-		frame:EnableMouse(true) -- Do not allow click-through on the frame
+		frame:EnableMouse(true) -- чтобы не было сквозных кликов по рамке
 		frame:SetFrameStrata("TOOLTIP")
-		frame:SetFrameLevel(100) -- Lots of room to draw under it
+		frame:SetFrameLevel(100)
 		frame:SetScript("OnKeyDown", function(self, key)
 			if key == "ESCAPE" then
-				-- self:SetPropagateKeyboardInput(false)
 				self:EnableKeyboard(false)
 				if self.cancel:IsShown() then
 					self.cancel:Click()
-				else -- Showing a validation error
+				else -- показываем ошибку валидации
 					self:Hide()
 				end
 			else
-				-- self:SetPropagateKeyboardInput(true)
 				self:EnableKeyboard(true)
 
 			end
@@ -668,11 +666,11 @@ do
 			button:SetSize(128, 21)
 			button:SetNormalFontObject(GameFontNormal)
 			button:SetHighlightFontObject(GameFontHighlight)
-			button:SetNormalTexture("Interface\\Buttons\\UI-DialogBox-Button-Up") -- "Interface\\Buttons\\UI-DialogBox-Button-Up"
+			button:SetNormalTexture("Interface\\Buttons\\UI-DialogBox-Button-Up")
 			button:GetNormalTexture():SetTexCoord(0.0, 1.0, 0.0, 0.71875)
-			button:SetPushedTexture("Interface\\Buttons\\UI-DialogBox-Button-Down") -- "Interface\\Buttons\\UI-DialogBox-Button-Down"
+			button:SetPushedTexture("Interface\\Buttons\\UI-DialogBox-Button-Down")
 			button:GetPushedTexture():SetTexCoord(0.0, 1.0, 0.0, 0.71875)
-			button:SetHighlightTexture("Interface\\Buttons\\UI-DialogBox-Button-Highlight") -- "Interface\\Buttons\\UI-DialogBox-Button-Highlight"
+			button:SetHighlightTexture("Interface\\Buttons\\UI-DialogBox-Button-Highlight")
 			button:GetHighlightTexture():SetTexCoord(0.0, 1.0, 0.0, 0.71875)
 			button:SetText(newText)
 			return button
@@ -691,10 +689,7 @@ local function confirmPopup(appName, rootframe, basepath, info, message, func, .
 	local frame = AceConfigDialog.popup
 	frame:Show()
 	frame.text:SetText(message)
-	-- From StaticPopup.lua
-	-- local height = 32 + text:GetHeight() + 2;
-	-- height = height + 6 + accept:GetHeight()
-	-- We add 32 + 2 + 6 + 21 (button height) == 61
+	-- высота взята из StaticPopup.lua: 32 + 2 + 6 + 21 (высота кнопки) == 61
 	local height = 61 + frame.text:GetHeight()
 	frame:SetHeight(height)
 
@@ -705,7 +700,7 @@ local function confirmPopup(appName, rootframe, basepath, info, message, func, .
 	local t = {...}
 	local tCount = select("#", ...)
 	frame.accept:SetScript("OnClick", function(self)
-		safecall(func, unpack(t, 1, tCount)) -- Manually set count as unpack() stops on nil (bug with #table)
+		safecall(func, unpack(t, 1, tCount)) -- задаем количество вручную: unpack() останавливается на nil (баг #)
 		AceConfigDialog:Open(appName, rootframe, unpack(basepath or emptyTbl))
 		frame:Hide()
 		self:SetScript("OnClick", nil)
@@ -725,10 +720,7 @@ local function validationErrorPopup(message)
 	local frame = AceConfigDialog.popup
 	frame:Show()
 	frame.text:SetText(message)
-	-- From StaticPopup.lua
-	-- local height = 32 + text:GetHeight() + 2;
-	-- height = height + 6 + accept:GetHeight()
-	-- We add 32 + 2 + 6 + 21 (button height) == 61
+	-- высота взята из StaticPopup.lua: 32 + 2 + 6 + 21 (высота кнопки) == 61
 	local height = 61 + frame.text:GetHeight()
 	frame:SetHeight(height)
 
@@ -844,7 +836,7 @@ local function ActivateControl(widget, event, ...)
 		else
 			validationErrorPopup(validated)
 		end
-		PlaySound(882) -- SOUNDKIT.IG_PLAYER_INVITE_DECLINE || _DECLINE is actually missing from the table
+		PlaySound(882) -- SOUNDKIT.IG_PLAYER_INVITE_DECLINE: _DECLINE отсутствует в таблице
 		del(info)
 		return true
 	else
@@ -1277,7 +1269,7 @@ local function FeedOptions(appName, options,container,rootframe,path,group,inlin
 					control:SetLabel(name)
 					control:SetCallback("OnEnterPressed",ActivateControl)
 
-					-- ElvUI block
+					-- начало блока ElvUI
 					if gui.luaSyntax and control.SetSyntaxHighlightingEnabled then
 						control:SetSyntaxHighlightingEnabled(v.luaSyntax or false)
 					end
@@ -1289,7 +1281,7 @@ local function FeedOptions(appName, options,container,rootframe,path,group,inlin
 
 					control.textChanged = v.textChanged
 					control.focusSelect = v.focusSelect
-					-- End ElvUI block
+					-- конец блока ElvUI
 
 					local text = GetOptionsMemberValue("get",v, options, path, appName)
 					if type(text) ~= "string" then
@@ -1908,9 +1900,9 @@ function AceConfigDialog:FeedGroup(appName,options,container,rootframe,path, isR
 
 			container:AddChild(tree)
 
-			-- ElvUI renders its own left menu (window chrome); keep the
-			-- AceGUI tree hidden for such root groups so its buttons never
-			-- show through the chrome (belt-and-braces next to the Ace3 skin).
+			-- ElvUI рисует своё левое меню (хром окна), поэтому для таких корневых
+			-- групп держим дерево AceGUI скрытым, чтобы его кнопки не просвечивали
+			-- сквозь хром (в дополнение к скину Ace3)
 			if (group.childGroups or "") == "ElvUI_HiddenTree" and tree.treeframe then
 				tree.treeframe:Hide()
 			end
@@ -2146,7 +2138,7 @@ end
 -- @param parent The parent to use in the interface options tree.
 -- @param ... The path in the options table to feed into the interface options panel.
 -- @return The reference to the frame registered into the Interface Options.
--- @return The category ID to pass to Settings.OpenToCategory (or InterfaceOptionsFrame_OpenToCategory)
+-- @return ID категории для Settings.OpenToCategory (или InterfaceOptionsFrame_OpenToCategory)
 function AceConfigDialog:AddToBlizOptions(appName, name, parent, ...)
 	local BlizOptions = AceConfigDialog.BlizOptions
 
@@ -2183,12 +2175,13 @@ function AceConfigDialog:AddToBlizOptions(appName, name, parent, ...)
 				end
 				local subcategory = Settings.RegisterCanvasLayoutSubcategory(category, group.frame, categoryName)
 
-				-- force the generated ID to be used for subcategories, as these can have very simple names like "Profiles"
+				-- для подкатегорий используем сгенерированный ID, так как у них могут
+				-- быть очень простые имена вроде "Profiles"
 				group:SetName(subcategory.ID, parent)
 			else
 				local category = Settings.RegisterCanvasLayoutCategory(group.frame, categoryName)
-				-- using appName here would be cleaner, but would not be 100% compatible
-				-- but for top-level categories it should be fine, as these are typically addon names
+				-- appName тут был бы чище, но не на 100% совместим; для категорий
+				-- верхнего уровня это ок, обычно это имена аддонов
 				category.ID = categoryName
 				group:SetName(categoryName, parent)
 				Settings.RegisterAddOnCategory(category)

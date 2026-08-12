@@ -76,7 +76,7 @@ for key in pairs(E.Options.args) do
 	tinsert(E.OriginalOptions, key)
 end
 setmetatable(E.OriginalOptions, {__newindex = E.noop})
--- deterministic left-column order for the window chrome (filters/profiles were -10)
+-- фиксированный порядок левой колонки хрома окна (раньше filters/profiles были -10)
 local orderList = {
 	general = 1, actionbar = 2, auras = 3, bags = 4, chat = 5, cooldown = 6,
 	databars = 7, datatexts = 8, maps = 9, nameplates = 10, skins = 11,

@@ -130,7 +130,7 @@ Methods
 -------------------------------------------------------------------------------]]
 local methods = {
 	["OnAcquire"] = function(self)
-		-- height is controlled by SetLabel
+		-- высоту задает SetLabel
 		self:SetWidth(200)
 		self:SetDisabled(false)
 		self:SetLabel()

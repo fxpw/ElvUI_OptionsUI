@@ -140,7 +140,6 @@ local methods = {
 			self.label:SetTextColor(.5, .5, .5)
 			self.hightext:SetTextColor(.5, .5, .5)
 			self.lowtext:SetTextColor(.5, .5, .5)
-			--self.valuetext:SetTextColor(.5, .5, .5)
 			self.editbox:SetTextColor(.5, .5, .5)
 			self.editbox:EnableMouse(false)
 			self.editbox:ClearFocus()
@@ -149,7 +148,6 @@ local methods = {
 			self.label:SetTextColor(1, .82, 0)
 			self.hightext:SetTextColor(1, 1, 1)
 			self.lowtext:SetTextColor(1, 1, 1)
-			--self.valuetext:SetTextColor(1, 1, 1)
 			self.editbox:SetTextColor(1, 1, 1)
 			self.editbox:EnableMouse(true)
 		end

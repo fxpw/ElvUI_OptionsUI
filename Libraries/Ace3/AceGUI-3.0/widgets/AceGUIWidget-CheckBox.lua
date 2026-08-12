@@ -196,8 +196,8 @@ local methods = {
 		self.text:SetText(label)
 		self.text:SetWordWrap(false)
 
-		-- truncate long (russian) labels with an ellipsis; the full
-		-- string is still shown by the AceConfigDialog tooltip
+		-- обрезаем длинные (русские) подписи многоточием; полный текст
+		-- показывает тултип AceConfigDialog
 		local maxWidth = (self.frame:GetWidth() or 0) - 30
 		if maxWidth > 0 and self.text:GetStringWidth() > maxWidth then
 			local cut = #label

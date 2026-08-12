@@ -53,7 +53,7 @@ Scripts
 local function OnClick(self)                                                     -- Button
 	self = self.obj
 	self.editBox:ClearFocus()
-	if not self:Fire("OnEnterPressed", self.editBox:GetText(true)) then -- ElvUI changed
+	if not self:Fire("OnEnterPressed", self.editBox:GetText(true)) then -- изменено ElvUI
 		self.button:Disable()
 	end
 end
@@ -271,7 +271,7 @@ local methods = {
 		return self.editBox:SetCursorPosition(...)
 	end,
 
-	-- ElvUI block, this it to support plugins that use FAIAP
+	-- начало блока ElvUI, нужно для плагинов, использующих FAIAP
 	["SetSyntaxHighlightingEnabled"] = function(self, enabled)
 		if enabled then
 			AceGUI.luaSyntax.enable(self.editBox, nil, 4)
@@ -279,7 +279,7 @@ local methods = {
 			AceGUI.luaSyntax.disable(self.editBox)
 		end
 	end
-	-- End ElvUI block
+	-- конец блока ElvUI
 }
 
 --[[-----------------------------------------------------------------------------

@@ -258,7 +258,7 @@ local methods = {
 				local tab = tabs[i]
 				PanelTemplates_TabResize(tab, padding + 4, nil, width)
 
-				-- ensure localized (e.g. Russian) tab text fits: textWidth + padding
+				-- чтобы текст вкладки (например, русский) помещался: textWidth + отступ
 				local fs = tab.GetFontString and tab:GetFontString()
 				if fs and fs.GetStringWidth then
 					local textW = fs:GetStringWidth()
