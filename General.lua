@@ -81,6 +81,14 @@ E.Options.args.general = {
 					get = function(info) return E.global.general.ignoreScalePopup end,
 					set = function(info, value) E.global.general.ignoreScalePopup = value end
 				},
+				loginmessage = {
+					order = 5.1,
+					type = "toggle",
+					name = L["Login Message"],
+					desc = L["Enable the login message."],
+					get = function(info) return E.db.general.loginmessage end,
+					set = function(info, value) E.db.general.loginmessage = value end
+				},
 				pixelPerfect = {
 					order = 6,
 					type = "toggle",
@@ -692,6 +700,155 @@ E.Options.args.general = {
 						E.db.general[info[#info]] = value
 						Blizzard:UpdateVehicleFrame()
 					end
+				}
+			}
+		},
+		guildBank = {
+			order = 8.5,
+			type = "group",
+			guiInline = true,
+			name = L["Guild Bank"],
+			get = function(info) return E.db.general.guildBank[info[#info]] end,
+			set = function(info, value) E.db.general.guildBank[info[#info]] = value Blizzard:GuildBank_Update() end,
+			args = {
+				header = {
+					order = 1,
+					type = "header",
+					name = L["Guild Bank"]
+				},
+				itemQuality = {
+					order = 2,
+					type = "toggle",
+					name = L["Item Quality"],
+					desc = L["Color the border of items by quality."]
+				},
+				itemLevel = {
+					order = 3,
+					type = "toggle",
+					name = L["Display Item Level"],
+					desc = L["Displays item level on equippable items."]
+				},
+				itemLevelThreshold = {
+					order = 4,
+					type = "range",
+					name = L["Item Level Threshold"],
+					desc = L["The minimum item level required for it to be shown."],
+					min = 1, max = 500, step = 1,
+					disabled = function() return not E.db.general.guildBank.itemLevel end
+				},
+				ilvlFontGroup = {
+					order = 5,
+					type = "group",
+					guiInline = true,
+					name = L["Item Level Font"],
+					disabled = function() return not E.db.general.guildBank.itemLevel end,
+					args = {
+						itemLevelFont = {
+							order = 1,
+							type = "select",
+							dialogControl = "LSM30_Font",
+							name = L["Font"],
+							values = AceGUIWidgetLSMlists.font
+						},
+						itemLevelFontSize = {
+							order = 2,
+							type = "range",
+							name = L["FONT_SIZE"],
+							min = 4, max = 22, step = 1
+						},
+						itemLevelFontOutline = {
+							order = 3,
+							type = "select",
+							name = L["Font Outline"],
+							values = C.Values.FontFlags
+						}
+					}
+				},
+				ilvlPositionGroup = {
+					order = 6,
+					type = "group",
+					guiInline = true,
+					name = L["Item Level Position"],
+					disabled = function() return not E.db.general.guildBank.itemLevel end,
+					args = {
+						itemLevelPosition = {
+							order = 1,
+							type = "select",
+							name = L["Position"],
+							values = C.Values.AllPositions
+						},
+						itemLevelxOffset = {
+							order = 2,
+							type = "range",
+							name = L["X-Offset"],
+							min = -45, max = 45, step = 1
+						},
+						itemLevelyOffset = {
+							order = 3,
+							type = "range",
+							name = L["Y-Offset"],
+							min = -45, max = 45, step = 1
+						}
+					}
+				},
+				countGroup = {
+					order = 7,
+					type = "group",
+					name = L["Item Count"],
+					args = {
+						countFont = {
+							order = 1,
+							type = "select",
+							dialogControl = "LSM30_Font",
+							name = L["Font"],
+							values = AceGUIWidgetLSMlists.font
+						},
+						countFontSize = {
+							order = 2,
+							type = "range",
+							name = L["FONT_SIZE"],
+							min = 4, max = 22, step = 1
+						},
+						countFontOutline = {
+							order = 3,
+							type = "select",
+							name = L["Font Outline"],
+							values = C.Values.FontFlags
+						},
+						countFontColor = {
+							order = 4,
+							type = "color",
+							name = L["COLOR"],
+							hasAlpha = false,
+							get = function(info)
+								local t = E.db.general.guildBank[info[#info]]
+								return t.r, t.g, t.b
+							end,
+							set = function(info, r, g, b)
+								local t = E.db.general.guildBank[info[#info]]
+								t.r, t.g, t.b = r, g, b
+								Blizzard:GuildBank_Update()
+							end
+						},
+						countPosition = {
+							order = 5,
+							type = "select",
+							name = L["Position"],
+							values = C.Values.AllPositions
+						},
+						countxOffset = {
+							order = 6,
+							type = "range",
+							name = L["X-Offset"],
+							min = -45, max = 45, step = 1
+						},
+						countyOffset = {
+							order = 7,
+							type = "range",
+							name = L["Y-Offset"],
+							min = -45, max = 45, step = 1
+						}
+					}
 				}
 			}
 		},

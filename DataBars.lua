@@ -19,8 +19,40 @@ E.Options.args.databars = {
 			type = "description",
 			name = ""
 		},
-		experience = {
+		general = {
 			order = 3,
+			type = "group",
+			name = L["General"],
+			get = function(info) return E.db.databars[info[#info]] end,
+			set = function(info, value) E.db.databars[info[#info]] = value mod:UpdateAll() end,
+			args = {
+				header = {
+					order = 1,
+					type = "header",
+					name = L["General"]
+				},
+				transparent = {
+					order = 2,
+					type = "toggle",
+					name = L["Transparent"]
+				},
+				customTexture = {
+					order = 3,
+					type = "toggle",
+					name = L["Custom StatusBar"]
+				},
+				statusbar = {
+					order = 4,
+					type = "select",
+					dialogControl = "LSM30_Statusbar",
+					name = L["StatusBar Texture"],
+					values = AceGUIWidgetLSMlists.statusbar,
+					disabled = function() return not E.db.databars.customTexture end
+				}
+			}
+		},
+		experience = {
+			order = 4,
 			type = "group",
 			name = L["XPBAR_LABEL"],
 			get = function(info) return mod.db.experience[info[#info]] end,
@@ -76,6 +108,7 @@ E.Options.args.databars = {
 					name = L["Statusbar Fill Orientation"],
 					desc = L["Direction the bar moves on gains/losses"],
 					values = {
+						["AUTOMATIC"] = L["Automatic"],
 						["HORIZONTAL"] = L["Horizontal"],
 						["VERTICAL"] = L["Vertical"]
 					}
@@ -127,8 +160,53 @@ E.Options.args.databars = {
 					},
 					set = function(info, value) mod.db.experience[info[#info]] = value mod:ExperienceBar_Update() end
 				},
-				questXP = {
+				displayText = {
 					order = 16,
+					type = "toggle",
+					name = L["Display Text"]
+				},
+				clickThrough = {
+					order = 17,
+					type = "toggle",
+					name = L["Click Through"]
+				},
+				frameLevel = {
+					order = 18,
+					type = "range",
+					name = L["Frame Level"],
+					min = 1, max = 128, step = 1
+				},
+				frameStrata = {
+					order = 19,
+					type = "select",
+					name = L["Frame Strata"],
+					values = C.Values.Strata
+				},
+				spacer2 = {
+					order = 20,
+					type = "description",
+					name = " "
+				},
+				anchorPoint = {
+					order = 21,
+					type = "select",
+					name = L["Anchor Point"],
+					values = C.Values.AllPoints
+				},
+				xOffset = {
+					order = 22,
+					type = "range",
+					name = L["X-Offset"],
+					min = -300, max = 300, step = 1
+				},
+				yOffset = {
+					order = 23,
+					type = "range",
+					name = L["Y-Offset"],
+					min = -300, max = 300, step = 1
+				},
+				questXP = {
+					order = 24,
 					type = "group",
 					name = L["Quest XP"],
 					guiInline = true,
@@ -189,7 +267,7 @@ E.Options.args.databars = {
 			}
 		},
 		petExperience = {
-			order = 4,
+			order = 5,
 			type = "group",
 			name = L["Pet Experience"],
 			get = function(info) return mod.db.petExperience[info[#info]] end,
@@ -245,6 +323,7 @@ E.Options.args.databars = {
 					name = L["Statusbar Fill Orientation"],
 					desc = L["Direction the bar moves on gains/losses"],
 					values = {
+						["AUTOMATIC"] = L["Automatic"],
 						["HORIZONTAL"] = L["Horizontal"],
 						["VERTICAL"] = L["Vertical"]
 					}
@@ -295,11 +374,56 @@ E.Options.args.databars = {
 						CURPERCREM = L["Current - Percent (Remaining)"],
 					},
 					set = function(info, value) mod.db.petExperience[info[#info]] = value mod:PetExperienceBar_Update() end
+				},
+				displayText = {
+					order = 16,
+					type = "toggle",
+					name = L["Display Text"]
+				},
+				clickThrough = {
+					order = 17,
+					type = "toggle",
+					name = L["Click Through"]
+				},
+				frameLevel = {
+					order = 18,
+					type = "range",
+					name = L["Frame Level"],
+					min = 1, max = 128, step = 1
+				},
+				frameStrata = {
+					order = 19,
+					type = "select",
+					name = L["Frame Strata"],
+					values = C.Values.Strata
+				},
+				spacer2 = {
+					order = 20,
+					type = "description",
+					name = " "
+				},
+				anchorPoint = {
+					order = 21,
+					type = "select",
+					name = L["Anchor Point"],
+					values = C.Values.AllPoints
+				},
+				xOffset = {
+					order = 22,
+					type = "range",
+					name = L["X-Offset"],
+					min = -300, max = 300, step = 1
+				},
+				yOffset = {
+					order = 23,
+					type = "range",
+					name = L["Y-Offset"],
+					min = -300, max = 300, step = 1
 				}
 			}
 		},
 		reputation = {
-			order = 5,
+			order = 6,
 			type = "group",
 			name = L["REPUTATION"],
 			get = function(info) return mod.db.reputation[info[#info]] end,
@@ -349,6 +473,7 @@ E.Options.args.databars = {
 					name = L["Statusbar Fill Orientation"],
 					desc = L["Direction the bar moves on gains/losses"],
 					values = {
+						["AUTOMATIC"] = L["Automatic"],
 						["HORIZONTAL"] = L["Horizontal"],
 						["VERTICAL"] = L["Vertical"]
 					}
@@ -399,6 +524,185 @@ E.Options.args.databars = {
 						CURPERCREM = L["Current - Percent (Remaining)"],
 					},
 					set = function(info, value) mod.db.reputation[info[#info]] = value mod:ReputationBar_Update() end
+				},
+				displayText = {
+					order = 15,
+					type = "toggle",
+					name = L["Display Text"]
+				},
+				clickThrough = {
+					order = 16,
+					type = "toggle",
+					name = L["Click Through"]
+				},
+				frameLevel = {
+					order = 17,
+					type = "range",
+					name = L["Frame Level"],
+					min = 1, max = 128, step = 1
+				},
+				frameStrata = {
+					order = 18,
+					type = "select",
+					name = L["Frame Strata"],
+					values = C.Values.Strata
+				},
+				spacer2 = {
+					order = 19,
+					type = "description",
+					name = " "
+				},
+				anchorPoint = {
+					order = 20,
+					type = "select",
+					name = L["Anchor Point"],
+					values = C.Values.AllPoints
+				},
+				xOffset = {
+					order = 21,
+					type = "range",
+					name = L["X-Offset"],
+					min = -300, max = 300, step = 1
+				},
+				yOffset = {
+					order = 22,
+					type = "range",
+					name = L["Y-Offset"],
+					min = -300, max = 300, step = 1
+				}
+			}
+		},
+		threat = {
+			order = 7,
+			type = "group",
+			name = L["Threat"],
+			get = function(info) return mod.db.threat[info[#info]] end,
+			set = function(info, value) mod.db.threat[info[#info]] = value mod:UpdateThreatDimensions() end,
+			args = {
+				header = {
+					order = 1,
+					type = "header",
+					name = L["Threat"]
+				},
+				enable = {
+					order = 2,
+					type = "toggle",
+					name = L["Enable"],
+					set = function(info, value) mod.db.threat[info[#info]] = value mod:ThreatBar_Toggle() end
+				},
+				tankStatus = {
+					order = 3,
+					type = "toggle",
+					name = L["Tank Colors"],
+					set = function(info, value) mod.db.threat[info[#info]] = value mod:ThreatBar_Update() end
+				},
+				smoothbars = {
+					order = 4,
+					type = "toggle",
+					name = L["Smooth Bars"],
+					desc = L["Bars will transition smoothly."],
+					set = function(info, value) mod.db.threat[info[#info]] = value mod:ThreatBar_Toggle() end
+				},
+				mouseover = {
+					order = 5,
+					type = "toggle",
+					name = L["Mouseover"]
+				},
+				showBubbles = {
+					order = 6,
+					type = "toggle",
+					name = L["Show Bubbles"]
+				},
+				spacer = {
+					order = 7,
+					type = "description",
+					name = " "
+				},
+				orientation = {
+					order = 8,
+					type = "select",
+					name = L["Statusbar Fill Orientation"],
+					desc = L["Direction the bar moves on gains/losses"],
+					values = {
+						["AUTOMATIC"] = L["Automatic"],
+						["HORIZONTAL"] = L["Horizontal"],
+						["VERTICAL"] = L["Vertical"]
+					}
+				},
+				width = {
+					order = 9,
+					type = "range",
+					name = L["Width"],
+					min = 5, max = ceil(GetScreenWidth() or 800), step = 1
+				},
+				height = {
+					order = 10,
+					type = "range",
+					name = L["Height"],
+					min = 5, max = ceil(GetScreenHeight() or 800), step = 1
+				},
+				font = {
+					order = 11,
+					type = "select", dialogControl = "LSM30_Font",
+					name = L["Font"],
+					values = AceGUIWidgetLSMlists.font
+				},
+				textSize = {
+					order = 12,
+					type = "range",
+					name = L["FONT_SIZE"],
+					min = 6, max = 22, step = 1
+				},
+				fontOutline = {
+					order = 13,
+					type = "select",
+					name = L["Font Outline"],
+					values = C.Values.FontFlags
+				},
+				displayText = {
+					order = 14,
+					type = "toggle",
+					name = L["Display Text"]
+				},
+				clickThrough = {
+					order = 16,
+					type = "toggle",
+					name = L["Click Through"]
+				},
+				frameLevel = {
+					order = 17,
+					type = "range",
+					name = L["Frame Level"],
+					min = 1, max = 128, step = 1
+				},
+				frameStrata = {
+					order = 18,
+					type = "select",
+					name = L["Frame Strata"],
+					values = C.Values.Strata
+				},
+				spacer2 = {
+					order = 19,
+					type = "description",
+					name = " "
+				},
+				anchorPoint = {
+					order = 20,
+					type = "select",
+					name = L["Anchor Point"],
+					values = C.Values.AllPoints
+				},
+				xOffset = {
+					order = 21,
+					type = "range",
+					name = L["X-Offset"],
+					min = -300, max = 300, step = 1
+				},
+				yOffset = {
+					order = 22,
+					type = "range",
+					name = L["Y-Offset"],
+					min = -300, max = 300, step = 1
 				}
 			}
 		}

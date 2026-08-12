@@ -255,7 +255,17 @@ local methods = {
 			end
 
 			for i = starttab, endtab do
-				PanelTemplates_TabResize(tabs[i], padding + 4, nil, width)
+				local tab = tabs[i]
+				PanelTemplates_TabResize(tab, padding + 4, nil, width)
+
+				-- ensure localized (e.g. Russian) tab text fits: textWidth + padding
+				local fs = tab.GetFontString and tab:GetFontString()
+				if fs and fs.GetStringWidth then
+					local textW = fs:GetStringWidth()
+					if textW and tab:GetWidth() < textW + 24 then
+						tab:SetWidth(textW + 24)
+					end
+				end
 			end
 			starttab = endtab + 1
 		end
